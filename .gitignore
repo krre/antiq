@@ -1,2 +1,7 @@
 build-*
 *.user
+*.o
+*.so
+*.dll
+*.bg
+.*
