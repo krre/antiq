@@ -7,5 +7,6 @@ DynamicLibrary {
     ]
     name: "a3dcore"
     destinationDirectory: "lib"
+    cpp.cxxLanguageVersion: "c++11"
     Depends { name: "cpp" }
 }
