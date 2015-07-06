@@ -5,5 +5,7 @@ DynamicLibrary {
         "src/window.cpp",
         "src/window.h",
     ]
-    name: "3dui"
+    name: "a3dui"
+    destinationDirectory: "lib"
+    Depends { name: "cpp" }
 }

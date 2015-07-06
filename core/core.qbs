@@ -5,5 +5,7 @@ DynamicLibrary {
         "src/core.cpp",
         "src/core.h",
     ]
-    name: "core"
+    name: "a3dcore"
+    destinationDirectory: "lib"
+    Depends { name: "cpp" }
 }
