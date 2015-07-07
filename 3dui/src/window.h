@@ -1,11 +1,7 @@
-#ifndef WINDOW_H
-#define WINDOW_H
-
+#pragma once
 
 class Window
 {
 public:
     Window();
 };
-
-#endif // WINDOW_H
