@@ -3,6 +3,6 @@
 
 Window::Window()
 {
-    std::cout << "window";
+    std::cout << "window" << std::endl;
 }
 
