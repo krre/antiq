@@ -6,4 +6,7 @@ CppApplication {
         "main.aml",
         "main.cpp",
     ]
+    cpp.includePaths: "../../src"
+    cpp.libraryPaths: "../../lib"
+    cpp.dynamicLibraries: "angie3d"
 }
