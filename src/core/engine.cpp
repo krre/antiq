@@ -3,6 +3,11 @@
 
 Engine::Engine()
 {
-    std::cout << "engine" << std::endl;
+    cout << "engine" << endl;
+}
+
+void Engine::load(string path)
+{
+    cout << path << endl;
 }
 
