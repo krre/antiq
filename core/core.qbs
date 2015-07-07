@@ -2,6 +2,8 @@ import qbs 1.0
 
 DynamicLibrary {
     files: [
+        "engine.cpp",
+        "engine.h",
         "src/core.cpp",
         "src/core.h",
     ]
