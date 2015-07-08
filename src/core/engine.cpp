@@ -7,9 +7,9 @@ Engine::Engine()
 {
 }
 
-void Engine::load(std::string filepath)
+void Engine::load(std::string filePath)
 {
-    std::cout << filepath << std::endl;
+    std::cout << filePath << std::endl;
 }
 
 END_NAMESPACE_A3D
