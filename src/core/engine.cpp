@@ -1,13 +1,15 @@
 #include "engine.h"
 #include <iostream>
 
+namespace a3d {
+
 Engine::Engine()
 {
-    cout << "engine" << endl;
 }
 
-void Engine::load(string path)
+void Engine::load(std::string filepath)
 {
-    cout << path << endl;
+    std::cout << filepath << std::endl;
 }
 
+}

@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
 
-using namespace std;
+namespace a3d {
 
 class Engine
 {
 public:
     Engine();
-    void load(string path);
+    void load(std::string filepath);
 };
+
+}

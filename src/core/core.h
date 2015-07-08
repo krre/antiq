@@ -1,5 +1,6 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
+
+namespace a3d {
 
 class Core
 {
@@ -7,4 +8,4 @@ public:
     Core();
 };
 
-#endif // CORE_H
+}
