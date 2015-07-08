@@ -23,7 +23,7 @@ Project {
 
         Group {
             qbs.install: true
-            qbs.installDir: "bin"
+            qbs.installDir: "lib"
             fileTagsFilter: product.type
         }
     }
