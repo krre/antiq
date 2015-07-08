@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include "global.h"
 
-namespace a3d {
+BEGIN_NAMESPACE_A3D
 
 class Engine
 {
@@ -10,4 +11,4 @@ public:
     void load(std::string filepath);
 };
 
-}
+END_NAMESPACE_A3D

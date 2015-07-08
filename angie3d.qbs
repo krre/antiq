@@ -15,6 +15,7 @@ Project {
             "src/core/core.h",
             "src/3dui/window.h",
             "src/3dui/window.cpp",
+            "src/core/global.h",
         ]
 
         Depends { name: "cpp" }

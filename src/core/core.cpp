@@ -1,11 +1,11 @@
 #include "core.h"
 #include <iostream>
 
-namespace a3d {
+BEGIN_NAMESPACE_A3D
 
 Core::Core()
 {
     std::cout << "core";
 }
 
-}
+END_NAMESPACE_A3D
