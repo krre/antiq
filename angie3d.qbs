@@ -7,6 +7,7 @@ Project {
     DynamicLibrary {
         name: "angie3d"
         cpp.cxxLanguageVersion: "c++11"
+        qbs.installRoot: sourceDirectory
 
         files: [
             "src/core/engine.cpp",
@@ -22,7 +23,7 @@ Project {
 
         Group {
             qbs.install: true
-            qbs.installDir: "../../../angie3d/bin"
+            qbs.installDir: "bin"
             fileTagsFilter: product.type
         }
     }
