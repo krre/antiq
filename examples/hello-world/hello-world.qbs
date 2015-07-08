@@ -6,11 +6,13 @@ CppApplication {
         "main.cpp",
     ]
     cpp.includePaths: "../../src"
-    cpp.libraryPaths: "../../lib"
+    cpp.libraryPaths: "../../bin"
     cpp.dynamicLibraries: "angie3d"
 
     Group {
+        name: "aml-install"
         qbs.install: true
+        qbs.installDir: "../../../../bin"
         files: [
             "main.aml",
         ]
@@ -18,6 +20,7 @@ CppApplication {
 
     Group {
         qbs.install: true
+        qbs.installDir: "../../../../bin"
         fileTagsFilter: "application"
     }
 }

@@ -21,7 +21,7 @@ Project {
 
         Group {
             qbs.install: true
-            qbs.installDir: "../../../angie3d/lib"
+            qbs.installDir: "../../../angie3d/bin"
             fileTagsFilter: product.type
         }
     }
