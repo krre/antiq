@@ -12,6 +12,8 @@ Project {
         files: [
             "src/core/application.cpp",
             "src/core/application.h",
+            "src/core/debug.cpp",
+            "src/core/debug.h",
             "src/core/engine.cpp",
             "src/core/engine.h",
             "src/core/core.cpp",
