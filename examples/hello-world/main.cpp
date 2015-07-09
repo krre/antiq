@@ -16,13 +16,9 @@ void func(T t, Args... args) // recursive variadic function
 {
     std::cout << t << " ";
     func(args...);
-    std::cout << std::endl;
 }
 
-int main(int argc, char *argv[], char *envp[]) {
-
-    A3D_UNUSED(envp)
-
+int main(int argc, char *argv[]) {
     a3d::Application app(argc, argv);
     a3d::Engine engine;
     std::string appDirPath = app.currentDirPath();
