@@ -5,6 +5,8 @@ BEGIN_NAMESPACE_A3D
 
 Application::Application(int argc, char *argv[], char *envp[])
 {
+    A3D_UNUSED(argc)
+
     for (int i = 0; argv[i] != nullptr; i++) {
         m_arguments.push_back(argv[i]);
     }
