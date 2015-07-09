@@ -10,6 +10,8 @@ Project {
         qbs.installRoot: sourceDirectory
 
         files: [
+            "src/core/application.cpp",
+            "src/core/application.h",
             "src/core/engine.cpp",
             "src/core/engine.h",
             "src/core/core.cpp",
