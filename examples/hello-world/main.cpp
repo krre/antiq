@@ -6,6 +6,6 @@
 int main(int argc, char *argv[], char *envp[]) {
     a3d::Application app(argc, argv);
     a3d::Engine engine;
-//    std::string path = fileInfo.currentFilePath();
-//    engine.load(path + "/main.aml");
+    std::string appDirPath = app.currentDirPath();
+    engine.load(appDirPath + "/main.aml");
 }
