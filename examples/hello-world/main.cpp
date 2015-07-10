@@ -10,4 +10,5 @@ int main(int argc, char *argv[]) {
     a3d::Engine engine;
     std::string appDirPath = app.currentDirPath();
     engine.load(appDirPath + "/main.aml");
+    a3d::Debug::instance()->print()->print();
 }
