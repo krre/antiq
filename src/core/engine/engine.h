@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "global.h"
+#include "../global.h"
 
 BEGIN_NAMESPACE_A3D
 

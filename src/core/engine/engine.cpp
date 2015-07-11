@@ -1,6 +1,6 @@
 #include "engine.h"
-#include "debug.h"
-#include "../3dui/window.h"
+#include "../debug.h"
+#include "../../3dui/window.h"
 
 BEGIN_NAMESPACE_A3D
 
