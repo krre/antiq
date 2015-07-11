@@ -23,6 +23,10 @@ Project {
             "src/core/engine/engine.h",
             "src/3dui/window.h",
             "src/3dui/window.cpp",
+            "src/core/engine/compiler/lexer.cpp",
+            "src/core/engine/compiler/lexer.h",
+            "src/core/engine/program.cpp",
+            "src/core/engine/program.h",
             "src/core/global.h",
         ]
 
