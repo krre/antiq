@@ -13,6 +13,7 @@ public:
     ~Debug() { std::cout << std::endl; }
     inline Debug &operator<<(bool t) { std::cout << (t ? "true" : "false") << " "; return *this; }
     inline Debug &operator<<(int t) { std::cout << t << " "; return *this; }
+    inline Debug &operator<<(unsigned int t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(float t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(double t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(const char *t) { std::cout << t << " "; return *this; }
