@@ -7,6 +7,11 @@ Project {
     DynamicLibrary {
         name: "angie3d"
         cpp.cxxLanguageVersion: "c++11"
+        cpp.libraryPaths: "lib"
+        cpp.dynamicLibraries: [
+            "glfw3",
+            "opengl32"
+        ]
         qbs.installRoot: sourceDirectory
 
         files: [

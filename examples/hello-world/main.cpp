@@ -1,9 +1,6 @@
-#include <iostream>
 #include <string>
 #include "core/engine.h"
 #include "core/application.h"
-#include "core/debug.h"
-#include "core/global.h"
 
 int main(int argc, char *argv[]) {
     a3d::Application app(argc, argv);
@@ -11,3 +8,4 @@ int main(int argc, char *argv[]) {
     std::string appDirPath = app.currentDirPath();
     engine.load(appDirPath + "/main.aml");
 }
+
