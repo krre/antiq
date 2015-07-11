@@ -2,7 +2,12 @@
 
 BEGIN_NAMESPACE_A3D
 
-Lexer::Lexer(std::vector<char> &sourceData)
+Lexer::Lexer(const std::vector<char> &sourceData)
+{
+    scan(sourceData);
+}
+
+void Lexer::scan(const std::vector<char> &sourceData)
 {
 
 }

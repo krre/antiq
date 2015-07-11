@@ -8,7 +8,9 @@ BEGIN_NAMESPACE_A3D
 class Lexer
 {
 public:
-    Lexer(std::vector<char> &sourceData);
+    Lexer(const std::vector<char> &sourceData);
+private:
+    void scan(const std::vector<char> &sourceData);
 };
 
 END_NAMESPACE_A3D

@@ -1,5 +1,6 @@
 #include <fstream>
 #include "program.h"
+#include "compiler/lexer.h"
 #include "../debug.h"
 
 BEGIN_NAMESPACE_A3D
@@ -11,8 +12,9 @@ Program::Program(std::string startFilePath): startFilePath(startFilePath)
 
 void Program::compile()
 {
-    std::vector<char> sourceBuffer = readSourceFromFile(startFilePath);
-    DBG << sourceBuffer.size();
+    std::vector<char> &&sourceBuffer = readSourceFromFile(startFilePath);
+    Lexer lexer(sourceBuffer);
+    sourceBuffer.clear();
 }
 
 void Program::run()
