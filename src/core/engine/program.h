@@ -1,21 +1,20 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include "../global.h"
+#include "compiler/ast.h"
 
 BEGIN_NAMESPACE_A3D
 
 class Program
 {
 public:
-    Program(std::string startFilePath);
-    void compile();
+    Program(std::string startFile);
     void run();
 
 private:
-    std::string startFilePath;
-    std::vector<char> readSourceFromFile(std::string sourceFilePath);
+    void evaluate(Ast &ast);
+    std::string startFile;
 };
 
 END_NAMESPACE_A3D

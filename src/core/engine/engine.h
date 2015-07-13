@@ -9,7 +9,7 @@ class Engine
 {
 public:
     Engine();
-    void load(std::string startFilePath);
+    void load(std::string startFile);
 };
 
 END_NAMESPACE_A3D

@@ -7,10 +7,9 @@ Engine::Engine()
 {
 }
 
-void Engine::load(std::string startFilePath)
+void Engine::load(std::string startFile)
 {
-    Program program(startFilePath);
-    program.compile();
+    Program program(startFile);
     program.run();
 }
 
