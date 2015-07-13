@@ -6,9 +6,7 @@ CppApplication {
     cpp.includePaths: "../../src"
     cpp.libraryPaths: "../../lib"
     cpp.dynamicLibraries: [
-        "angie3d",
-        "glfw3",
-        "opengl32"
+        "angie3d"
     ]
     cpp.cxxLanguageVersion: "c++11"
     qbs.installRoot: sourceDirectory
