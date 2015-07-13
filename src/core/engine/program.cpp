@@ -1,6 +1,7 @@
 #include <fstream>
 #include "program.h"
 #include "compiler/lexer.h"
+#include "../../3dui/window.h"
 #include "../debug.h"
 
 BEGIN_NAMESPACE_A3D
@@ -19,7 +20,7 @@ void Program::compile()
 
 void Program::run()
 {
-
+//    Window window;
 }
 
 std::vector<char> Program::readSourceFromFile(std::string sourceFilePath)

@@ -5,13 +5,27 @@ Project {
     minimumQbsVersion: "1.4"
 
     DynamicLibrary {
+        property var dependLibs: {
+            var result = [];
+            result.push("glfw3")
+            if (qbs.targetOS.contains("windows"))
+                result.push("opengl32")
+            else if (qbs.targetOS.contains("linux"))
+                result.push("GL",
+                            "X11",
+                            "Xinerama",
+                            "Xcursor",
+                            "Xrandr",
+                            "Xi",
+                            "Xxf86vm",
+                            "pthread");
+            return result
+        }
+
         name: "angie3d"
         cpp.cxxLanguageVersion: "c++11"
         cpp.libraryPaths: "lib"
-        cpp.dynamicLibraries: [
-            "glfw3",
-            "opengl32"
-        ]
+        cpp.dynamicLibraries: dependLibs
         qbs.installRoot: sourceDirectory
 
         files: [
