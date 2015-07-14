@@ -15,7 +15,7 @@ CppApplication {
         name: "Runtime resources"
         qbs.install: true
         qbs.installDir: "build"
-        files: "*.aml"
+        files: "*.a3d"
     }
 
     Group {
