@@ -2,8 +2,6 @@
 #include "parser.h"
 #include "../../debug.h"
 
-BEGIN_NAMESPACE_A3D
-
 Parser::Parser()
 {
 
@@ -14,7 +12,7 @@ Ast *Parser::parseFile(std::string sourceFile)
     Ast *ast = new Ast();
     std::vector<char> sourceBuffer = readFile(sourceFile);
 
-//    sourceBuffer.clear();
+    sourceBuffer.clear();
 
     return ast;
 }
@@ -44,6 +42,3 @@ std::vector<char> Parser::readFile(std::string sourceFile)
 
     return buffer;
 }
-
-END_NAMESPACE_A3D
-

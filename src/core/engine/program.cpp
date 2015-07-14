@@ -3,8 +3,6 @@
 #include "../../3dui/window.h"
 #include "../debug.h"
 
-BEGIN_NAMESPACE_A3D
-
 Program::Program(std::string startFile): startFile(startFile)
 {
 }
@@ -22,4 +20,3 @@ void Program::evaluate(Ast &ast)
 
 }
 
-END_NAMESPACE_A3D

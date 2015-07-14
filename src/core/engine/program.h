@@ -1,10 +1,7 @@
 #pragma once
 
 #include <string>
-#include "../global.h"
 #include "compiler/ast.h"
-
-BEGIN_NAMESPACE_A3D
 
 class Program
 {
@@ -17,4 +14,3 @@ private:
     std::string startFile;
 };
 
-END_NAMESPACE_A3D
