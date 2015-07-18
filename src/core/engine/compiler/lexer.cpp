@@ -1,11 +1,24 @@
 #include "lexer.h"
+#include "token.h"
+#include "../../debug.h"
 
-Lexer::Lexer(const std::vector<char> &sourceData)
+Lexer::Lexer(std::vector<char> *source) : sourceData(source)
 {
-    scan(sourceData);
+//    token.sym = Symbol.UNDEFINED;
 }
 
-void Lexer::scan(const std::vector<char> &sourceData)
+void Lexer::nextTok()
 {
+    while (1) {
+        char c = getChar();
+        DBG << c;
+        if (c == 0) {
+            break;
+        }
+    }
+}
 
+char Lexer::getChar()
+{
+    return sourceData->at(pos++);
 }

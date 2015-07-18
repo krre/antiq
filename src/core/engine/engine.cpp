@@ -10,6 +10,7 @@ Engine::Engine()
 void Engine::load(std::string startFile)
 {
     Program program(startFile);
+    program.compile();
     program.run();
 }
 

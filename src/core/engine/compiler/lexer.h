@@ -1,12 +1,19 @@
 #pragma once
 
 #include <vector>
+#include "../../global.h"
+#include "token.h"
 
 class Lexer
 {
 public:
-    Lexer(const std::vector<char> &sourceData);
+    Lexer(std::vector<char> *source);
+    void nextTok();
+    Token token;
+
 private:
-    void scan(const std::vector<char> &sourceData);
+    std::vector<char> *sourceData;
+    char getChar();
+    int pos = 0;
 };
 

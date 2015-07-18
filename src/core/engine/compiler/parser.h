@@ -1,14 +1,17 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include "../../global.h"
 #include "ast.h"
+#include "lexer.h"
 
 class Parser
 {
 public:
-    Parser();
-    Ast *parseFile(std::string sourceFile);
-    std::vector<char> readFile(std::string sourceFile);
+    Parser(Lexer *lex);
+    ~Parser();
+    Ast *parse();
 
+private:
+    Lexer *lexer;
+    Ast *ast;
 };
