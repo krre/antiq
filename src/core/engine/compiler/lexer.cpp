@@ -4,17 +4,26 @@
 
 Lexer::Lexer(std::vector<char> *source) : sourceData(source)
 {
-//    token.sym = Symbol.UNDEFINED;
 }
 
 void Lexer::nextTok()
 {
-    while (1) {
+    token = {Symbol::UNDEFINED, ""};
+    while (token.sym == Symbol::UNDEFINED) {
         char c = getChar();
-        DBG << c;
-        if (c == 0) {
-            break;
+        if (pos == sourceData->size() - 1) {
+            token = {Symbol::END, ""};
+        } else if (c == '\n') {
+            line++;
+        } else if (c == '{') {
+            token = {Symbol::LB, ""};
+        } else if (c == '}') {
+            token = {Symbol::RB, ""};
+        } else {
+            DBG << line << "Unexected symbol:" << c;
+            exit(EXIT_SUCCESS);
         }
+        DBG << c;
     }
 }
 

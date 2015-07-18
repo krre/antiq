@@ -7,7 +7,9 @@ enum class Symbol {
     IDENT,
     NUMBER,
     WORD,
-    END
+    END,
+    LB, // {
+    RB // }
 };
 
 struct Token
