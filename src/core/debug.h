@@ -16,6 +16,7 @@ public:
     inline Debug &operator<<(unsigned int t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(float t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(double t) { std::cout << t << " "; return *this; }
+    inline Debug &operator<<(char t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(const char *t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(std::string t) { std::cout << t << " "; return *this; }
     inline Debug &operator<<(void *t) { std::cout << t << " "; return *this; }
