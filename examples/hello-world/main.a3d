@@ -1,3 +1,5 @@
-Application {
-    title: "Hello World!"
-}
+Application
+    Window
+        title: "Hello World!"
+    end
+end
