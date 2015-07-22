@@ -15,7 +15,7 @@ public:
 
 private:
     std::vector<char> *sourceData;
-    char getChar();
+    char nextChar();
     unsigned int pos = 0;
     int line = 1;
 };

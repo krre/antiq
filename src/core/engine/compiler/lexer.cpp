@@ -10,7 +10,7 @@ void Lexer::nextToken()
 {
     token = Token::UNDEFINED;
     while (token == Token::UNDEFINED) {
-        char c = getChar();
+        char c = nextChar();
         if (pos == sourceData->size() - 1) {
             token = Token::END;
         } else if (c == '\n') {
@@ -27,7 +27,7 @@ void Lexer::nextToken()
     }
 }
 
-char Lexer::getChar()
+char Lexer::nextChar()
 {
     return sourceData->at(pos++);
 }
