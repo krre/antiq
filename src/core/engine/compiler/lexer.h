@@ -8,7 +8,7 @@ class Lexer
 {
 public:
     Lexer(std::vector<char> *source);
-    void nextTok();
+    void nextToken();
     Token token;
 
 private:

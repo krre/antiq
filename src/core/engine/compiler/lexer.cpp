@@ -6,7 +6,7 @@ Lexer::Lexer(std::vector<char> *source) : sourceData(source)
 {
 }
 
-void Lexer::nextTok()
+void Lexer::nextToken()
 {
     token = {Symbol::UNDEFINED, ""};
     while (token.sym == Symbol::UNDEFINED) {

@@ -13,7 +13,7 @@ Parser::~Parser()
 
 Ast *Parser::parse()
 {
-    lexer->nextTok();
+    lexer->nextToken();
 
     return ast;
 }
