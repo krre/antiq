@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-
-enum class Symbol {
+enum class Token {
     UNDEFINED,
     IDENT,
     NUMBER,
@@ -10,10 +8,4 @@ enum class Symbol {
     END,
     LB, // {
     RB // }
-};
-
-struct Token
-{
-    Symbol sym;
-    std::string value;
 };

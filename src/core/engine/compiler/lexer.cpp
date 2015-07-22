@@ -8,17 +8,17 @@ Lexer::Lexer(std::vector<char> *source) : sourceData(source)
 
 void Lexer::nextToken()
 {
-    token = {Symbol::UNDEFINED, ""};
-    while (token.sym == Symbol::UNDEFINED) {
+    token = Token::UNDEFINED;
+    while (token == Token::UNDEFINED) {
         char c = getChar();
         if (pos == sourceData->size() - 1) {
-            token = {Symbol::END, ""};
+            token = Token::END;
         } else if (c == '\n') {
             line++;
         } else if (c == '{') {
-            token = {Symbol::LB, ""};
+            token = Token::LB;
         } else if (c == '}') {
-            token = {Symbol::RB, ""};
+            token = Token::RB;
         } else {
             DBG << line << "Unexected symbol:" << c;
             exit(EXIT_SUCCESS);
