@@ -8,16 +8,18 @@
 class Lexer
 {
 public:
-    Lexer(std::vector<char> *source);
+    Lexer(std::string *source);
     void nextToken();
     Token token;
     std::string value;
 
 private:
-    std::vector<char> *sourceData;
     void nextChar();
+    void skipSpace();
+
+    std::string *source;
     char ch;
-    unsigned int pos = 0;
+    unsigned int pos = -1;
     int line = 1;
 };
 

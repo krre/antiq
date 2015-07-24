@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include "../global.h"
 #include "compiler/ast.h"
 
@@ -13,7 +12,7 @@ public:
     void run();
 
 private:
-    std::vector<char> *readFile(std::string sourceFile);
+    std::string readSource(std::string sourcePath);
     void evaluate(Ast *ast);
     std::string startFile;
     Ast *ast;

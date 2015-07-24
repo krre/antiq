@@ -13,7 +13,11 @@ Parser::~Parser()
 
 Ast *Parser::parse()
 {
-    lexer->nextToken();
+//    while (lexer->ch != EOF) {
+        lexer->nextToken();
+//        std::cout << lexer->ch << std::endl;
+//    }
+
 
     return ast;
 }

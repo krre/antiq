@@ -1,9 +1,9 @@
 #pragma once
 
 enum class Token {
-    UNDEFINED,
-    IDENT,
+    IDENTIFIER,
     NUMBER,
+    STRIGN,
     WORD,
     END,
     LB, // {
