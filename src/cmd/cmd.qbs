@@ -1,7 +1,7 @@
 import qbs 1.0
 
 CppApplication {
-    name: "angie3d"
+    name: "al"
     files: "main.cpp"
     cpp.includePaths: "../"
     cpp.libraryPaths: "../../lib"
