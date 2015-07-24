@@ -10,24 +10,24 @@ void Lexer::nextToken()
 {
     token = Token::UNDEFINED;
     while (token == Token::UNDEFINED) {
-        char c = nextChar();
+        nextChar();
         if (pos == sourceData->size() - 1) {
             token = Token::END;
-        } else if (c == '\n') {
+        } else if (ch == '\n') {
             line++;
-        } else if (c == '{') {
+        } else if (ch == '{') {
             token = Token::LB;
-        } else if (c == '}') {
+        } else if (ch == '}') {
             token = Token::RB;
         } else {
-            DBG << line << "Unexected symbol:" << c;
+            DBG << line << "Unexected symbol:" << ch;
             exit(EXIT_SUCCESS);
         }
-        DBG << c;
+        DBG << ch;
     }
 }
 
-char Lexer::nextChar()
+void Lexer::nextChar()
 {
-    return sourceData->at(pos++);
+    ch = sourceData->at(pos++);
 }
