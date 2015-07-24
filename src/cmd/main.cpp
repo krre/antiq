@@ -10,5 +10,6 @@ int main(int argc, char *argv[]) {
         program.run();
     } else {
         std::cout << "AngieLogic Interpreter" << std::endl;
+        std::cout << "Usage: al file" << std::endl;
     }
 }
