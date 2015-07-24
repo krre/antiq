@@ -12,8 +12,6 @@ Program::Program(std::string startFile): startFile(startFile)
 void Program::compile()
 {
     std::string &&source = readSource(startFile);
-    DBG << source;
-
     Lexer lexer(&source);
     Parser parser(&lexer);
     ast = parser.parse();
