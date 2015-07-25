@@ -27,7 +27,7 @@ enum class Token {
     MOD,
     PLUS,
     MINUS,
-    EQ, // =
+    EQ, // ==
     NE, // !=
     LT, // <
     LE, // <=
@@ -38,7 +38,7 @@ enum class Token {
     COMMA,
     COLON,
     SEMICOLON,
-    ASSIGN,
+    ASSIGN, // =
     QM, // ?
     LPAR, // (
     RPAR, // )
