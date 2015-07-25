@@ -1,47 +1,54 @@
 #pragma once
 
 enum class Token {
-    NONE,
-    IMPORT,
-    USE,
+    EOT, // end of text
     NAME,
+    NONE,
     NUMBER,
     STRIGN,
-    SIGNAL,
-    PROP,
-    VAR,
-    VAL,
-    FUNC,
-    END,
-    RETURN,
-    EOT, // end of text
 
-    WHILE,
+    BREAK,
+    CASE,
+    DEFAULT,
     DO,
-    IF,
     ELSE,
     ELSIF,
+    END,
+    FOR,
+    FUNC,
+    IF,
+    IMPORT,
+    NIL,
+    PROP,
+    RETURN,
+    SIG,
+    SWITCH,
+    TO,
+    USE,
+    VAL,
+    VAR,
+    WHILE,
 
-    MULT,
     DIV,
-    MOD,
-    PLUS,
-    MINUS,
     EQ, // ==
-    NE, // !=
-    LT, // <
-    LE, // <=
-    GT, // >
     GE, // >=
+    GT, // >
+    LE, // <=
+    LT, // <
+    MINUS,
+    MOD,
+    MULT,
+    NE, // !=
+    PLUS,
 
-    DOT,
-    COMMA,
-    COLON,
-    SEMICOLON,
     ASSIGN, // =
-    QM, // ?
-    LPAR, // (
-    RPAR, // )
+    COLON,
+    COMMA,
+    DOT,
     LB, // {
-    RB // }
+    LPAR, // (
+    QM, // ?
+    RB, // }
+    RPAR, // )
+    SEMICOLON,
 };
