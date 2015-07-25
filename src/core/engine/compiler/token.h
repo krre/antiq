@@ -5,7 +5,7 @@ enum class Token {
     NAME,
     NONE,
     NUMBER,
-    STRIGN,
+    STRING,
 
     BREAK,
     CASE,
