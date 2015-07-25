@@ -8,7 +8,7 @@
 class Lexer
 {
 public:
-    Lexer(std::string *source);
+    Lexer(std::string &source);
     void nextToken();
     Token token;
     std::string value;

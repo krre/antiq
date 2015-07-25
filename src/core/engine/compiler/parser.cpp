@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "../../debug.h"
 
-Parser::Parser(Lexer *lex): lexer(lex)
+Parser::Parser(Lexer &lex): lexer(&lex)
 {
     ast = new Ast();
 }

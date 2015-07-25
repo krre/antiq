@@ -7,7 +7,7 @@
 class Parser
 {
 public:
-    Parser(Lexer *lex);
+    Parser(Lexer &lex);
     ~Parser();
     Ast *parse();
 

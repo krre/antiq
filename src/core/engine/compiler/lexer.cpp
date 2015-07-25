@@ -2,7 +2,7 @@
 #include "token.h"
 #include "../../debug.h"
 
-Lexer::Lexer(std::string *source) : source(source)
+Lexer::Lexer(std::string &source) : source(&source)
 {
 }
 
