@@ -34,12 +34,7 @@ std::string Program::readSource(std::string sourcePath)
     std::ifstream in(sourcePath);
     if (in.is_open()) {
         std::string source((std::istreambuf_iterator<char>(in)), (std::istreambuf_iterator<char>()));
-        if (source.empty()) {
-            std::cerr << "File is empty: " << sourcePath << std::endl;
-            exit(EXIT_FAILURE);
-        } else {
-            return source;
-        }
+        return source;
     } else {
         std::cerr << "Failed open file: " << sourcePath << std::endl;
         exit(EXIT_FAILURE);
