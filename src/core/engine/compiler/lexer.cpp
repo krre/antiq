@@ -24,6 +24,17 @@ void Lexer::nextToken()
         switch (ch) {
         case -1: token = Token::EOT; break;
         case '"': scanString(); break;
+        case '(': token = Token::LPAR; nextChar(); break;
+        case ')': token = Token::RPAR; nextChar(); break;
+        case '=':
+            nextChar();
+            if (ch == '=') {
+                token = Token::EQ;
+                nextChar();
+            } else {
+                token = Token::ASSIGN;
+            }
+            break;
         case '/':
             nextChar();
             if (ch == '/') {
@@ -79,7 +90,12 @@ void Lexer::scanIdent()
 
 void Lexer::scanNumber()
 {
-
+    while (std::isdigit(ch)) {
+        value += ch;
+        nextChar();
+    }
+    token = Token::NUMBER;
+    nextChar();
 }
 
 void Lexer::scanString()
