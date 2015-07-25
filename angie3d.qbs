@@ -37,7 +37,6 @@ Project {
             "src/core/engine/compiler/ast.h",
             "src/core/engine/compiler/parser.cpp",
             "src/core/engine/compiler/parser.h",
-            "src/core/engine/compiler/token.cpp",
             "src/core/engine/compiler/token.h",
             "src/core/engine/engine.cpp",
             "src/core/engine/engine.h",
