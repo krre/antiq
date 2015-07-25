@@ -19,9 +19,5 @@ Ast *Parser::parse()
         lexer->nextToken();
     }
 
-    if (lexer->token == Token::EOT) {
-        std::cout << "EOT\n";
-    }
-
     return ast;
 }
