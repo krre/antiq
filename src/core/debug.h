@@ -5,6 +5,7 @@
 BEGIN_NAMESPACE_A3D
 
 #define DBG a3d::Debug()
+#define debug(x) std::cout << x << std::endl;
 
 class Debug
 {

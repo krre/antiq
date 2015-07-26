@@ -15,7 +15,15 @@ Ast *Parser::parse()
 {
     lexer->nextToken();
     while (lexer->token != Token::EOT) {
-        std::cout << "Token: " << lexer->value << std::endl;
+        debug("Token: " << lexer->value);
+
+        switch (lexer->token) {
+        case Token::IDENT:
+            break;
+        default:
+            break;
+        }
+
         lexer->nextToken();
     }
 
