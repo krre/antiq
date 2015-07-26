@@ -84,7 +84,7 @@ void Lexer::scanIdent()
     if (got == keywords.end()) {
         token = Token::IDENT;
     } else {
-        token = got->second;
+        token = got->second; // keyword token
     }
 }
 
