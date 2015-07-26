@@ -23,7 +23,7 @@ enum class Token {
     NIL,
     PROP,
     RETURN,
-    SIG,
+    SIGNAL,
     SWITCH,
     TO,
     TRUE,
@@ -34,24 +34,26 @@ enum class Token {
 
     // special symbols
     ASSIGN, // =
-    COLON,
-    COMMA,
-    DIV,
-    DOT,
-    EQ, // ==
-    GE, // >=
-    GT, // >
-    LB, // {
-    LE, // <=
-    LPAR, // (
-    LT, // <
-    MINUS,
-    MOD,
-    MULT,
-    NE, // !=
-    PLUS,
-    QM, // ?
-    RB, // }
-    RPAR, // )
-    SEMICOLON,
+    COLON, // :
+    COMMA, // ,
+    DOT, // .
+    DOT_DOT, // ..
+    EQUALS, // ==
+    GREATER_EQUALS, // >=
+    GREATER_THEN, // >
+    LEFT_BRACE, // {
+    LEFT_BRACKET, // [
+    LEFT_PAREN, // (
+    LESS_EQUALS, // <=
+    LESS_THEN, // <
+    MINUS, // -
+    NOT_EQUALS, // !=
+    PLUS, // +
+    QUESTION_MARK, // ?
+    RIGHT_BRACE, // }
+    RIGHT_BRACKET, // ]
+    RIGHT_PAREN, // )
+    SEMICOLON, // ;
+    SLASH, // /
+    STAR, // *
 };

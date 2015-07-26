@@ -24,12 +24,12 @@ void Lexer::nextToken()
         switch (ch) {
         case -1: token = Token::EOT; break;
         case '"': scanString(); break;
-        case '(': token = Token::LPAR; nextChar(); break;
-        case ')': token = Token::RPAR; nextChar(); break;
+        case '(': token = Token::LEFT_PAREN; nextChar(); break;
+        case ')': token = Token::RIGHT_PAREN; nextChar(); break;
         case '=':
             nextChar();
             if (ch == '=') {
-                token = Token::EQ;
+                token = Token::EQUALS;
                 nextChar();
             } else {
                 token = Token::ASSIGN;
@@ -40,7 +40,7 @@ void Lexer::nextToken()
             if (ch == '/') {
                 scanComment();
             } else {
-                token = Token::DIV;
+                token = Token::SLASH;
                 nextChar();
             }
             break;

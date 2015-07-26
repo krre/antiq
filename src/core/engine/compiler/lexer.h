@@ -44,7 +44,7 @@ private:
         { "nil", Token::NIL },
         { "prop", Token::PROP },
         { "return", Token::RETURN },
-        { "signal", Token::SIG },
+        { "signal", Token::SIGNAL },
         { "switch", Token::SWITCH },
         { "to", Token::TO },
         { "true", Token::TRUE },
