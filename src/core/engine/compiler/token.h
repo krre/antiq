@@ -1,12 +1,14 @@
 #pragma once
 
 enum class Token {
+    // identifiers and literals
     EOT, // end of text
-    NAME,
+    IDENT,
     NONE,
     NUMBER,
     STRING,
 
+    // keywords
     BREAK,
     CASE,
     DEFAULT,
@@ -31,6 +33,7 @@ enum class Token {
     VAR,
     WHILE,
 
+    // arithmetic
     DIV,
     EQ, // ==
     GE, // >=
@@ -42,8 +45,9 @@ enum class Token {
     MULT,
     NE, // !=
     PLUS,
-
     ASSIGN, // =
+
+    // service
     COLON,
     COMMA,
     DOT,

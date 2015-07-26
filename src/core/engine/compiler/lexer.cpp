@@ -82,7 +82,7 @@ void Lexer::scanIdent()
 
     auto got = keywords.find(value);
     if (got == keywords.end()) {
-        token = Token::NAME;
+        token = Token::IDENT;
     } else {
         token = got->second;
     }
