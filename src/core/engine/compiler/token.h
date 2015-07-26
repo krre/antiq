@@ -4,7 +4,6 @@ enum class Token {
     // identifiers and literals
     EOT, // end of text
     IDENT,
-    NONE,
     NUMBER,
     STRING,
 
@@ -33,26 +32,24 @@ enum class Token {
     VAR,
     WHILE,
 
-    // arithmetic
+    // special symbols
+    ASSIGN, // =
+    COLON,
+    COMMA,
     DIV,
+    DOT,
     EQ, // ==
     GE, // >=
     GT, // >
+    LB, // {
     LE, // <=
+    LPAR, // (
     LT, // <
     MINUS,
     MOD,
     MULT,
     NE, // !=
     PLUS,
-    ASSIGN, // =
-
-    // service
-    COLON,
-    COMMA,
-    DOT,
-    LB, // {
-    LPAR, // (
     QM, // ?
     RB, // }
     RPAR, // )
