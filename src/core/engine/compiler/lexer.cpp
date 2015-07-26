@@ -80,8 +80,8 @@ void Lexer::scanIdent()
         nextChar();
     } while (std::isalnum(ch) || ch == '_');
 
-    auto got = reserved.find(value);
-    if (got == reserved.end()) {
+    auto got = keywords.find(value);
+    if (got == keywords.end()) {
         token = Token::NAME;
     } else {
         token = got->second;

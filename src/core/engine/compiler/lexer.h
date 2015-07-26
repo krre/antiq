@@ -29,7 +29,7 @@ private:
     int line = 1; // current line
     int sourcePos = -1; // current pos at source text
     int tokenPos = 0; // start token pos
-    std::unordered_map<std::string, Token> reserved{
+    std::unordered_map<std::string, Token> keywords{
         { "break", Token::BREAK },
         { "case", Token::CASE },
         { "default", Token::DEFAULT },
