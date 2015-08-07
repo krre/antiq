@@ -7,8 +7,18 @@ set(VERSION_MINOR "1")
 set(VERSION_PATCH "0")
 set(VERSION "${ANGIE3D_VERSION_MAJOR}.${ANGIE3D_VERSION_MINOR}.${ANGIE3D_VERSION_PATCH}")
 
-#option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+set(CMAKE_CXX_FLAGS "-O0 -Wall -pedantic -std=c++11")
 
-#add_library(angie3d)
-#target_link_libraries(angie3d, glfw3)
+file(GLOB_RECURSE SOURCES src/3dui/*.cpp
+                          src/3dui/*.h
+                          src/core/*.cpp
+                          src/core/*.h
+                          src/3rdparty/*.h
+                          src/3rdparty/*.cpp
+)
 
+find_library(LIBS NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/lib)
+
+add_library(${LIB} SHARED ${SOURCES})
+target_link_libraries(${LIB} ${LIBS})
+install(TARGETS ${LIB} DESTINATION ${PROJECT_SOURCE_DIR}/lib)
