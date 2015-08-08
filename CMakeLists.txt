@@ -33,5 +33,8 @@ if (WIN32)
 endif()
 
 target_link_libraries(${LIB} ${LIBS})
-install(TARGETS ${LIB} DESTINATION ${PROJECT_SOURCE_DIR}/lib)
+install(TARGETS ${LIB}
+   LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/lib
+   RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/lib
+)
 
