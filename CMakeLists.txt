@@ -27,6 +27,11 @@ find_library(GLFW3_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/lib)
 list(APPEND LIBS ${GLFW3_LIB})
 
 add_library(${LIB} SHARED ${SOURCES})
+
+if (WIN32)
+    set_target_properties(${LIB} PROPERTIES PREFIX "")
+endif()
+
 target_link_libraries(${LIB} ${LIBS})
 install(TARGETS ${LIB} DESTINATION ${PROJECT_SOURCE_DIR}/lib)
 
