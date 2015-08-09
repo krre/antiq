@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-set(LIB angie3d)
-project(${LIB})
+project(angie3d)
 
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "1")
@@ -26,14 +25,14 @@ SET(LIBS ${OPENGL_LIBRARIES})
 find_library(GLFW3_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/lib)
 list(APPEND LIBS ${GLFW3_LIB})
 
-add_library(${LIB} SHARED ${SOURCES})
+add_library(angie3d SHARED ${SOURCES})
 
 if (WIN32)
-    set_target_properties(${LIB} PROPERTIES PREFIX "")
+    set_target_properties(angie3d PROPERTIES PREFIX "")
 endif()
 
-target_link_libraries(${LIB} ${LIBS})
-install(TARGETS ${LIB}
+target_link_libraries(angie3d ${LIBS})
+install(TARGETS angie3d
    LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/lib
    RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/lib
 )
