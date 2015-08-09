@@ -8,13 +8,24 @@ set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 set(CMAKE_CXX_FLAGS "-O0 -Wall -pedantic -std=c++11")
 
-file(GLOB_RECURSE SOURCES src/3dui/*.cpp
-                          src/3dui/*.h
-                          src/core/*.cpp
-                          src/core/*.h
-                          src/3rdparty/*.h
-                          src/3rdparty/*.cpp
-)
+set(SOURCES "src/core/application.cpp"
+            "src/core/application.h"
+            "src/core/debug.cpp"
+            "src/core/debug.h"
+            "src/core/engine/compiler/ast.cpp"
+            "src/core/engine/compiler/ast.h"
+            "src/core/engine/compiler/parser.cpp"
+            "src/core/engine/compiler/parser.h"
+            "src/core/engine/compiler/token.h"
+            "src/core/engine/engine.cpp"
+            "src/core/engine/engine.h"
+            "src/3dui/window.h"
+            "src/3dui/window.cpp"
+            "src/core/engine/compiler/lexer.cpp"
+            "src/core/engine/compiler/lexer.h"
+            "src/core/engine/program.cpp"
+            "src/core/engine/program.h"
+            "src/core/global.h")
 
 find_package(OpenGL REQUIRED)
 if (NOT OPENGL_FOUND)
