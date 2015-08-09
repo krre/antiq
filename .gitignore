@@ -7,3 +7,5 @@ build*
 *.dll
 *.bg
 .*
+tags
+
