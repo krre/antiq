@@ -31,7 +31,7 @@ find_package(OpenGL REQUIRED)
 if (NOT OPENGL_FOUND)
     message(FATAL_ERROR "OpenGL not found")
 endif()
-SET(LIBS ${OPENGL_LIBRARIES})
+set(LIBS ${OPENGL_LIBRARIES})
 
 find_library(GLFW3_LIB NAMES glfw3 PATHS ${PROJECT_SOURCE_DIR}/lib)
 list(APPEND LIBS ${GLFW3_LIB})
