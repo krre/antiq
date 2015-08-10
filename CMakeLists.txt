@@ -58,8 +58,6 @@ if (UNIX)
         message(FATAL_ERROR "Xinput library not found")
     endif()
     list(APPEND LIBS ${X11_Xinput_LIB})
-
-
 endif()
 
 add_library(angie3d SHARED ${SOURCES})
