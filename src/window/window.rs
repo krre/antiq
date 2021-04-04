@@ -6,7 +6,7 @@ pub struct Window {
 
 impl Window {
     pub fn new() -> Self {
-        Window::default()
+        Self::default()
     }
 }
 
@@ -22,7 +22,7 @@ impl Windowed for Window {
 
 impl Default for Window {
     fn default() -> Self {
-        Window {
+        Self {
             title: "Untitled".to_string(),
         }
     }

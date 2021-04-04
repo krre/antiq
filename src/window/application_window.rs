@@ -7,7 +7,7 @@ pub struct ApplicationWindow {
 
 impl ApplicationWindow {
     pub fn new() -> Self {
-        ApplicationWindow {
+        Self {
             window: Window::new(),
         }
     }
