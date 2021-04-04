@@ -6,3 +6,7 @@ pub fn name() -> Option<String> {
         .to_owned()
         .into()
 }
+
+pub fn run() -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
+}
