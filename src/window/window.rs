@@ -23,7 +23,16 @@ impl Windowed for Window {
 impl Default for Window {
     fn default() -> Self {
         Self {
-            title: "Untitled".to_string(),
+            title: application_name().unwrap_or("Untitled".to_string()),
         }
     }
+}
+
+fn application_name() -> Option<String> {
+    std::env::current_exe()
+        .ok()?
+        .file_name()?
+        .to_str()?
+        .to_owned()
+        .into()
 }
