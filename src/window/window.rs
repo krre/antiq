@@ -12,8 +12,8 @@ impl Window {
 }
 
 impl Windowed for Window {
-    fn set_title(&mut self, title: &str) {
-        self.title = title.into();
+    fn set_title(&mut self, title: String) {
+        self.title = title;
     }
 
     fn title(&self) -> &str {

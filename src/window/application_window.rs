@@ -14,7 +14,7 @@ impl ApplicationWindow {
 }
 
 impl Windowed for ApplicationWindow {
-    fn set_title(&mut self, title: &str) {
+    fn set_title(&mut self, title: String) {
         self.window.set_title(title);
     }
 
