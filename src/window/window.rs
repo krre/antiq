@@ -7,12 +7,6 @@ pub struct Window {
     platform_window: platform_window::Window,
 }
 
-impl Window {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl Windowed for Window {
     fn set_title(&mut self, title: &str) {
         self.title = title.to_string();
@@ -28,7 +22,7 @@ impl Default for Window {
     fn default() -> Self {
         Self {
             title: application::name().unwrap_or("Untitled".to_string()),
-            platform_window: platform_window::Window::new(),
+            platform_window: platform_window::Window::default(),
         }
     }
 }
