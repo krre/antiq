@@ -1,4 +1,3 @@
-use std::ops::{Deref, DerefMut};
 use std::rc::Rc;
 
 pub trait Updatable {
@@ -18,6 +17,14 @@ impl<T: Updatable + Default> Node<T> {
             children: Vec::new(),
             content: Default::default(),
         }
+    }
+
+    pub fn get(&self) -> &T {
+        &self.content
+    }
+
+    pub fn get_mut(&mut self) -> &mut T {
+        &mut self.content
     }
 
     pub fn add_child(&mut self, child: Rc<Node<T>>) {
@@ -50,19 +57,5 @@ impl<T: Updatable + Default> Node<T> {
 
     pub fn update(&mut self) {
         self.content.update();
-    }
-}
-
-impl<T: Updatable + Default> Deref for Node<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.content
-    }
-}
-
-impl<T: Updatable + Default> DerefMut for Node<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.content
     }
 }
