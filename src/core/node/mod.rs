@@ -1,45 +1,45 @@
 use std::rc::Rc;
 
+pub trait Node {
+    fn add_child(&mut self, child: Rc<dyn Node>);
+
+    fn remove_child(&mut self, index: usize);
+
+    fn count(&self) -> usize;
+
+    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>>;
+
+    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>);
+
+    fn parent(&self) -> Option<Rc<dyn Node>>;
+
+    fn update(&mut self);
+}
+
 pub trait Update {
     fn update(&mut self);
 }
 
-pub struct Node<T: Update + Default> {
-    parent: Option<Rc<Node<T>>>,
-    children: Vec<Rc<Node<T>>>,
-    content: T,
+pub struct UpdatedNode<T: Update> {
+    parent: Option<Rc<dyn Node>>,
+    children: Vec<Rc<dyn Node>>,
+    data: T,
 }
 
-impl<T: Update + Default> Node<T> {
-    pub fn new() -> Self {
-        Self {
-            parent: None,
-            children: Vec::new(),
-            content: Default::default(),
-        }
-    }
-
-    pub fn get(&self) -> &T {
-        &self.content
-    }
-
-    pub fn get_mut(&mut self) -> &mut T {
-        &mut self.content
-    }
-
-    pub fn add_child(&mut self, child: Rc<Node<T>>) {
+impl<T: Update> Node for UpdatedNode<T> {
+    fn add_child(&mut self, child: Rc<dyn Node>) {
         self.children.push(child);
     }
 
-    pub fn remove_child(&mut self, index: usize) {
+    fn remove_child(&mut self, index: usize) {
         self.children.remove(index);
     }
 
-    pub fn count(&self) -> usize {
+    fn count(&self) -> usize {
         self.children.len()
     }
 
-    pub fn child_at(&self, index: usize) -> Option<Rc<Node<T>>> {
+    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>> {
         if index > self.children.len() - 1 {
             None
         } else {
@@ -47,15 +47,33 @@ impl<T: Update + Default> Node<T> {
         }
     }
 
-    pub fn set_parent(&mut self, parent: Option<Rc<Node<T>>>) {
+    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>) {
         self.parent = parent;
     }
 
-    pub fn parent(&self) -> Option<Rc<Node<T>>> {
+    fn parent(&self) -> Option<Rc<dyn Node>> {
         self.parent.clone()
     }
 
-    pub fn update(&mut self) {
-        self.content.update();
+    fn update(&mut self) {
+        self.data.update();
+    }
+}
+
+impl<T: Update + Default> UpdatedNode<T> {
+    pub fn new() -> Self {
+        Self {
+            parent: None,
+            children: Vec::new(),
+            data: Default::default(),
+        }
+    }
+
+    pub fn get(&self) -> &T {
+        &self.data
+    }
+
+    pub fn get_mut(&mut self) -> &mut T {
+        &mut self.data
     }
 }
