@@ -1,9 +1,9 @@
-use super::node::Updatable;
+use super::node::Update;
 
 #[derive(Default)]
 pub struct Application {}
 
-impl Updatable for Application {
+impl Update for Application {
     fn update(&mut self) {}
 }
 

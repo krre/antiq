@@ -1,13 +1,13 @@
 use super::Window;
 use super::Windowed;
-use crate::core::node::Updatable;
+use crate::core::node::Update;
 
 #[derive(Default)]
 pub struct ApplicationWindow {
     window: Window,
 }
 
-impl Updatable for ApplicationWindow {
+impl Update for ApplicationWindow {
     fn update(&mut self) {}
 }
 

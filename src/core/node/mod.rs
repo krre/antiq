@@ -1,16 +1,16 @@
 use std::rc::Rc;
 
-pub trait Updatable {
+pub trait Update {
     fn update(&mut self);
 }
 
-pub struct Node<T: Updatable + Default> {
+pub struct Node<T: Update + Default> {
     parent: Option<Rc<Node<T>>>,
     children: Vec<Rc<Node<T>>>,
     content: T,
 }
 
-impl<T: Updatable + Default> Node<T> {
+impl<T: Update + Default> Node<T> {
     pub fn new() -> Self {
         Self {
             parent: None,
