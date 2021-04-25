@@ -73,7 +73,7 @@ impl<T: Update> Node for UpdatedNode<T> {
 impl<T: Update + Default> UpdatedNode<T> {
     pub fn new() -> Self {
         Self {
-            id: create_id(),
+            id: next_id(),
             parent: None,
             children: Vec::new(),
             data: Default::default(),
@@ -93,6 +93,6 @@ impl<T: Update + Default> UpdatedNode<T> {
     }
 }
 
-fn create_id() -> usize {
+fn next_id() -> usize {
     ID_COUNT.fetch_add(1, Ordering::SeqCst)
 }
