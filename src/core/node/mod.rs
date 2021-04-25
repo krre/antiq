@@ -80,7 +80,11 @@ impl<T: Update + Default> UpdatedNode<T> {
         }
     }
 
-    pub fn get(&self) -> &T {
+    pub fn into_inner(self) -> T {
+        self.data
+    }
+
+    pub fn get_ref(&self) -> &T {
         &self.data
     }
 
