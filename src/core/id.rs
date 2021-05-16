@@ -2,6 +2,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 
+#[derive(Clone, Copy)]
 pub struct Id(usize);
 
 impl Id {
