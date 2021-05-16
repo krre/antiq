@@ -1,11 +1,6 @@
 use std::rc::Rc;
-use std::sync::atomic::{AtomicUsize, Ordering};
-
-static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 pub trait Node {
-    fn id(&self) -> usize;
-
     fn add_child(&mut self, child: Rc<dyn Node>);
 
     fn remove_child(&mut self, index: usize);
@@ -26,17 +21,12 @@ pub trait Update {
 }
 
 pub struct UpdatedNode<T: Update> {
-    id: usize,
     parent: Option<Rc<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
     data: T,
 }
 
 impl<T: Update> Node for UpdatedNode<T> {
-    fn id(&self) -> usize {
-        self.id
-    }
-
     fn add_child(&mut self, child: Rc<dyn Node>) {
         self.children.push(child);
     }
@@ -73,7 +63,6 @@ impl<T: Update> Node for UpdatedNode<T> {
 impl<T: Update + Default> UpdatedNode<T> {
     pub fn new() -> Self {
         Self {
-            id: next_id(),
             parent: None,
             children: Vec::new(),
             data: Default::default(),
@@ -91,8 +80,4 @@ impl<T: Update + Default> UpdatedNode<T> {
     pub fn get_mut(&mut self) -> &mut T {
         &mut self.data
     }
-}
-
-fn next_id() -> usize {
-    ID_COUNT.fetch_add(1, Ordering::SeqCst)
 }
