@@ -1,6 +1,11 @@
-use crate::core::{self, node};
-use crate::window;
+use crate::entity;
 
-pub type Application = node::UpdatedNode<core::application::Application>;
-pub type Window = node::UpdatedNode<window::Window>;
-pub type ApplicationWindow = node::UpdatedNode<window::ApplicationWindow>;
+mod application_window;
+mod window;
+
+pub use application_window::ApplicationWindow;
+pub use window::Window;
+
+pub trait Widget: entity::Entity {
+    fn draw(&self);
+}
