@@ -1,3 +1,6 @@
 pub mod application;
-pub mod id;
 pub mod node;
+
+mod id;
+
+pub use id::Id;
