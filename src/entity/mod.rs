@@ -1,6 +1,8 @@
 use crate::core::Id;
 
-pub mod application;
+mod application;
+
+pub use application::Application;
 
 pub trait Entity {
     fn id(&self) -> Id;

@@ -1,4 +1,3 @@
-pub mod application;
 pub mod node;
 
 mod id;
