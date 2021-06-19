@@ -2,6 +2,7 @@ use super::Widget;
 use crate::core::Id;
 use crate::entity::Entity;
 
+#[derive(Default)]
 pub struct Window {
     id: Id,
 }
@@ -9,12 +10,6 @@ pub struct Window {
 impl Window {
     pub fn new() -> Self {
         Self { id: Id::default() }
-    }
-}
-
-impl Default for Window {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

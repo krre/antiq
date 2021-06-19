@@ -3,6 +3,7 @@ use super::Window;
 use crate::core::Id;
 use crate::entity::Entity;
 
+#[derive(Default)]
 pub struct ApplicationWindow {
     window: Window,
 }
@@ -12,12 +13,6 @@ impl ApplicationWindow {
         Self {
             window: Window::default(),
         }
-    }
-}
-
-impl Default for ApplicationWindow {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

@@ -1,6 +1,7 @@
 use crate::core::Id;
 use crate::entity::Entity;
 
+#[derive(Default)]
 pub struct Application {
     id: Id,
 }
@@ -21,12 +22,6 @@ impl Application {
             .to_str()?
             .to_owned()
             .into()
-    }
-}
-
-impl Default for Application {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

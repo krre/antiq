@@ -20,6 +20,7 @@ pub trait Update {
     fn update(&mut self);
 }
 
+#[derive(Default)]
 pub struct UpdatedNode<T: Update> {
     parent: Option<Rc<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
@@ -79,11 +80,5 @@ impl<T: Update + Default> UpdatedNode<T> {
 
     pub fn get_mut(&mut self) -> &mut T {
         &mut self.data
-    }
-}
-
-impl<T: Update + Default> Default for UpdatedNode<T> {
-    fn default() -> Self {
-        Self::new()
     }
 }
