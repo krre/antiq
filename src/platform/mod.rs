@@ -7,3 +7,7 @@ mod windows;
 
 #[cfg(target_os = "macos")]
 mod macos;
+
+pub trait PlatformWindow {
+    fn set_title(&mut self, title: &str);
+}

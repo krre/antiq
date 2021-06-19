@@ -14,6 +14,10 @@ impl ApplicationWindow {
             window: Window::default(),
         }
     }
+
+    pub fn set_title(&mut self, title: &str) {
+        self.window.set_title(title);
+    }
 }
 
 impl Entity for ApplicationWindow {
