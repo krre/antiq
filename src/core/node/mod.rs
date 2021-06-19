@@ -81,3 +81,9 @@ impl<T: Update + Default> UpdatedNode<T> {
         &mut self.data
     }
 }
+
+impl<T: Update + Default> Default for UpdatedNode<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
