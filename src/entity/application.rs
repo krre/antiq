@@ -6,6 +6,10 @@ pub struct Application {
 }
 
 impl Application {
+    pub fn new() -> Self {
+        Self { id: Id::default() }
+    }
+
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         Ok(())
     }
@@ -17,6 +21,12 @@ impl Application {
             .to_str()?
             .to_owned()
             .into()
+    }
+}
+
+impl Default for Application {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
