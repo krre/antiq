@@ -1,14 +1,16 @@
-use crate::core::Id;
+use crate::core::EntityCore;
 use crate::entity::Entity;
 
 #[derive(Default)]
 pub struct Application {
-    id: Id,
+    entity_core: EntityCore,
 }
 
 impl Application {
     pub fn new() -> Self {
-        Self { id: Id::default() }
+        Self {
+            entity_core: EntityCore::default(),
+        }
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -26,7 +28,11 @@ impl Application {
 }
 
 impl Entity for Application {
-    fn id(&self) -> Id {
-        self.id
+    fn entity_ref(&self) -> &EntityCore {
+        &self.entity_core
+    }
+
+    fn entity_mut(&mut self) -> &EntityCore {
+        &self.entity_core
     }
 }

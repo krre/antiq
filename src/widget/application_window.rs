@@ -1,6 +1,6 @@
 use super::Widget;
 use super::Window;
-use crate::core::Id;
+use crate::core::EntityCore;
 use crate::entity::Entity;
 
 #[derive(Default)]
@@ -21,8 +21,12 @@ impl ApplicationWindow {
 }
 
 impl Entity for ApplicationWindow {
-    fn id(&self) -> Id {
-        self.window.id()
+    fn entity_ref(&self) -> &EntityCore {
+        self.window.entity_ref()
+    }
+
+    fn entity_mut(&mut self) -> &EntityCore {
+        self.window.entity_mut()
     }
 }
 

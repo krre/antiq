@@ -1,9 +1,10 @@
-use crate::core::Id;
-
 mod application;
 
 pub use application::Application;
 
+use crate::core::EntityCore;
+
 pub trait Entity {
-    fn id(&self) -> Id;
+    fn entity_ref(&self) -> &EntityCore;
+    fn entity_mut(&mut self) -> &EntityCore;
 }
