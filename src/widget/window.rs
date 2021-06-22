@@ -1,18 +1,17 @@
 use super::Widget;
-use crate::core::EntityCore;
-use crate::entity::Entity;
+use crate::core::WidgetCore;
 use crate::platform::{self, PlatformWindow};
 
 #[derive(Default)]
 pub struct Window {
-    entity_core: EntityCore,
+    widget_core: WidgetCore,
     platform_window: platform::Window,
 }
 
 impl Window {
     pub fn new() -> Self {
         Self {
-            entity_core: EntityCore::default(),
+            widget_core: WidgetCore::default(),
             platform_window: platform::Window::default(),
         }
     }
@@ -22,16 +21,14 @@ impl Window {
     }
 }
 
-impl Entity for Window {
-    fn entity_ref(&self) -> &EntityCore {
-        &self.entity_core
-    }
-
-    fn entity_mut(&mut self) -> &EntityCore {
-        &self.entity_core
-    }
-}
-
 impl Widget for Window {
+    fn widget_ref(&self) -> &WidgetCore {
+        &self.widget_core
+    }
+
+    fn widget_mut(&mut self) -> &mut WidgetCore {
+        &mut self.widget_core
+    }
+
     fn draw(&self) {}
 }

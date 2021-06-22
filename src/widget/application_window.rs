@@ -1,7 +1,6 @@
 use super::Widget;
 use super::Window;
-use crate::core::EntityCore;
-use crate::entity::Entity;
+use crate::core::WidgetCore;
 
 #[derive(Default)]
 pub struct ApplicationWindow {
@@ -20,17 +19,15 @@ impl ApplicationWindow {
     }
 }
 
-impl Entity for ApplicationWindow {
-    fn entity_ref(&self) -> &EntityCore {
-        self.window.entity_ref()
-    }
-
-    fn entity_mut(&mut self) -> &EntityCore {
-        self.window.entity_mut()
-    }
-}
-
 impl Widget for ApplicationWindow {
+    fn widget_ref(&self) -> &WidgetCore {
+        self.window.widget_ref()
+    }
+
+    fn widget_mut(&mut self) -> &mut WidgetCore {
+        self.window.widget_mut()
+    }
+
     fn draw(&self) {
         self.window.draw();
     }

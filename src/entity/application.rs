@@ -32,7 +32,7 @@ impl Entity for Application {
         &self.entity_core
     }
 
-    fn entity_mut(&mut self) -> &EntityCore {
-        &self.entity_core
+    fn entity_mut(&mut self) -> &mut EntityCore {
+        &mut self.entity_core
     }
 }
