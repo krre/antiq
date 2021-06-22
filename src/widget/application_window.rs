@@ -1,5 +1,4 @@
-use super::Widget;
-use super::Window;
+use super::{Widget, Window};
 use crate::core::WidgetCore;
 
 #[derive(Default)]

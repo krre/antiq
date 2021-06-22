@@ -1,8 +1,7 @@
 mod application_window;
 mod window;
 
-use crate::core::EntityCore;
-use crate::core::WidgetCore;
+use crate::core::{EntityCore, WidgetCore};
 pub use crate::platform::*;
 pub use application_window::ApplicationWindow;
 pub use window::Window;
