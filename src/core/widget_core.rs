@@ -1,6 +1,6 @@
 use super::EntityCore;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct WidgetCore {
     entity_core: EntityCore,
 }

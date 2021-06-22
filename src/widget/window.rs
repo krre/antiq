@@ -2,7 +2,7 @@ use super::Widget;
 use crate::core::WidgetCore;
 use crate::platform::{self, PlatformWindow};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Window {
     widget_core: WidgetCore,
     platform_window: platform::Window,

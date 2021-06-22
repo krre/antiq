@@ -1,7 +1,7 @@
 use crate::core::EntityCore;
 use crate::entity::Entity;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Application {
     entity_core: EntityCore,
 }

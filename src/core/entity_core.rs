@@ -1,6 +1,6 @@
 use super::Id;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct EntityCore {
     id: Id,
 }

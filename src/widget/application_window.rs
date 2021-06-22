@@ -1,7 +1,7 @@
 use super::{Widget, Window};
 use crate::core::WidgetCore;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ApplicationWindow {
     window: Window,
 }

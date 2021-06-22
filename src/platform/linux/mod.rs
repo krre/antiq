@@ -1,6 +1,6 @@
 use super::PlatformWindow;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Window {}
 
 impl PlatformWindow for Window {
