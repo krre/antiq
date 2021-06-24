@@ -8,3 +8,6 @@ impl PlatformWindow for Window {
         dbg!(title);
     }
 }
+
+#[derive(Default, Debug)]
+pub struct PlatformApplication {}

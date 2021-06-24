@@ -1,15 +1,18 @@
 use crate::core::EntityCore;
 use crate::entity::Entity;
+use crate::platform::PlatformApplication;
 
 #[derive(Default, Debug)]
 pub struct Application {
     entity_core: EntityCore,
+    platform_application: PlatformApplication,
 }
 
 impl Application {
     pub fn new() -> Self {
         Self {
             entity_core: EntityCore::default(),
+            platform_application: PlatformApplication::default(),
         }
     }
 
