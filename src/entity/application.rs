@@ -1,11 +1,14 @@
 use crate::core::EntityCore;
 use crate::entity::Entity;
 use crate::platform::PlatformApplication;
+use crate::widget::WindowWidget;
+use std::rc::Rc;
 
 #[derive(Default, Debug)]
 pub struct Application {
     entity_core: EntityCore,
     platform_application: PlatformApplication,
+    windows: Vec<Rc<dyn WindowWidget>>,
 }
 
 impl Application {
@@ -13,6 +16,7 @@ impl Application {
         Self {
             entity_core: EntityCore::default(),
             platform_application: PlatformApplication::default(),
+            windows: Vec::new(),
         }
     }
 
@@ -27,6 +31,10 @@ impl Application {
             .to_str()?
             .to_owned()
             .into()
+    }
+
+    pub fn add_window(&mut self, window: Rc<dyn WindowWidget>) {
+        self.windows.push(window);
     }
 }
 

@@ -1,4 +1,4 @@
-use super::Widget;
+use super::{Widget, WindowWidget};
 use crate::core::WidgetCore;
 use crate::platform::{self, PlatformWindow};
 
@@ -32,3 +32,5 @@ impl Widget for Window {
 
     fn draw(&self) {}
 }
+
+impl WindowWidget for Window {}

@@ -4,6 +4,7 @@ mod window;
 use crate::core::{EntityCore, WidgetCore};
 pub use crate::platform::*;
 pub use application_window::ApplicationWindow;
+use core::fmt::Debug;
 pub use window::Window;
 
 pub trait Widget {
@@ -20,4 +21,12 @@ pub trait Widget {
     }
 
     fn draw(&self);
+}
+
+pub trait WindowWidget {}
+
+impl Debug for dyn WindowWidget {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "WindowWidget")
+    }
 }

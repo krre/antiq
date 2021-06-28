@@ -1,4 +1,4 @@
-use super::{Widget, Window};
+use super::{Widget, Window, WindowWidget};
 use crate::core::WidgetCore;
 
 #[derive(Default, Debug)]
@@ -31,3 +31,5 @@ impl Widget for ApplicationWindow {
         self.window.draw();
     }
 }
+
+impl WindowWidget for ApplicationWindow {}
