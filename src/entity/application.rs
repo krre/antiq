@@ -2,12 +2,14 @@ use crate::core::EntityCore;
 use crate::entity::Entity;
 use crate::platform::PlatformApplication;
 use crate::widget::WindowWidget;
+use winit::event_loop::{ControlFlow, EventLoop};
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct Application {
     entity_core: EntityCore,
     platform_application: PlatformApplication,
     windows: Vec<Box<dyn WindowWidget>>,
+    event_loop: EventLoop<()>,
 }
 
 impl Application {
@@ -16,10 +18,19 @@ impl Application {
             entity_core: EntityCore::default(),
             platform_application: PlatformApplication::default(),
             windows: Vec::new(),
+            event_loop: EventLoop::new(),
         }
     }
 
-    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn run(self) -> Result<(), Box<dyn std::error::Error>> {
+        self.event_loop.run(move |event, _, control_flow| {
+            *control_flow = ControlFlow::Wait;
+            println!("{:?}", event);
+            match event {
+                _ => (),
+            }
+        });
+
         Ok(())
     }
 
@@ -44,5 +55,11 @@ impl Entity for Application {
 
     fn entity_mut(&mut self) -> &mut EntityCore {
         &mut self.entity_core
+    }
+}
+
+impl Default for Application {
+    fn default() -> Self {
+        Self::new()
     }
 }
