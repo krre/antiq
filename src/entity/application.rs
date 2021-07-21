@@ -43,8 +43,8 @@ impl Application {
             .into()
     }
 
-    pub fn add_window(&mut self, window: Box<dyn WindowWidget>) {
-        self.windows.push(window);
+    pub fn add_window<W: WindowWidget + 'static>(&mut self, window: W) {
+        self.windows.push(Box::new(window));
     }
 }
 
