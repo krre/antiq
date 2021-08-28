@@ -5,4 +5,3 @@ authors = ["Vladimir Zarypov <krre31@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-winit = "0.25.0"
