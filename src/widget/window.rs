@@ -1,24 +1,19 @@
 use super::{Widget, WindowWidget};
 use crate::core::WidgetCore;
-use crate::platform::{self, PlatformWindow};
 
 #[derive(Default, Debug)]
 pub struct Window {
     widget_core: WidgetCore,
-    platform_window: platform::Window,
 }
 
 impl Window {
     pub fn new() -> Self {
         Self {
             widget_core: WidgetCore::default(),
-            platform_window: platform::Window::default(),
         }
     }
 
-    pub fn set_title(&mut self, title: &str) {
-        self.platform_window.set_title(title);
-    }
+    pub fn set_title(&mut self, title: &str) {}
 }
 
 impl Widget for Window {
