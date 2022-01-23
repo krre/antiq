@@ -1,16 +1,17 @@
 use super::{Widget, Window, WindowWidget};
 use crate::core::WidgetCore;
+use crate::entity::Application;
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct ApplicationWindow {
     window: Window,
 }
 
 impl ApplicationWindow {
-    pub fn new() -> Self {
-        Self {
-            window: Window::default(),
-        }
+    pub fn new(app: &Application) -> Result<Self, Box<dyn std::error::Error>> {
+        let window = Window::new(app)?;
+
+        Ok(Self { window })
     }
 
     pub fn set_title(&mut self, title: &str) {

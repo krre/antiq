@@ -43,6 +43,10 @@ impl Application {
     pub fn add_window<W: WindowWidget + 'static>(&mut self, window: W) {
         self.windows.push(Box::new(window));
     }
+
+    pub(crate) fn event_loop(&self) -> &EventLoop<()> {
+        &self.event_loop
+    }
 }
 
 impl Entity for Application {
