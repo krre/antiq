@@ -20,7 +20,9 @@ impl Window {
         })
     }
 
-    pub fn set_title(&mut self, title: &str) {}
+    pub fn set_title(&mut self, title: &str) {
+        self.window.set_title(title);
+    }
 }
 
 impl Widget for Window {
