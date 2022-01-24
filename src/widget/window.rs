@@ -12,7 +12,9 @@ pub struct Window {
 
 impl Window {
     pub fn new(app: &Application) -> Result<Self, Box<dyn std::error::Error>> {
-        let window = winit::window::Window::new(app.event_loop())?;
+        let window = winit::window::WindowBuilder::new()
+            .with_visible(false)
+            .build(app.event_loop())?;
 
         Ok(Self {
             widget_core: WidgetCore::default(),
@@ -22,6 +24,10 @@ impl Window {
 
     pub fn set_title(&mut self, title: &str) {
         self.window.set_title(title);
+    }
+
+    pub fn set_visible(&mut self, visible: bool) {
+        self.window.set_visible(visible);
     }
 }
 

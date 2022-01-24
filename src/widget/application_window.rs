@@ -17,6 +17,10 @@ impl ApplicationWindow {
     pub fn set_title(&mut self, title: &str) {
         self.window.set_title(title);
     }
+
+    pub fn set_visible(&mut self, visible: bool) {
+        self.window.set_visible(visible);
+    }
 }
 
 impl Widget for ApplicationWindow {
