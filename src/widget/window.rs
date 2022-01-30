@@ -46,4 +46,8 @@ impl WindowWidget for Window {
     fn id(&self) -> winit::window::WindowId {
         self.window.id()
     }
+
+    fn render(&self) {
+        println!("Window render");
+    }
 }

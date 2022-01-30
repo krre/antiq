@@ -24,6 +24,8 @@ pub trait Widget {
 
 pub trait WindowWidget {
     fn id(&self) -> winit::window::WindowId;
+
+    fn render(&self);
 }
 
 impl Debug for dyn WindowWidget {

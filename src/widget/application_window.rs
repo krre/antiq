@@ -40,4 +40,9 @@ impl WindowWidget for ApplicationWindow {
     fn id(&self) -> winit::window::WindowId {
         self.window.id()
     }
+
+    fn render(&self) {
+        self.window.render();
+        println!("Application window render");
+    }
 }

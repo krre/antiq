@@ -29,8 +29,16 @@ impl Application {
     pub fn run(self) -> Result<(), Box<dyn std::error::Error>> {
         self.event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Wait;
-            println!("{:?}", event);
+            // println!("{:?}", event);
             match event {
+                Event::RedrawRequested(window_id) => {
+                    WINDOWS.with(|w| {
+                        if let Some(window) = w.borrow_mut().get(&window_id) {
+                            window.render();
+                        }
+                    });
+                }
+
                 Event::WindowEvent {
                     event: WindowEvent::CloseRequested,
                     window_id,
