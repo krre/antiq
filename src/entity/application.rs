@@ -1,12 +1,20 @@
 use crate::core::EntityCore;
 use crate::entity::Entity;
 use crate::widget::WindowWidget;
-use winit::event_loop::{ControlFlow, EventLoop};
+use std::cell::RefCell;
+use std::collections::HashMap;
+use winit::{
+    event::{Event, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
+};
+
+thread_local! {
+    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Box<dyn WindowWidget>>> = RefCell::new(HashMap::new());
+}
 
 #[derive(Debug)]
 pub struct Application {
     entity_core: EntityCore,
-    windows: Vec<Box<dyn WindowWidget>>,
     event_loop: EventLoop<()>,
 }
 
@@ -14,7 +22,6 @@ impl Application {
     pub fn new() -> Self {
         Self {
             entity_core: EntityCore::default(),
-            windows: Vec::new(),
             event_loop: EventLoop::new(),
         }
     }
@@ -24,6 +31,18 @@ impl Application {
             *control_flow = ControlFlow::Wait;
             println!("{:?}", event);
             match event {
+                Event::WindowEvent {
+                    event: WindowEvent::CloseRequested,
+                    window_id,
+                } => {
+                    WINDOWS.with(|w| {
+                        w.borrow_mut().remove(&window_id);
+
+                        if w.borrow().len() == 0 {
+                            *control_flow = ControlFlow::Exit;
+                        }
+                    });
+                }
                 _ => (),
             }
         });
@@ -41,7 +60,8 @@ impl Application {
     }
 
     pub fn add_window<W: WindowWidget + 'static>(&mut self, window: W) {
-        self.windows.push(Box::new(window));
+        let box_window = Box::new(window);
+        WINDOWS.with(|w| w.borrow_mut().insert(box_window.id(), box_window));
     }
 
     pub(crate) fn event_loop(&self) -> &EventLoop<()> {

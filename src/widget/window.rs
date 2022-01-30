@@ -1,7 +1,6 @@
 use super::{Widget, WindowWidget};
 use crate::core::WidgetCore;
 use crate::entity::Application;
-
 use winit;
 
 #[derive(Debug)]
@@ -11,7 +10,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(app: &Application) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(app: &mut Application) -> Result<Self, Box<dyn std::error::Error>> {
         let window = winit::window::WindowBuilder::new()
             .with_visible(false)
             .build(app.event_loop())?;
@@ -43,4 +42,8 @@ impl Widget for Window {
     fn draw(&self) {}
 }
 
-impl WindowWidget for Window {}
+impl WindowWidget for Window {
+    fn id(&self) -> winit::window::WindowId {
+        self.window.id()
+    }
+}

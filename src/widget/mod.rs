@@ -22,7 +22,9 @@ pub trait Widget {
     fn draw(&self);
 }
 
-pub trait WindowWidget {}
+pub trait WindowWidget {
+    fn id(&self) -> winit::window::WindowId;
+}
 
 impl Debug for dyn WindowWidget {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {

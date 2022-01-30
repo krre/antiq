@@ -8,9 +8,8 @@ pub struct ApplicationWindow {
 }
 
 impl ApplicationWindow {
-    pub fn new(app: &Application) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(app: &mut Application) -> Result<Self, Box<dyn std::error::Error>> {
         let window = Window::new(app)?;
-
         Ok(Self { window })
     }
 
@@ -37,4 +36,8 @@ impl Widget for ApplicationWindow {
     }
 }
 
-impl WindowWidget for ApplicationWindow {}
+impl WindowWidget for ApplicationWindow {
+    fn id(&self) -> winit::window::WindowId {
+        self.window.id()
+    }
+}
