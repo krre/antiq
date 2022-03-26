@@ -1,8 +1,6 @@
-mod application_window;
 mod window;
 
 use crate::core::{EntityCore, WidgetCore};
-pub use application_window::ApplicationWindow;
 use core::fmt::Debug;
 pub use window::Window;
 
