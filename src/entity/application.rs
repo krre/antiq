@@ -29,7 +29,6 @@ impl Application {
     pub fn run(self) -> Result<(), Box<dyn std::error::Error>> {
         self.event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Wait;
-            // println!("{:?}", event);
             match event {
                 Event::RedrawRequested(window_id) => {
                     WINDOWS.with(|w| {
@@ -54,8 +53,6 @@ impl Application {
                 _ => (),
             }
         });
-
-        Ok(())
     }
 
     pub fn name() -> Option<String> {
