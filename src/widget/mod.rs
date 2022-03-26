@@ -1,8 +1,5 @@
-mod window;
-
 use crate::core::{EntityCore, WidgetCore};
 use core::fmt::Debug;
-pub use window::Window;
 
 pub trait Widget {
     fn widget_ref(&self) -> &WidgetCore;

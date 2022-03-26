@@ -1,4 +1,4 @@
-use crate::widget::WindowWidget;
+use super::Window;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use winit::{
@@ -7,7 +7,7 @@ use winit::{
 };
 
 thread_local! {
-    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Box<dyn WindowWidget>>> = RefCell::new(HashMap::new());
+    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Box<Window>>> = RefCell::new(HashMap::new());
 }
 
 #[derive(Debug)]
@@ -60,7 +60,7 @@ impl Application {
             .into()
     }
 
-    pub fn add_window<W: WindowWidget + 'static>(&mut self, window: W) {
+    pub fn add_window(&mut self, window: Window) {
         let box_window = Box::new(window);
         WINDOWS.with(|w| w.borrow_mut().insert(box_window.id(), box_window));
     }

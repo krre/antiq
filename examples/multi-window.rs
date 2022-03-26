@@ -1,5 +1,4 @@
-use antiq::core::Application;
-use antiq::widget::Window;
+use antiq::core::{Application, Window};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Multi-window test");
