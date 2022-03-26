@@ -1,5 +1,3 @@
-use crate::core::EntityCore;
-use crate::entity::Entity;
 use crate::widget::WindowWidget;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -14,14 +12,12 @@ thread_local! {
 
 #[derive(Debug)]
 pub struct Application {
-    entity_core: EntityCore,
     event_loop: EventLoop<()>,
 }
 
 impl Application {
     pub fn new() -> Self {
         Self {
-            entity_core: EntityCore::default(),
             event_loop: EventLoop::new(),
         }
     }
@@ -71,16 +67,6 @@ impl Application {
 
     pub(crate) fn event_loop(&self) -> &EventLoop<()> {
         &self.event_loop
-    }
-}
-
-impl Entity for Application {
-    fn entity_ref(&self) -> &EntityCore {
-        &self.entity_core
-    }
-
-    fn entity_mut(&mut self) -> &mut EntityCore {
-        &mut self.entity_core
     }
 }
 

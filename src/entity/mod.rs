@@ -1,7 +1,3 @@
-mod application;
-
-pub use application::Application;
-
 use crate::core::EntityCore;
 
 pub trait Entity {

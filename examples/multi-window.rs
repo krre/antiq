@@ -1,4 +1,4 @@
-use antiq::entity::Application;
+use antiq::core::Application;
 use antiq::widget::Window;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

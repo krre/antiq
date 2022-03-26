@@ -1,6 +1,6 @@
 use super::{Widget, WindowWidget};
+use crate::core::Application;
 use crate::core::WidgetCore;
-use crate::entity::Application;
 use winit;
 
 #[derive(Debug)]
