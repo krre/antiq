@@ -7,23 +7,16 @@ use winit::{
 };
 
 thread_local! {
+    static EVENT_LOOP: RefCell<Option<EventLoop<()>>> = RefCell::new(Some(EventLoop::new()));
     static WINDOWS: RefCell<HashMap<winit::window::WindowId, Box<Window>>> = RefCell::new(HashMap::new());
 }
 
 #[derive(Debug)]
-pub struct Application {
-    event_loop: EventLoop<()>,
-}
+pub struct Application {}
 
 impl Application {
-    pub fn new() -> Self {
-        Self {
-            event_loop: EventLoop::new(),
-        }
-    }
-
-    pub fn run(self) -> Result<(), Box<dyn std::error::Error>> {
-        self.event_loop.run(move |event, _, control_flow| {
+    pub fn run() {
+        Application::event_loop().run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Wait;
             match event {
                 Event::RedrawRequested(window_id) => {
@@ -60,18 +53,12 @@ impl Application {
             .into()
     }
 
-    pub fn add_window(&mut self, window: Window) {
+    pub fn add_window(window: Window) {
         let box_window = Box::new(window);
         WINDOWS.with(|w| w.borrow_mut().insert(box_window.id(), box_window));
     }
 
-    pub(crate) fn event_loop(&self) -> &EventLoop<()> {
-        &self.event_loop
-    }
-}
-
-impl Default for Application {
-    fn default() -> Self {
-        Self::new()
+    pub(crate) fn event_loop() -> EventLoop<()> {
+        EVENT_LOOP.with(|el| el.borrow_mut().take().unwrap_or_else(EventLoop::new))
     }
 }

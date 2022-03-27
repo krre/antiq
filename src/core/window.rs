@@ -7,10 +7,10 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(app: &mut Application) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
         let window = winit::window::WindowBuilder::new()
             .with_visible(false)
-            .build(app.event_loop())?;
+            .build(&Application::event_loop())?;
 
         Ok(Self { window })
     }
