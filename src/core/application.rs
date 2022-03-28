@@ -1,7 +1,8 @@
 use super::Window;
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
-use std::rc::{Rc, Weak};
+use std::rc::Weak;
+use winit::window::WindowId;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -9,7 +10,7 @@ use winit::{
 
 thread_local! {
     static EVENT_LOOP: Cell<Option<EventLoop<()>>> = Cell::new(Some(EventLoop::new()));
-    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Rc<RefCell<Window>>>> = RefCell::new(HashMap::new());
+    static WINDOWS: RefCell<HashMap<WindowId, Weak<Window>>> = RefCell::new(HashMap::new());
 }
 
 #[derive(Debug)]
@@ -23,7 +24,7 @@ impl Application {
                 Event::RedrawRequested(window_id) => {
                     WINDOWS.with(|w| {
                         if let Some(window) = w.borrow().get(&window_id) {
-                            window.borrow().render();
+                            window.upgrade().unwrap().render();
                         }
                     });
                 }
@@ -33,9 +34,14 @@ impl Application {
                     window_id,
                 } => {
                     WINDOWS.with(|w| {
-                        w.borrow_mut().remove(&window_id);
+                        let mut windows = w.borrow_mut();
 
-                        if w.borrow().len() == 0 {
+                        if let Some(window) = windows.get(&window_id) {
+                            window.upgrade().unwrap().set_visible(false);
+                            windows.remove(&window_id);
+                        }
+
+                        if windows.len() == 0 {
                             *control_flow = ControlFlow::Exit;
                         }
                     });
@@ -54,12 +60,9 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn add_window(window: Window) -> Weak<RefCell<Window>> {
-        let rc_window = Rc::new(RefCell::new(window));
-        let weak_window = Rc::downgrade(&rc_window);
-        let id = rc_window.borrow().id();
-        WINDOWS.with(|w| w.borrow_mut().insert(id, rc_window));
-        weak_window
+    pub(crate) fn add_window(window: Weak<Window>) {
+        let id = window.upgrade().unwrap().id();
+        WINDOWS.with(|w| w.borrow_mut().insert(id, window));
     }
 
     pub(crate) fn event_loop() -> EventLoop<()> {

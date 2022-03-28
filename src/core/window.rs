@@ -1,6 +1,5 @@
 use crate::core::Application;
-use std::cell::RefCell;
-use std::rc::Weak;
+use std::rc::Rc;
 use winit;
 
 #[derive(Debug)]
@@ -9,23 +8,27 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new() -> Result<Weak<RefCell<Self>>, Box<dyn std::error::Error>> {
-        let window = winit::window::WindowBuilder::new()
+    pub fn new() -> Rc<Self> {
+        let winit_window = winit::window::WindowBuilder::new()
             .with_visible(false)
-            .build(&Application::event_loop())?;
+            .build(&Application::event_loop())
+            .unwrap();
 
-        let win = Self { window };
-        let weak_win = Application::add_window(win);
-
-        Ok(weak_win)
+        Rc::new(Self {
+            window: winit_window,
+        })
     }
 
-    pub fn set_title(&mut self, title: &str) {
+    pub fn set_title(self: &Rc<Self>, title: &str) {
         self.window.set_title(title);
     }
 
-    pub fn set_visible(&mut self, visible: bool) {
+    pub fn set_visible(self: &Rc<Self>, visible: bool) {
         self.window.set_visible(visible);
+
+        if visible {
+            Application::add_window(Rc::downgrade(self));
+        }
     }
 }
 
