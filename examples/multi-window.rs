@@ -1,6 +1,6 @@
 use antiq::core::{Application, Window};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
     println!("Multi-window test");
 
     let window_1 = Window::new();
@@ -12,6 +12,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     window_2.set_visible(true);
 
     Application::run();
-
-    Ok(())
 }
