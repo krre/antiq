@@ -1,4 +1,6 @@
 use crate::core::Application;
+use std::cell::RefCell;
+use std::rc::Weak;
 use winit;
 
 #[derive(Debug)]
@@ -7,12 +9,15 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Weak<RefCell<Self>>, Box<dyn std::error::Error>> {
         let window = winit::window::WindowBuilder::new()
             .with_visible(false)
             .build(&Application::event_loop())?;
 
-        Ok(Self { window })
+        let win = Self { window };
+        let weak_win = Application::add_window(win);
+
+        Ok(weak_win)
     }
 
     pub fn set_title(&mut self, title: &str) {

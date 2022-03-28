@@ -1,6 +1,7 @@
 use super::Window;
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::{Rc, Weak};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -8,7 +9,7 @@ use winit::{
 
 thread_local! {
     static EVENT_LOOP: RefCell<Option<EventLoop<()>>> = RefCell::new(Some(EventLoop::new()));
-    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Box<Window>>> = RefCell::new(HashMap::new());
+    static WINDOWS: RefCell<HashMap<winit::window::WindowId, Rc<RefCell<Window>>>> = RefCell::new(HashMap::new());
 }
 
 #[derive(Debug)]
@@ -21,8 +22,8 @@ impl Application {
             match event {
                 Event::RedrawRequested(window_id) => {
                     WINDOWS.with(|w| {
-                        if let Some(window) = w.borrow_mut().get(&window_id) {
-                            window.render();
+                        if let Some(window) = w.borrow().get(&window_id) {
+                            window.borrow().render();
                         }
                     });
                 }
@@ -53,9 +54,12 @@ impl Application {
             .into()
     }
 
-    pub fn add_window(window: Window) {
-        let box_window = Box::new(window);
-        WINDOWS.with(|w| w.borrow_mut().insert(box_window.id(), box_window));
+    pub(crate) fn add_window(window: Window) -> Weak<RefCell<Window>> {
+        let rc_window = Rc::new(RefCell::new(window));
+        let weak_window = Rc::downgrade(&rc_window);
+        let id = rc_window.borrow().id();
+        WINDOWS.with(|w| w.borrow_mut().insert(id, rc_window));
+        weak_window
     }
 
     pub(crate) fn event_loop() -> EventLoop<()> {
