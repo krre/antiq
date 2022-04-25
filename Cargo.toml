@@ -6,4 +6,3 @@ edition = "2021"
 
 [dependencies]
 winit = "0.26.1"
-wgpu = "0.12.0"

@@ -24,7 +24,7 @@ impl Application {
                 Event::RedrawRequested(window_id) => {
                     WINDOWS.with(|w| {
                         if let Some(window) = w.borrow().get(&window_id) {
-                            window.upgrade().unwrap().render();
+                            window.upgrade().unwrap().draw();
                         }
                     });
                 }

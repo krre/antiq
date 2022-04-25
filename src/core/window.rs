@@ -1,11 +1,6 @@
 use crate::core::Application;
-use crate::gfx::gpu::Gpu;
 use std::rc::Rc;
 use winit;
-
-thread_local! {
-    static GPU: Gpu = Gpu::new();
-}
 
 #[derive(Debug)]
 pub struct Window {
@@ -52,7 +47,7 @@ impl Window {
         self.window.id()
     }
 
-    pub fn render(&self) {
-        println!("Window render");
+    pub fn draw(&self) {
+        println!("Window draw");
     }
 }
