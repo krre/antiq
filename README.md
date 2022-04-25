@@ -1,2 +1,2 @@
 # Antiq
-Old fashioned, archaic, antiquated 3D UI toolkit written in Rust language.
+Old fashioned, archaic, antiquated GUI toolkit written in Rust language.
