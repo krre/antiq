@@ -1,10 +1,10 @@
 pub mod node;
+pub mod window;
 
 mod application;
 mod entity_core;
 mod id;
 mod widget_core;
-mod window;
 
 pub use application::Application;
 pub use entity_core::EntityCore;

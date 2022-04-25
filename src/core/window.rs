@@ -2,9 +2,13 @@ use crate::core::Application;
 use std::rc::Rc;
 use winit;
 
+#[derive(Debug, Clone, Copy)]
+pub struct Id(winit::window::WindowId);
+
 #[derive(Debug)]
 pub struct Window {
     window: winit::window::Window,
+    id: Id,
 }
 
 impl Window {
@@ -14,9 +18,20 @@ impl Window {
             .build(&Application::event_loop())
             .unwrap();
 
+        let id = Id(winit_window.id());
+
         Rc::new(Self {
             window: winit_window,
+            id,
         })
+    }
+
+    pub fn id(&self) -> Id {
+        self.id
+    }
+
+    pub(crate) fn winit_id(&self) -> winit::window::WindowId {
+        self.id.0
     }
 
     pub fn set_title(self: &Rc<Self>, title: &str) {
@@ -39,12 +54,6 @@ impl Window {
     pub fn set_position(self: &Rc<Self>, x: i32, y: i32) {
         self.window
             .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
-    }
-}
-
-impl Window {
-    pub fn id(&self) -> winit::window::WindowId {
-        self.window.id()
     }
 
     pub fn draw(&self) {

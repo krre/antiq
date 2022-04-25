@@ -1,4 +1,4 @@
-use super::Window;
+use super::window;
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::rc::Weak;
@@ -10,7 +10,7 @@ use winit::{
 
 thread_local! {
     static EVENT_LOOP: Cell<Option<EventLoop<()>>> = Cell::new(Some(EventLoop::new()));
-    static WINDOWS: RefCell<HashMap<WindowId, Weak<Window>>> = RefCell::new(HashMap::new());
+    static WINDOWS: RefCell<HashMap<WindowId, Weak<window::Window>>> = RefCell::new(HashMap::new());
 }
 
 #[derive(Debug)]
@@ -60,9 +60,9 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn add_window(window: Weak<Window>) {
-        let id = window.upgrade().unwrap().id();
-        WINDOWS.with(|w| w.borrow_mut().insert(id, window));
+    pub(crate) fn add_window(window: Weak<window::Window>) {
+        let id = window.upgrade().unwrap();
+        WINDOWS.with(|w| w.borrow_mut().insert(id.winit_id(), window));
     }
 
     pub(crate) fn event_loop() -> EventLoop<()> {
