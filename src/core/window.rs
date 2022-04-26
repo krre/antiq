@@ -68,3 +68,9 @@ impl Window {
         println!("Window draw");
     }
 }
+
+impl Drop for Window {
+    fn drop(&mut self) {
+        Application::remove_window(&self.id());
+    }
+}
