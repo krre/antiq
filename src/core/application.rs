@@ -1,7 +1,7 @@
 use super::window;
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
-use std::rc::Weak;
+use std::rc::{Rc, Weak};
 use winit::window::WindowId;
 use winit::{
     event::{Event, WindowEvent},
@@ -22,8 +22,8 @@ impl Application {
             *control_flow = ControlFlow::Wait;
             match event {
                 Event::RedrawRequested(window_id) => {
-                    WINDOWS.with(|w| {
-                        if let Some(window) = w.borrow().get(&window_id) {
+                    WINDOWS.with(|ws| {
+                        if let Some(window) = ws.borrow().get(&window_id) {
                             window.upgrade().unwrap().draw();
                         }
                     });
@@ -33,15 +33,22 @@ impl Application {
                     event: WindowEvent::CloseRequested,
                     window_id,
                 } => {
-                    WINDOWS.with(|w| {
-                        let mut windows = w.borrow_mut();
+                    WINDOWS.with(|ws| {
+                        let mut window: Option<Rc<window::Window>> = None;
 
-                        if let Some(window) = windows.get(&window_id) {
-                            window.upgrade().unwrap().set_visible(false);
-                            windows.remove(&window_id);
+                        {
+                            let windows = ws.borrow();
+
+                            if let Some(w) = windows.get(&window_id) {
+                                window = w.upgrade();
+                            }
                         }
 
-                        if windows.len() == 0 {
+                        if let Some(w) = window {
+                            w.set_visible(false);
+                        }
+
+                        if ws.borrow().len() == 0 {
                             *control_flow = ControlFlow::Exit;
                         }
                     });
@@ -62,7 +69,11 @@ impl Application {
 
     pub(crate) fn add_window(window: Weak<window::Window>) {
         let id = window.upgrade().unwrap();
-        WINDOWS.with(|w| w.borrow_mut().insert(id.winit_id(), window));
+        WINDOWS.with(|ws| ws.borrow_mut().insert(id.winit_id(), window));
+    }
+
+    pub(crate) fn remove_window(id: &window::Id) {
+        WINDOWS.with(|ws| ws.borrow_mut().remove(&id.winit_id()));
     }
 
     pub(crate) fn event_loop() -> EventLoop<()> {

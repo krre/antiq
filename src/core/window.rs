@@ -11,6 +11,12 @@ pub struct Window {
     id: Id,
 }
 
+impl Id {
+    pub(crate) fn winit_id(&self) -> winit::window::WindowId {
+        self.0
+    }
+}
+
 impl Window {
     pub fn new() -> Rc<Self> {
         let winit_window = winit::window::WindowBuilder::new()
@@ -43,6 +49,8 @@ impl Window {
 
         if visible {
             Application::add_window(Rc::downgrade(self));
+        } else {
+            Application::remove_window(&self.id());
         }
     }
 
