@@ -1,7 +1,7 @@
 use antiq::core::{Application, Window};
 
 fn main() {
-    println!("Multi-window test");
+    println!("Multiwindow test");
 
     let window_1 = Window::new();
     window_1.set_title("Window 1");
