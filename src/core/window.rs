@@ -54,6 +54,14 @@ impl Window {
         }
     }
 
+    pub fn show(self: &Rc<Self>) {
+        self.set_visible(true);
+    }
+
+    pub fn hide(self: &Rc<Self>) {
+        self.set_visible(false);
+    }
+
     pub fn set_size(self: &Rc<Self>, width: u32, height: u32) {
         self.window
             .set_inner_size(winit::dpi::PhysicalSize::new(width, height));
