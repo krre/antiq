@@ -5,4 +5,5 @@ authors = ["Vladimir Zarypov <krre31@gmail.com>"]
 edition = "2021"
 
 [dependencies]
+wgpu = "0.15.0"
 winit = "0.28.1"
