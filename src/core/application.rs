@@ -1,58 +1,58 @@
-use super::window;
-use std::cell::{Cell, RefCell};
+use super::{window, Window};
 use std::collections::HashMap;
-use std::rc::{Rc, Weak};
+use std::ops::Deref;
 use winit::window::WindowId;
 use winit::{
     event::{Event, WindowEvent},
-    event_loop::{ControlFlow, EventLoop},
+    event_loop::EventLoop,
 };
 
-thread_local! {
-    static EVENT_LOOP: Cell<Option<EventLoop<()>>> = Cell::new(Some(EventLoop::new()));
-    static WINDOWS: RefCell<HashMap<WindowId, Weak<window::Window>>> = RefCell::new(HashMap::new());
+#[derive(Debug)]
+pub struct Application {
+    event_loop: EventLoop<()>,
+    windows: HashMap<WindowId, Box<window::Window>>,
 }
 
-#[derive(Debug)]
-pub struct Application {}
-
 impl Application {
-    pub fn run() {
-        Application::event_loop().run(move |event, _, control_flow| {
-            *control_flow = ControlFlow::Wait;
+    pub fn new() -> Self {
+        Self {
+            event_loop: EventLoop::new(),
+            windows: HashMap::new(),
+        }
+    }
+
+    pub(crate) fn event_loop(&self) -> &EventLoop<()> {
+        &self.event_loop
+    }
+
+    pub fn create_window(&mut self) -> &Window {
+        let window = Box::new(Window::new(self));
+        let id = window.id().winit_id();
+        self.windows.insert(id, window);
+        self.windows.get(&id).unwrap().deref()
+    }
+
+    pub fn run(mut self) {
+        self.event_loop.run(move |event, _, control_flow| {
+            control_flow.set_wait();
+
             match event {
                 Event::RedrawRequested(window_id) => {
-                    WINDOWS.with(|ws| {
-                        if let Some(window) = ws.borrow().get(&window_id) {
-                            window.upgrade().unwrap().draw();
-                        }
-                    });
+                    self.windows.get(&window_id).unwrap().draw();
                 }
 
                 Event::WindowEvent {
                     event: WindowEvent::CloseRequested,
                     window_id,
                 } => {
-                    WINDOWS.with(|ws| {
-                        let mut window: Option<Rc<window::Window>> = None;
+                    self.windows.get(&window_id).unwrap().set_visible(false);
+                    self.windows.remove(&window_id);
 
-                        {
-                            let windows = ws.borrow();
-
-                            if let Some(w) = windows.get(&window_id) {
-                                window = w.upgrade();
-                            }
-                        }
-
-                        if let Some(w) = window {
-                            w.set_visible(false);
-                        }
-
-                        if ws.borrow().len() == 0 {
-                            *control_flow = ControlFlow::Exit;
-                        }
-                    });
+                    if self.windows.len() == 0 {
+                        control_flow.set_exit();
+                    }
                 }
+
                 _ => (),
             }
         });
@@ -65,18 +65,5 @@ impl Application {
             .to_str()?
             .to_owned()
             .into()
-    }
-
-    pub(crate) fn add_window(window: Weak<window::Window>) {
-        let id = window.upgrade().unwrap();
-        WINDOWS.with(|ws| ws.borrow_mut().insert(id.winit_id(), window));
-    }
-
-    pub(crate) fn remove_window(id: &window::Id) {
-        WINDOWS.with(|ws| ws.borrow_mut().remove(&id.winit_id()));
-    }
-
-    pub(crate) fn event_loop() -> EventLoop<()> {
-        EVENT_LOOP.with(|e| e.take().unwrap_or_else(EventLoop::new))
     }
 }

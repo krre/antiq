@@ -1,17 +1,15 @@
-use antiq::core::{Application, Window};
+use antiq::core::Application;
 
 fn main() {
-    println!("Multi-window test");
+    let mut app = Application::new();
 
-    let window_1 = Window::new();
+    let window_1 = app.create_window();
     window_1.set_title("Window 1");
-    window_1.show();
 
-    let window_2 = Window::new();
+    let window_2 = app.create_window();
     window_2.set_title("Window 2");
     window_2.set_size(600, 400);
-    window_2.set_position(200, 200);
-    window_2.show();
+    window_2.set_position(500, 200);
 
-    Application::run();
+    app.run();
 }
