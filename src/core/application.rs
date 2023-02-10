@@ -11,13 +11,19 @@ use winit::{
 pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, Box<window::Window>>,
+    wgpu_instance: wgpu::Instance,
 }
 
 impl Application {
     pub fn new() -> Self {
+        let wgpu_instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            dx12_shader_compiler: wgpu::Dx12Compiler::Fxc,
+        });
         Self {
             event_loop: EventLoop::new(),
             windows: HashMap::new(),
+            wgpu_instance,
         }
     }
 
