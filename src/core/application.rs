@@ -48,7 +48,7 @@ impl Application {
 
             match event {
                 Event::RedrawRequested(window_id) => {
-                    self.windows.get(&window_id).unwrap().draw();
+                    self.windows.get(&window_id).unwrap().render();
                 }
 
                 Event::WindowEvent {

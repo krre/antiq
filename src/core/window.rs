@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 use crate::core::Application;
 use winit;
 
@@ -7,6 +9,7 @@ pub struct Id(winit::window::WindowId);
 #[derive(Debug)]
 pub struct Window {
     id: Id,
+    title: RefCell<String>,
     winit_window: winit::window::Window,
     wgpu_surface: wgpu::Surface,
 }
@@ -32,6 +35,7 @@ impl Window {
 
         Self {
             id,
+            title: RefCell::new(String::from("")),
             winit_window,
             wgpu_surface,
         }
@@ -43,6 +47,7 @@ impl Window {
 
     pub fn set_title(&self, title: &str) {
         self.winit_window.set_title(title);
+        *self.title.borrow_mut() = String::from(title);
     }
 
     pub fn set_visible(&self, visible: bool) {
@@ -60,6 +65,10 @@ impl Window {
     }
 
     pub fn draw(&self) {
-        println!("Window draw");
+        println!("Draw window: {}", self.winit_window.title());
+    }
+
+    pub fn render(&self) {
+        println!("Render window: {}", self.title.borrow());
     }
 }
