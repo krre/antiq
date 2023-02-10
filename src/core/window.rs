@@ -6,8 +6,8 @@ pub struct Id(winit::window::WindowId);
 
 #[derive(Debug)]
 pub struct Window {
-    window: winit::window::Window,
     id: Id,
+    winit_window: winit::window::Window,
     wgpu_surface: wgpu::Surface,
 }
 
@@ -31,8 +31,8 @@ impl Window {
         let wgpu_surface = unsafe { app.wgpu_instance().create_surface(&winit_window).unwrap() };
 
         Self {
-            window: winit_window,
             id,
+            winit_window,
             wgpu_surface,
         }
     }
@@ -42,20 +42,20 @@ impl Window {
     }
 
     pub fn set_title(&self, title: &str) {
-        self.window.set_title(title);
+        self.winit_window.set_title(title);
     }
 
     pub fn set_visible(&self, visible: bool) {
-        self.window.set_visible(visible);
+        self.winit_window.set_visible(visible);
     }
 
     pub fn set_size(&self, width: u32, height: u32) {
-        self.window
+        self.winit_window
             .set_inner_size(winit::dpi::PhysicalSize::new(width, height));
     }
 
     pub fn set_position(&self, x: i32, y: i32) {
-        self.window
+        self.winit_window
             .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
     }
 
