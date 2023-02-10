@@ -8,6 +8,7 @@ pub struct Id(winit::window::WindowId);
 pub struct Window {
     window: winit::window::Window,
     id: Id,
+    wgpu_surface: wgpu::Surface,
 }
 
 impl Id {
@@ -27,10 +28,12 @@ impl Window {
             .unwrap();
 
         let id = Id::new(winit_window.id());
+        let wgpu_surface = unsafe { app.wgpu_instance().create_surface(&winit_window).unwrap() };
 
         Self {
             window: winit_window,
             id,
+            wgpu_surface,
         }
     }
 

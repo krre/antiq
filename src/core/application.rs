@@ -31,6 +31,10 @@ impl Application {
         &self.event_loop
     }
 
+    pub(crate) fn wgpu_instance(&self) -> &wgpu::Instance {
+        &&self.wgpu_instance
+    }
+
     pub fn create_window(&mut self) -> &Window {
         let window = Box::new(Window::new(self));
         let id = window.id().winit_id();
