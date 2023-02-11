@@ -31,7 +31,13 @@ impl Window {
             .unwrap();
 
         let id = Id::new(winit_window.id());
-        let wgpu_surface = unsafe { app.wgpu_instance().create_surface(&winit_window).unwrap() };
+        let wgpu_surface = unsafe {
+            app.engine()
+                .gpu()
+                .instance()
+                .create_surface(&winit_window)
+                .unwrap()
+        };
 
         Self {
             id,

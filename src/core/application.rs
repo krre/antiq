@@ -1,5 +1,6 @@
+use crate::gfx::engine::Engine;
+
 use super::{window, Window};
-use pollster;
 use std::collections::HashMap;
 use std::ops::Deref;
 use winit::window::WindowId;
@@ -8,43 +9,18 @@ use winit::{
     event_loop::EventLoop,
 };
 
-#[derive(Debug)]
 pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, Box<window::Window>>,
-    wgpu_instance: wgpu::Instance,
-    wgpu_adapter: wgpu::Adapter,
-    wgpu_device: wgpu::Device,
-    wgpu_queue: wgpu::Queue,
+    engine: Engine,
 }
 
 impl Application {
     pub fn new() -> Self {
-        let wgpu_instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
-            dx12_shader_compiler: wgpu::Dx12Compiler::Fxc,
-        });
-
-        let adapter_options = wgpu::RequestAdapterOptions {
-            ..Default::default()
-        };
-
-        let wgpu_adapter =
-            pollster::block_on(wgpu_instance.request_adapter(&adapter_options)).unwrap();
-
-        println!("Graphic adapter: {}", wgpu_adapter.get_info().name);
-
-        let device_descriptor = wgpu::DeviceDescriptor::default();
-        let device_future = wgpu_adapter.request_device(&device_descriptor, None);
-        let (wgpu_device, wgpu_queue) = pollster::block_on(device_future).unwrap();
-
         Self {
             event_loop: EventLoop::new(),
             windows: HashMap::new(),
-            wgpu_instance,
-            wgpu_adapter,
-            wgpu_device,
-            wgpu_queue,
+            engine: Engine::new(),
         }
     }
 
@@ -52,8 +28,8 @@ impl Application {
         &self.event_loop
     }
 
-    pub(crate) fn wgpu_instance(&self) -> &wgpu::Instance {
-        &&self.wgpu_instance
+    pub(crate) fn engine(&self) -> &Engine {
+        &self.engine
     }
 
     pub fn create_window(&mut self) -> &Window {
