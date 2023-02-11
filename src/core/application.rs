@@ -1,4 +1,5 @@
 use super::{window, Window};
+use pollster;
 use std::collections::HashMap;
 use std::ops::Deref;
 use winit::window::WindowId;
@@ -12,6 +13,7 @@ pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, Box<window::Window>>,
     wgpu_instance: wgpu::Instance,
+    wgpu_adapter: wgpu::Adapter,
 }
 
 impl Application {
@@ -20,10 +22,21 @@ impl Application {
             backends: wgpu::Backends::all(),
             dx12_shader_compiler: wgpu::Dx12Compiler::Fxc,
         });
+
+        let adapter_options = wgpu::RequestAdapterOptions {
+            ..Default::default()
+        };
+
+        let wgpu_adapter =
+            pollster::block_on(wgpu_instance.request_adapter(&adapter_options)).unwrap();
+
+        println!("Graphic adapter: {}", wgpu_adapter.get_info().name);
+
         Self {
             event_loop: EventLoop::new(),
             windows: HashMap::new(),
             wgpu_instance,
+            wgpu_adapter,
         }
     }
 
