@@ -14,6 +14,8 @@ pub struct Application {
     windows: HashMap<WindowId, Box<window::Window>>,
     wgpu_instance: wgpu::Instance,
     wgpu_adapter: wgpu::Adapter,
+    wgpu_device: wgpu::Device,
+    wgpu_queue: wgpu::Queue,
 }
 
 impl Application {
@@ -32,11 +34,17 @@ impl Application {
 
         println!("Graphic adapter: {}", wgpu_adapter.get_info().name);
 
+        let device_descriptor = wgpu::DeviceDescriptor::default();
+        let device_future = wgpu_adapter.request_device(&device_descriptor, None);
+        let (wgpu_device, wgpu_queue) = pollster::block_on(device_future).unwrap();
+
         Self {
             event_loop: EventLoop::new(),
             windows: HashMap::new(),
             wgpu_instance,
             wgpu_adapter,
+            wgpu_device,
+            wgpu_queue,
         }
     }
 
