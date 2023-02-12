@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use crate::core::Application;
+use crate::{core::Application, gfx::gpu::Gpu};
 use winit;
 
 #[derive(Debug, Clone, Copy)]
@@ -12,6 +12,7 @@ pub struct Window {
     title: RefCell<String>,
     winit_window: winit::window::Window,
     wgpu_surface: wgpu::Surface,
+    wgpu_config: RefCell<wgpu::SurfaceConfiguration>,
 }
 
 impl Id {
@@ -31,6 +32,7 @@ impl Window {
             .unwrap();
 
         let id = Id::new(winit_window.id());
+
         let wgpu_surface = unsafe {
             app.engine()
                 .gpu()
@@ -39,11 +41,27 @@ impl Window {
                 .unwrap()
         };
 
+        let caps = wgpu_surface.get_capabilities(app.engine().gpu().adapter());
+        let size = winit_window.inner_size();
+
+        let wgpu_config = wgpu::SurfaceConfiguration {
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+            format: caps.formats[0],
+            width: size.width,
+            height: size.height,
+            present_mode: wgpu::PresentMode::Fifo,
+            alpha_mode: caps.alpha_modes[0],
+            view_formats: vec![],
+        };
+
+        wgpu_surface.configure(app.engine().gpu().device(), &wgpu_config);
+
         Self {
             id,
             title: RefCell::new(String::from("")),
             winit_window,
             wgpu_surface,
+            wgpu_config: RefCell::new(wgpu_config),
         }
     }
 
@@ -70,11 +88,44 @@ impl Window {
             .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
     }
 
+    pub fn resize(&self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
+        self.wgpu_config.borrow_mut().width = size.width;
+        self.wgpu_config.borrow_mut().height = size.height;
+        self.wgpu_surface
+            .configure(device, &self.wgpu_config.borrow());
+        self.winit_window.request_redraw();
+    }
+
     pub fn draw(&self) {
         println!("Draw window: {}", self.winit_window.title());
     }
 
-    pub fn render(&self) {
+    pub fn render(&self, gpu: &Gpu) {
         println!("Render window: {}", self.title.borrow());
+
+        let frame = self.wgpu_surface.get_current_texture().unwrap();
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+        let mut encoder = gpu
+            .device()
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+        {
+            let _rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::BLUE),
+                        store: true,
+                    },
+                })],
+                depth_stencil_attachment: None,
+            });
+        }
+
+        gpu.queue().submit(Some(encoder.finish()));
+        frame.present();
     }
 }

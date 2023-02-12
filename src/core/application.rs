@@ -44,8 +44,22 @@ impl Application {
             control_flow.set_wait();
 
             match event {
+                Event::WindowEvent {
+                    window_id,
+                    event: WindowEvent::Resized(size),
+                    ..
+                } => {
+                    self.windows
+                        .get(&window_id)
+                        .unwrap()
+                        .resize(self.engine.gpu().device(), size);
+                }
+
                 Event::RedrawRequested(window_id) => {
-                    self.windows.get(&window_id).unwrap().render();
+                    self.windows
+                        .get(&window_id)
+                        .unwrap()
+                        .render(self.engine.gpu());
                 }
 
                 Event::WindowEvent {

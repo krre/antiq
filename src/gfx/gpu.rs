@@ -10,12 +10,8 @@ pub struct Gpu {
 impl Gpu {
     pub fn new() -> Self {
         let instance = wgpu::Instance::default();
-
-        let adapter_options = wgpu::RequestAdapterOptions {
-            ..Default::default()
-        };
-
-        let adapter = pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
+        // FIXME: Founded adapter may not match the window surface. Better use instance.request_adapter() with appropriate surface.
+        let adapter = Self::find_adapter(&instance);
 
         println!("Graphics adapter: {}", adapter.get_info().name);
 
@@ -31,7 +27,33 @@ impl Gpu {
         }
     }
 
+    fn find_adapter(instance: &Instance) -> Adapter {
+        for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
+            if adapter.get_info().device_type == wgpu::DeviceType::DiscreteGpu {
+                return adapter;
+            }
+        }
+
+        let adapter_options = wgpu::RequestAdapterOptions {
+            ..Default::default()
+        };
+
+        return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
+    }
+
     pub fn instance(&self) -> &Instance {
         &self.instance
+    }
+
+    pub fn adapter(&self) -> &Adapter {
+        &self.adapter
+    }
+
+    pub fn device(&self) -> &Device {
+        &self.device
+    }
+
+    pub fn queue(&self) -> &Queue {
+        &self.queue
     }
 }
