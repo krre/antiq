@@ -9,10 +9,7 @@ pub struct Gpu {
 
 impl Gpu {
     pub fn new() -> Self {
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
-            dx12_shader_compiler: wgpu::Dx12Compiler::Fxc,
-        });
+        let instance = wgpu::Instance::default();
 
         let adapter_options = wgpu::RequestAdapterOptions {
             ..Default::default()
