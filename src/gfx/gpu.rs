@@ -20,7 +20,7 @@ impl Gpu {
 
         let adapter = pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
 
-        println!("Graphic adapter: {}", adapter.get_info().name);
+        println!("Graphics adapter: {}", adapter.get_info().name);
 
         let device_descriptor = wgpu::DeviceDescriptor::default();
         let device_future = adapter.request_device(&device_descriptor, None);
