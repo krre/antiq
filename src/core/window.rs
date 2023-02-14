@@ -87,6 +87,13 @@ impl Window {
             .set_inner_size(winit::dpi::PhysicalSize::new(width, height));
     }
 
+    pub fn size(&self) -> (u32, u32) {
+        (
+            self.winit_window.inner_size().width,
+            self.winit_window.inner_size().height,
+        )
+    }
+
     pub fn set_position(&self, x: i32, y: i32) {
         self.winit_window
             .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
