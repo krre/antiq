@@ -1,4 +1,4 @@
-use crate::gfx::engine::Engine;
+use crate::gfx::Engine;
 
 use super::{window, Window};
 use std::collections::HashMap;

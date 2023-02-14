@@ -1,2 +1,5 @@
-pub mod engine;
-pub mod gpu;
+mod engine;
+mod gpu;
+
+pub use engine::Engine;
+pub use gpu::Gpu;

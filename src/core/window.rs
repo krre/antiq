@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use crate::{core::Application, gfx::gpu::Gpu};
+use crate::{core::Application, gfx::Gpu};
 use winit;
 
 #[derive(Debug, Clone, Copy)]
