@@ -3,6 +3,8 @@ use std::cell::RefCell;
 use crate::{core::Application, gfx::Gpu};
 use winit;
 
+use super::Color;
+
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
 
@@ -13,6 +15,7 @@ pub struct Window {
     winit_window: winit::window::Window,
     wgpu_surface: wgpu::Surface,
     wgpu_config: RefCell<wgpu::SurfaceConfiguration>,
+    color: RefCell<Color>,
 }
 
 impl Id {
@@ -62,6 +65,7 @@ impl Window {
             winit_window,
             wgpu_surface,
             wgpu_config: RefCell::new(wgpu_config),
+            color: RefCell::new(Color::new(0.0, 0.0, 1.0, 1.0)),
         }
     }
 
@@ -86,6 +90,10 @@ impl Window {
     pub fn set_position(&self, x: i32, y: i32) {
         self.winit_window
             .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
+    }
+
+    pub fn set_color(&self, color: Color) {
+        *self.color.borrow_mut() = color
     }
 
     pub fn resize(&self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
@@ -117,7 +125,7 @@ impl Window {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::BLUE),
+                        load: wgpu::LoadOp::Clear(self.color.borrow().inner()),
                         store: true,
                     },
                 })],

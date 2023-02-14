@@ -1,4 +1,4 @@
-use antiq::core::Application;
+use antiq::core::{Application, Color};
 
 fn main() {
     let mut app = Application::new();
@@ -10,6 +10,7 @@ fn main() {
     window_2.set_title("Window 2");
     window_2.set_size(600, 400);
     window_2.set_position(500, 200);
+    window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
 
     app.run();
 }
