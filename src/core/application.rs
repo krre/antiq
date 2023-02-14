@@ -1,6 +1,6 @@
 use crate::gfx::Engine;
 
-use super::{window, Window};
+use super::Window;
 use std::collections::HashMap;
 use std::ops::Deref;
 use winit::window::WindowId;
@@ -11,7 +11,7 @@ use winit::{
 
 pub struct Application {
     event_loop: EventLoop<()>,
-    windows: HashMap<WindowId, Box<window::Window>>,
+    windows: HashMap<WindowId, Box<Window>>,
     engine: Engine,
 }
 

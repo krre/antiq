@@ -1,9 +1,9 @@
 use std::cell::RefCell;
 
-use crate::{core::Application, gfx::Gpu};
+use crate::gfx::Gpu;
 use winit;
 
-use super::Color;
+use super::{Application, Color};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
