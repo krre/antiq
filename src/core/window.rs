@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 
 use crate::gfx::Gpu;
-use winit;
+use winit::{self, dpi::PhysicalPosition};
 
 use super::{Application, Color};
 
@@ -16,6 +16,7 @@ pub struct Window {
     wgpu_surface: wgpu::Surface,
     wgpu_config: RefCell<wgpu::SurfaceConfiguration>,
     color: RefCell<Color>,
+    position: RefCell<PhysicalPosition<i32>>,
 }
 
 impl Id {
@@ -66,6 +67,7 @@ impl Window {
             wgpu_surface,
             wgpu_config: RefCell::new(wgpu_config),
             color: RefCell::new(Color::new(0.0, 0.0, 1.0, 1.0)),
+            position: RefCell::new(PhysicalPosition::default()),
         }
     }
 
@@ -95,8 +97,18 @@ impl Window {
     }
 
     pub fn set_position(&self, x: i32, y: i32) {
-        self.winit_window
-            .set_outer_position(winit::dpi::PhysicalPosition::new(x, y));
+        let pos = winit::dpi::PhysicalPosition::new(x, y);
+        self.winit_window.set_outer_position(pos);
+        self.set_cache_position(pos)
+    }
+
+    pub(crate) fn set_cache_position(&self, position: PhysicalPosition<i32>) {
+        *self.position.borrow_mut() = position;
+    }
+
+    pub fn position(&self) -> (i32, i32) {
+        let pos = self.position.borrow();
+        (pos.x, pos.y)
     }
 
     pub fn set_color(&self, color: Color) {

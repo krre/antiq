@@ -74,6 +74,16 @@ impl Application {
                     }
                 }
 
+                Event::WindowEvent {
+                    event: WindowEvent::Moved(pos),
+                    window_id,
+                } => {
+                    self.windows
+                        .get(&window_id)
+                        .unwrap()
+                        .set_cache_position(pos);
+                }
+
                 _ => (),
             }
         });
