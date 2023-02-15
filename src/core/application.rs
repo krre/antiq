@@ -2,6 +2,7 @@ use crate::gfx::Engine;
 
 use super::window;
 use super::Window;
+use once_cell::sync::OnceCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 use winit::platform::run_return::EventLoopExtRunReturn;
@@ -10,6 +11,9 @@ use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
 };
+
+static ORGANIZATION: OnceCell<String> = OnceCell::new();
+static NAME: OnceCell<String> = OnceCell::new();
 
 pub struct Application {
     event_loop: EventLoop<()>,
@@ -24,6 +28,31 @@ impl Application {
             windows: HashMap::new(),
             engine: Engine::new(),
         }
+    }
+
+    pub fn set_organization(organization: &str) {
+        ORGANIZATION.set(organization.to_string()).unwrap();
+    }
+
+    pub fn organization() -> Option<String> {
+        ORGANIZATION.get().cloned()
+    }
+
+    pub fn set_name(name: &str) {
+        NAME.set(name.to_string()).unwrap();
+    }
+
+    pub fn name() -> Option<String> {
+        NAME.get().cloned()
+    }
+
+    pub fn file_name() -> Option<String> {
+        std::env::current_exe()
+            .ok()?
+            .file_name()?
+            .to_str()?
+            .to_owned()
+            .into()
     }
 
     pub(crate) fn event_loop(&self) -> &EventLoop<()> {
@@ -92,14 +121,5 @@ impl Application {
                 _ => (),
             }
         });
-    }
-
-    pub fn name() -> Option<String> {
-        std::env::current_exe()
-            .ok()?
-            .file_name()?
-            .to_str()?
-            .to_owned()
-            .into()
     }
 }
