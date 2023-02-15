@@ -1,7 +1,7 @@
 use antiq::core::{Application, Color};
 
 fn main() {
-    let app = Application::new();
+    let mut app = Application::new();
 
     let window_1 = app.create_window();
     window_1.set_title("Window 1");
