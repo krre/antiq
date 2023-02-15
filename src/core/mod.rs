@@ -1,11 +1,11 @@
 pub mod node;
+pub mod window;
 
 mod application;
 mod color;
 mod entity_core;
 mod id;
 mod widget_core;
-mod window;
 
 pub use application::Application;
 pub use color::Color;

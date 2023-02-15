@@ -1,8 +1,10 @@
 use crate::gfx::Engine;
 
+use super::window;
 use super::Window;
+use std::cell::RefCell;
 use std::collections::HashMap;
-use std::ops::Deref;
+use std::rc::Rc;
 use winit::window::WindowId;
 use winit::{
     event::{Event, WindowEvent},
@@ -11,7 +13,7 @@ use winit::{
 
 pub struct Application {
     event_loop: EventLoop<()>,
-    windows: HashMap<WindowId, Box<Window>>,
+    windows: RefCell<HashMap<WindowId, Rc<Window>>>,
     engine: Engine,
 }
 
@@ -19,7 +21,7 @@ impl Application {
     pub fn new() -> Self {
         Self {
             event_loop: EventLoop::new(),
-            windows: HashMap::new(),
+            windows: RefCell::new(HashMap::new()),
             engine: Engine::new(),
         }
     }
@@ -32,14 +34,18 @@ impl Application {
         &self.engine
     }
 
-    pub fn create_window(&mut self) -> &Window {
-        let window = Box::new(Window::new(self));
-        let id = window.id().winit_id();
-        self.windows.insert(id, window);
-        self.windows.get(&id).unwrap().deref()
+    pub fn create_window(&self) -> Rc<Window> {
+        let w = Rc::new(Window::new(self));
+        let id = w.id();
+        self.windows.borrow_mut().insert(id.winit_id(), w);
+        self.window(id)
     }
 
-    pub fn run(mut self) {
+    pub fn window(&self, id: window::Id) -> Rc<Window> {
+        self.windows.borrow().get(&id.winit_id()).unwrap().clone()
+    }
+
+    pub fn run(self) {
         self.event_loop.run(move |event, _, control_flow| {
             control_flow.set_wait();
 
@@ -50,6 +56,7 @@ impl Application {
                     ..
                 } => {
                     self.windows
+                        .borrow()
                         .get(&window_id)
                         .unwrap()
                         .resize(self.engine.gpu().device(), size);
@@ -57,6 +64,7 @@ impl Application {
 
                 Event::RedrawRequested(window_id) => {
                     self.windows
+                        .borrow()
                         .get(&window_id)
                         .unwrap()
                         .render(self.engine.gpu());
@@ -66,10 +74,14 @@ impl Application {
                     event: WindowEvent::CloseRequested,
                     window_id,
                 } => {
-                    self.windows.get(&window_id).unwrap().set_visible(false);
-                    self.windows.remove(&window_id);
+                    self.windows
+                        .borrow()
+                        .get(&window_id)
+                        .unwrap()
+                        .set_visible(false);
+                    self.windows.borrow_mut().remove(&window_id);
 
-                    if self.windows.len() == 0 {
+                    if self.windows.borrow().len() == 0 {
                         control_flow.set_exit();
                     }
                 }
@@ -79,9 +91,9 @@ impl Application {
                     window_id,
                 } => {
                     self.windows
+                        .borrow()
                         .get(&window_id)
-                        .unwrap()
-                        .set_cache_position(pos);
+                        .map(|w| w.set_cache_position(pos));
                 }
 
                 _ => (),
