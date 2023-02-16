@@ -115,6 +115,14 @@ impl Window {
         *self.color.borrow_mut() = color
     }
 
+    pub fn set_maximized(&self, maximized: bool) {
+        self.winit_window.set_maximized(maximized);
+    }
+
+    pub fn is_maximized(&self) -> bool {
+        self.winit_window.is_maximized()
+    }
+
     pub fn resize(&self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
         self.wgpu_config.borrow_mut().width = size.width;
         self.wgpu_config.borrow_mut().height = size.height;
