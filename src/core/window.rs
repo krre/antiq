@@ -132,11 +132,11 @@ impl Window {
     }
 
     pub fn draw(&self) {
-        println!("Draw window: {}", self.winit_window.title());
+        log::info!("Draw window: {}", self.winit_window.title());
     }
 
     pub fn render(&self, gpu: &Gpu) {
-        println!("Render window: {}", self.title.borrow());
+        log::info!("Render window: {}", self.title.borrow());
 
         let frame = self.wgpu_surface.get_current_texture().unwrap();
         let view = frame

@@ -1,6 +1,8 @@
 use antiq::core::{Application, Color};
 
 fn main() {
+    env_logger::init();
+
     let mut app = Application::new();
 
     let window_1 = app.create_window();

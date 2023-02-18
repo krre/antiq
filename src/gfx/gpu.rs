@@ -13,7 +13,7 @@ impl Gpu {
         // FIXME: Founded adapter may not match the window surface. Better use instance.request_adapter() with appropriate surface.
         let adapter = Self::find_adapter(&instance);
 
-        println!("Graphics adapter: {}", adapter.get_info().name);
+        log::info!("Graphics adapter: {}", adapter.get_info().name);
 
         let device_descriptor = wgpu::DeviceDescriptor::default();
         let device_future = adapter.request_device(&device_descriptor, None);
