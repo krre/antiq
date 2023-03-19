@@ -1,31 +1,44 @@
-use std::{borrow::Cow, cell::RefCell, collections::HashMap, rc::Rc};
+use std::{borrow::Cow, collections::HashMap, rc::Rc};
+
+type Shaders = HashMap<ShaderName, Rc<wgpu::ShaderModule>>;
 
 pub struct ShaderStorage {
-    shaders: RefCell<HashMap<ShaderName, Rc<wgpu::ShaderModule>>>,
+    shaders: Shaders,
 }
 
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Eq, Hash, PartialEq, Debug)]
 pub enum ShaderName {
     Dot,
 }
 
 impl ShaderStorage {
-    pub fn new() -> Self {
-        Self {
-            shaders: RefCell::new(HashMap::new()),
-        }
+    pub fn new(device: &wgpu::Device) -> Self {
+        let mut shaders = HashMap::new();
+        Self::load(&device, &mut shaders);
+
+        Self { shaders }
     }
 
-    pub fn load(&self, device: &wgpu::Device) {
-        self.load_shader(device, ShaderName::Dot, include_str!("sources/dot.wgsl"));
+    pub fn shader(&self, name: ShaderName) -> &wgpu::ShaderModule {
+        &self
+            .shaders
+            .get(&name)
+            .expect(&format!("Shader {:?} not found", name))
     }
 
-    fn load_shader(&self, device: &wgpu::Device, name: ShaderName, source: &str) {
+    fn load(device: &wgpu::Device, shaders: &mut Shaders) {
+        shaders.insert(
+            ShaderName::Dot,
+            Self::load_shader(&device, include_str!("sources/dot.wgsl")),
+        );
+    }
+
+    fn load_shader(device: &wgpu::Device, source: &str) -> Rc<wgpu::ShaderModule> {
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
             source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(source)),
         });
 
-        self.shaders.borrow_mut().insert(name, Rc::new(shader));
+        Rc::new(shader)
     }
 }

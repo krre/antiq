@@ -10,9 +10,7 @@ pub struct Engine {
 impl Engine {
     pub fn new() -> Self {
         let gpu = Gpu::new();
-
-        let shader_storage = ShaderStorage::new();
-        shader_storage.load(gpu.device());
+        let shader_storage = ShaderStorage::new(gpu.device());
 
         Self {
             gpu,
