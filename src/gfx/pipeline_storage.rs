@@ -24,6 +24,13 @@ impl PipelineStorage {
         Self { pipelines }
     }
 
+    pub fn pipeline(&self, name: PipelineName) -> &wgpu::RenderPipeline {
+        &self
+            .pipelines
+            .get(&name)
+            .expect(&format!("Pipeline {:?} not found", name))
+    }
+
     fn create_pipeline(
         device: &wgpu::Device,
         shader: &wgpu::ShaderModule,
