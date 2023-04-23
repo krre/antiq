@@ -3,12 +3,11 @@ use std::cell::RefCell;
 use crate::gfx::Gpu;
 use winit::{self, dpi::PhysicalPosition};
 
-use super::{Application, Color};
+use super::{layout::Layout, Application, Color};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
 
-#[derive(Debug)]
 pub struct Window {
     id: Id,
     title: RefCell<String>,
@@ -17,6 +16,7 @@ pub struct Window {
     wgpu_config: RefCell<wgpu::SurfaceConfiguration>,
     color: RefCell<Color>,
     position: RefCell<PhysicalPosition<i32>>,
+    layout: Box<dyn Layout>,
 }
 
 impl Id {
@@ -30,7 +30,7 @@ impl Id {
 }
 
 impl Window {
-    pub(crate) fn new(app: &Application) -> Self {
+    pub(crate) fn new(app: &Application, layout: Box<dyn Layout>) -> Self {
         let winit_window = winit::window::WindowBuilder::new()
             .build(&app.event_loop())
             .unwrap();
@@ -68,6 +68,7 @@ impl Window {
             wgpu_config: RefCell::new(wgpu_config),
             color: RefCell::new(Color::new(0.0, 0.0, 1.0, 1.0)),
             position: RefCell::new(PhysicalPosition::default()),
+            layout,
         }
     }
 

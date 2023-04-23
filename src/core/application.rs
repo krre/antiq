@@ -1,5 +1,6 @@
 use crate::gfx::Engine;
 
+use super::layout::Layout;
 use super::window;
 use super::Window;
 use once_cell::sync::OnceCell;
@@ -63,8 +64,8 @@ impl Application {
         &self.engine
     }
 
-    pub fn create_window(&mut self) -> Rc<Window> {
-        let w = Rc::new(Window::new(self));
+    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> Rc<Window> {
+        let w = Rc::new(Window::new(self, layout));
         let id = w.id();
         self.windows.insert(id.winit_id(), w);
         self.window(id)
