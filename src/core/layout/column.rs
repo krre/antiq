@@ -1,3 +1,5 @@
+use super::Layout;
+
 pub struct Column {}
 
 impl Column {
@@ -5,3 +7,5 @@ impl Column {
         Self {}
     }
 }
+
+impl Layout for Column {}

@@ -1,3 +1,5 @@
+use super::Layout;
+
 pub struct Row {}
 
 impl Row {
@@ -5,3 +7,5 @@ impl Row {
         Self {}
     }
 }
+
+impl Layout for Row {}

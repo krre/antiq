@@ -1,3 +1,5 @@
+use super::Layout;
+
 pub struct Grid {}
 
 impl Grid {
@@ -5,3 +7,5 @@ impl Grid {
         Self {}
     }
 }
+
+impl Layout for Grid {}

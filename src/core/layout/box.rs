@@ -1,3 +1,5 @@
+use super::Layout;
+
 pub struct Box {}
 
 impl Box {
@@ -5,3 +7,5 @@ impl Box {
         Self {}
     }
 }
+
+impl Layout for Box {}

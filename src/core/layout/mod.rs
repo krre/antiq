@@ -7,3 +7,5 @@ pub use column::Column;
 pub use grid::Grid;
 pub use r#box::Box;
 pub use row::Row;
+
+pub trait Layout {}
