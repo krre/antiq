@@ -5,14 +5,17 @@ fn main() {
 
     let mut app = Application::new();
 
-    let window_1 = app.create_window(Box::new(layout::Box::new()));
-    window_1.set_title("Window 1");
+    let window_id_1 = app.create_window(Box::new(layout::Box::new()));
+    app.window_mut(window_id_1).set_title("Window 1");
 
-    let window_2 = app.create_window(Box::new(layout::Box::new()));
-    window_2.set_title("Window 2");
-    window_2.set_size(600, 400);
-    window_2.set_position(500, 200);
-    window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
+    let window_id_2 = app.create_window(Box::new(layout::Box::new()));
+
+    {
+        let mut window_2 = app.window_mut(window_id_2);
+        window_2.set_size(600, 400);
+        window_2.set_position(500, 200);
+        window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
+    }
 
     app.run();
 }

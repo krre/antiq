@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-
 use crate::gfx::Gpu;
 use winit::{self, dpi::PhysicalPosition};
 
@@ -10,12 +8,12 @@ pub struct Id(winit::window::WindowId);
 
 pub struct Window {
     id: Id,
-    title: RefCell<String>,
+    title: String,
     winit_window: winit::window::Window,
     wgpu_surface: wgpu::Surface,
-    wgpu_config: RefCell<wgpu::SurfaceConfiguration>,
-    color: RefCell<Color>,
-    position: RefCell<PhysicalPosition<i32>>,
+    wgpu_config: wgpu::SurfaceConfiguration,
+    color: Color,
+    position: PhysicalPosition<i32>,
     layout: Box<dyn Layout>,
 }
 
@@ -62,12 +60,12 @@ impl Window {
 
         Self {
             id,
-            title: RefCell::new(String::from("")),
+            title: String::from(""),
             winit_window,
             wgpu_surface,
-            wgpu_config: RefCell::new(wgpu_config),
-            color: RefCell::new(Color::new(0.0, 0.0, 1.0, 1.0)),
-            position: RefCell::new(PhysicalPosition::default()),
+            wgpu_config,
+            color: Color::new(0.0, 0.0, 1.0, 1.0),
+            position: PhysicalPosition::default(),
             layout,
         }
     }
@@ -76,9 +74,9 @@ impl Window {
         self.id
     }
 
-    pub fn set_title(&self, title: &str) {
+    pub fn set_title(&mut self, title: &str) {
         self.winit_window.set_title(title);
-        *self.title.borrow_mut() = String::from(title);
+        self.title = String::from(title);
     }
 
     pub fn set_visible(&self, visible: bool) {
@@ -97,23 +95,22 @@ impl Window {
         )
     }
 
-    pub fn set_position(&self, x: i32, y: i32) {
+    pub fn set_position(&mut self, x: i32, y: i32) {
         let pos = winit::dpi::PhysicalPosition::new(x, y);
         self.winit_window.set_outer_position(pos);
         self.set_cache_position(pos)
     }
 
-    pub(crate) fn set_cache_position(&self, position: PhysicalPosition<i32>) {
-        *self.position.borrow_mut() = position;
+    pub(crate) fn set_cache_position(&mut self, position: PhysicalPosition<i32>) {
+        self.position = position;
     }
 
     pub fn position(&self) -> (i32, i32) {
-        let pos = self.position.borrow();
-        (pos.x, pos.y)
+        (self.position.x, self.position.y)
     }
 
-    pub fn set_color(&self, color: Color) {
-        *self.color.borrow_mut() = color
+    pub fn set_color(&mut self, color: Color) {
+        self.color = color;
     }
 
     pub fn set_maximized(&self, maximized: bool) {
@@ -124,11 +121,10 @@ impl Window {
         self.winit_window.is_maximized()
     }
 
-    pub fn resize(&self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
-        self.wgpu_config.borrow_mut().width = size.width;
-        self.wgpu_config.borrow_mut().height = size.height;
-        self.wgpu_surface
-            .configure(device, &self.wgpu_config.borrow());
+    pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
+        self.wgpu_config.width = size.width;
+        self.wgpu_config.height = size.height;
+        self.wgpu_surface.configure(device, &self.wgpu_config);
         self.winit_window.request_redraw();
     }
 
@@ -137,7 +133,7 @@ impl Window {
     }
 
     pub fn render(&self, gpu: &Gpu) {
-        log::info!("Render window: {}", self.title.borrow());
+        log::info!("Render window: {}", self.title);
 
         let frame = self.wgpu_surface.get_current_texture().unwrap();
         let view = frame
@@ -153,7 +149,7 @@ impl Window {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(self.color.borrow().inner()),
+                        load: wgpu::LoadOp::Clear(self.color.inner()),
                         store: true,
                     },
                 })],

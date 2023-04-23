@@ -2,10 +2,11 @@ use crate::gfx::Engine;
 
 use super::layout::Layout;
 use super::window;
+use super::window::Id;
 use super::Window;
 use once_cell::sync::OnceCell;
+use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
-use std::rc::Rc;
 use winit::platform::run_return::EventLoopExtRunReturn;
 use winit::window::WindowId;
 use winit::{
@@ -18,7 +19,7 @@ static NAME: OnceCell<String> = OnceCell::new();
 
 pub struct Application {
     event_loop: EventLoop<()>,
-    windows: HashMap<WindowId, Rc<Window>>,
+    windows: HashMap<WindowId, RefCell<Window>>,
     engine: Engine,
 }
 
@@ -64,15 +65,19 @@ impl Application {
         &self.engine
     }
 
-    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> Rc<Window> {
-        let w = Rc::new(Window::new(self, layout));
-        let id = w.id();
+    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> Id {
+        let w = RefCell::new(Window::new(self, layout));
+        let id = w.borrow().id();
         self.windows.insert(id.winit_id(), w);
-        self.window(id)
+        id
     }
 
-    pub fn window(&self, id: window::Id) -> Rc<Window> {
-        self.windows.get(&id.winit_id()).unwrap().clone()
+    pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
+        self.windows.get(&id.winit_id()).unwrap().borrow()
+    }
+
+    pub fn window_mut(&self, id: window::Id) -> RefMut<Window> {
+        self.windows.get(&id.winit_id()).unwrap().borrow_mut()
     }
 
     pub fn run(&mut self) {
@@ -88,6 +93,7 @@ impl Application {
                     self.windows
                         .get(&window_id)
                         .unwrap()
+                        .borrow_mut()
                         .resize(self.engine.gpu().device(), size);
                 }
 
@@ -95,6 +101,7 @@ impl Application {
                     self.windows
                         .get(&window_id)
                         .unwrap()
+                        .borrow_mut()
                         .render(self.engine.gpu());
                 }
 
@@ -102,7 +109,11 @@ impl Application {
                     event: WindowEvent::CloseRequested,
                     window_id,
                 } => {
-                    self.windows.get(&window_id).unwrap().set_visible(false);
+                    self.windows
+                        .get(&window_id)
+                        .unwrap()
+                        .borrow_mut()
+                        .set_visible(false);
                     self.windows.remove(&window_id);
 
                     if self.windows.len() == 0 {
@@ -116,7 +127,7 @@ impl Application {
                 } => {
                     self.windows
                         .get(&window_id)
-                        .map(|w| w.set_cache_position(pos));
+                        .map(|w| w.borrow_mut().set_cache_position(pos));
                 }
 
                 _ => (),
