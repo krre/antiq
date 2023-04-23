@@ -1,3 +1,6 @@
+mod rectangle;
+pub use rectangle::Rectangle;
+
 pub trait Widget {
     fn draw(&self);
 }
