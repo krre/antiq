@@ -8,4 +8,6 @@ pub use grid::Grid;
 pub use r#box::Box;
 pub use row::Row;
 
-pub trait Layout {}
+pub trait Layout {
+    fn draw(&self);
+}

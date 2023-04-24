@@ -130,6 +130,7 @@ impl Window {
 
     pub fn draw(&self) {
         log::info!("Draw window: {}", self.winit_window.title());
+        self.layout.draw();
     }
 
     pub fn render(&self, gpu: &Gpu) {

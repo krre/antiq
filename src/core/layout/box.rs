@@ -18,4 +18,8 @@ impl Box {
     }
 }
 
-impl Layout for Box {}
+impl Layout for Box {
+    fn draw(&self) {
+        log::info!("Draw box layout");
+    }
+}

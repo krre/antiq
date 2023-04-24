@@ -8,4 +8,6 @@ impl Grid {
     }
 }
 
-impl Layout for Grid {}
+impl Layout for Grid {
+    fn draw(&self) {}
+}

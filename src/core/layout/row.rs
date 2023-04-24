@@ -8,4 +8,6 @@ impl Row {
     }
 }
 
-impl Layout for Row {}
+impl Layout for Row {
+    fn draw(&self) {}
+}
