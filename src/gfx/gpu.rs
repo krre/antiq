@@ -1,5 +1,7 @@
 use wgpu::{Adapter, Device, Instance, Queue};
 
+use super::Surface;
+
 pub struct Gpu {
     instance: Instance,
     adapter: Adapter,
@@ -41,9 +43,33 @@ impl Gpu {
         return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
     }
 
-    pub fn clear_frame(&self, color: &wgpu::Color, view: &wgpu::TextureView) {
+    pub fn create_surface(&self, window: &winit::window::Window) -> Surface {
+        let wgpu_surface = unsafe { self.instance.create_surface(&window).unwrap() };
+
+        let caps = wgpu_surface.get_capabilities(&self.adapter);
+        let size = window.inner_size();
+
+        let wgpu_config = wgpu::SurfaceConfiguration {
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+            format: caps.formats[0],
+            width: size.width,
+            height: size.height,
+            present_mode: wgpu::PresentMode::Fifo,
+            alpha_mode: caps.alpha_modes[0],
+            view_formats: vec![],
+        };
+
+        wgpu_surface.configure(&self.device, &wgpu_config);
+
+        Surface {
+            wgpu_surface,
+            wgpu_config,
+        }
+    }
+
+    pub fn clear_view(&self, view: &wgpu::TextureView, color: &wgpu::Color) {
         let mut encoder = self
-            .device()
+            .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
         {
             let _rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -60,7 +86,7 @@ impl Gpu {
             });
         }
 
-        self.queue().submit(Some(encoder.finish()));
+        self.queue.submit(Some(encoder.finish()));
     }
 
     pub fn instance(&self) -> &Instance {

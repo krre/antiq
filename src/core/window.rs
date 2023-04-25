@@ -1,4 +1,4 @@
-use crate::gfx::Gpu;
+use crate::gfx::{self, Gpu};
 use winit::{self, dpi::PhysicalPosition};
 
 use super::{layout::Layout, Application, Color};
@@ -10,8 +10,7 @@ pub struct Window {
     id: Id,
     title: String,
     winit_window: winit::window::Window,
-    wgpu_surface: wgpu::Surface,
-    wgpu_config: wgpu::SurfaceConfiguration,
+    surface: gfx::Surface,
     color: Color,
     position: PhysicalPosition<i32>,
     layout: Box<dyn Layout>,
@@ -34,36 +33,13 @@ impl Window {
             .unwrap();
 
         let id = Id::new(winit_window.id());
-
-        let wgpu_surface = unsafe {
-            app.engine()
-                .gpu()
-                .instance()
-                .create_surface(&winit_window)
-                .unwrap()
-        };
-
-        let caps = wgpu_surface.get_capabilities(app.engine().gpu().adapter());
-        let size = winit_window.inner_size();
-
-        let wgpu_config = wgpu::SurfaceConfiguration {
-            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: caps.formats[0],
-            width: size.width,
-            height: size.height,
-            present_mode: wgpu::PresentMode::Fifo,
-            alpha_mode: caps.alpha_modes[0],
-            view_formats: vec![],
-        };
-
-        wgpu_surface.configure(app.engine().gpu().device(), &wgpu_config);
+        let surface = app.engine().gpu().create_surface(&winit_window);
 
         Self {
             id,
             title: String::from(""),
             winit_window,
-            wgpu_surface,
-            wgpu_config,
+            surface,
             color: Color::new(0.0, 0.0, 1.0, 1.0),
             position: PhysicalPosition::default(),
             layout,
@@ -122,9 +98,7 @@ impl Window {
     }
 
     pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
-        self.wgpu_config.width = size.width;
-        self.wgpu_config.height = size.height;
-        self.wgpu_surface.configure(device, &self.wgpu_config);
+        self.surface.resize(device, size.width, size.height);
         self.winit_window.request_redraw();
     }
 
@@ -136,11 +110,11 @@ impl Window {
     pub fn render(&self, gpu: &Gpu) {
         log::info!("Render window: {}", self.title);
 
-        let frame = self.wgpu_surface.get_current_texture().unwrap();
+        let frame = self.surface.current_frame();
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        gpu.clear_frame(&self.color.inner(), &view);
+        gpu.clear_view(&view, &self.color.inner());
         frame.present();
     }
 }
