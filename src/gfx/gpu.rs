@@ -41,6 +41,28 @@ impl Gpu {
         return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
     }
 
+    pub fn clear_frame(&self, color: &wgpu::Color, view: &wgpu::TextureView) {
+        let mut encoder = self
+            .device()
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+        {
+            let _rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(*color),
+                        store: true,
+                    },
+                })],
+                depth_stencil_attachment: None,
+            });
+        }
+
+        self.queue().submit(Some(encoder.finish()));
+    }
+
     pub fn instance(&self) -> &Instance {
         &self.instance
     }
