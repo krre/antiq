@@ -4,8 +4,8 @@ use super::{PipelineStorage, ShaderStorage};
 
 pub struct Engine {
     gpu: Gpu,
-    shader_storage: ShaderStorage,
-    pipeline_storage: PipelineStorage,
+    _shader_storage: ShaderStorage,
+    _pipeline_storage: PipelineStorage,
 }
 
 impl Engine {
@@ -16,8 +16,8 @@ impl Engine {
 
         Self {
             gpu,
-            shader_storage,
-            pipeline_storage,
+            _shader_storage: shader_storage,
+            _pipeline_storage: pipeline_storage,
         }
     }
 
