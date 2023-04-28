@@ -16,6 +16,12 @@ pub struct Size {
     height: u32,
 }
 
+#[derive(Clone, Copy)]
+pub struct Position {
+    x: i32,
+    y: i32,
+}
+
 impl Size {
     pub fn new(width: u32, height: u32) -> Self {
         Self { width, height }
@@ -27,5 +33,25 @@ impl Size {
 
     pub fn height(&self) -> u32 {
         self.height
+    }
+}
+
+impl Position {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+
+    pub fn x(&self) -> i32 {
+        self.x
+    }
+
+    pub fn y(&self) -> i32 {
+        self.y
+    }
+}
+
+impl Default for Position {
+    fn default() -> Self {
+        Self::new(0, 0)
     }
 }

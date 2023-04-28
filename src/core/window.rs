@@ -1,7 +1,7 @@
 use crate::gfx::{self, Gpu};
-use winit::{self, dpi::PhysicalPosition};
+use winit;
 
-use super::{layout::Layout, Application, Color, Size};
+use super::{layout::Layout, Application, Color, Position, Size};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -12,7 +12,7 @@ pub struct Window {
     winit_window: winit::window::Window,
     surface: gfx::Surface,
     color: Color,
-    position: PhysicalPosition<i32>,
+    position: Position,
     layout: Box<dyn Layout>,
 }
 
@@ -41,7 +41,7 @@ impl Window {
             winit_window,
             surface,
             color: Color::new(0.0, 0.0, 1.0, 1.0),
-            position: PhysicalPosition::default(),
+            position: Position::default(),
             layout,
         }
     }
@@ -71,18 +71,21 @@ impl Window {
         )
     }
 
-    pub fn set_position(&mut self, x: i32, y: i32) {
-        let pos = winit::dpi::PhysicalPosition::new(x, y);
-        self.winit_window.set_outer_position(pos);
-        self.set_cache_position(pos)
+    pub fn set_position(&mut self, position: Position) {
+        self.winit_window
+            .set_outer_position(winit::dpi::PhysicalPosition::new(
+                position.x(),
+                position.y(),
+            ));
+        self.set_cache_position(position)
     }
 
-    pub(crate) fn set_cache_position(&mut self, position: PhysicalPosition<i32>) {
+    pub(crate) fn set_cache_position(&mut self, position: Position) {
         self.position = position;
     }
 
-    pub fn position(&self) -> (i32, i32) {
-        (self.position.x, self.position.y)
+    pub fn position(&self) -> Position {
+        self.position
     }
 
     pub fn set_color(&mut self, color: Color) {

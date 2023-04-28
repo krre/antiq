@@ -1,9 +1,9 @@
 use crate::gfx::Engine;
 
 use super::layout::Layout;
-use super::window;
 use super::window::Id;
 use super::Window;
+use super::{window, Position};
 use once_cell::sync::OnceCell;
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
@@ -127,9 +127,10 @@ impl Application {
                     event: WindowEvent::Moved(pos),
                     window_id,
                 } => {
-                    self.windows
-                        .get(&window_id)
-                        .map(|w| w.borrow_mut().set_cache_position(pos));
+                    self.windows.get(&window_id).map(|w| {
+                        w.borrow_mut()
+                            .set_cache_position(Position::new(pos.x, pos.y))
+                    });
                 }
 
                 _ => (),
