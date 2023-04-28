@@ -1,7 +1,7 @@
 use crate::gfx::{self, Gpu};
 use winit::{self, dpi::PhysicalPosition};
 
-use super::{layout::Layout, Application, Color};
+use super::{layout::Layout, Application, Color, Size};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -59,13 +59,13 @@ impl Window {
         self.winit_window.set_visible(visible);
     }
 
-    pub fn set_size(&self, width: u32, height: u32) {
+    pub fn set_size(&self, size: Size) {
         self.winit_window
-            .set_inner_size(winit::dpi::PhysicalSize::new(width, height));
+            .set_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn size(&self) -> (u32, u32) {
-        (
+    pub fn size(&self) -> Size {
+        Size::new(
             self.winit_window.inner_size().width,
             self.winit_window.inner_size().height,
         )

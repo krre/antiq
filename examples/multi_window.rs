@@ -1,4 +1,4 @@
-use antiq::core::{layout, Application, Color};
+use antiq::core::{layout, Application, Color, Size};
 
 fn main() {
     env_logger::init();
@@ -12,7 +12,7 @@ fn main() {
 
     {
         let mut window_2 = app.window_mut(window_id_2);
-        window_2.set_size(600, 400);
+        window_2.set_size(Size::new(600, 400));
         window_2.set_position(500, 200);
         window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
     }
