@@ -1,4 +1,4 @@
-use crate::gfx::gpu::Gpu;
+use crate::gfx::Gpu;
 
 use super::{PipelineStorage, ShaderStorage};
 
