@@ -11,6 +11,7 @@ pub use color::Color;
 pub use id::Id;
 pub use window::Window;
 
+#[derive(Clone, Copy)]
 pub struct Size {
     width: u32,
     height: u32,
