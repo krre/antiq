@@ -1,7 +1,6 @@
 use crate::gfx::Engine;
 
 use super::layout::Layout;
-use super::window::Id;
 use super::Window;
 use super::{window, Position};
 use once_cell::sync::OnceCell;
@@ -65,11 +64,11 @@ impl Application {
         &self.engine
     }
 
-    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> Id {
+    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> RefMut<Window> {
         let w = RefCell::new(Window::new(self, layout));
         let id = w.borrow().id();
         self.windows.insert(id.winit_id(), w);
-        id
+        self.window_mut(id)
     }
 
     pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
