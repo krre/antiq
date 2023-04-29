@@ -12,13 +12,13 @@ pub use id::Id;
 use serde::{Deserialize, Serialize};
 pub use window::Window;
 
-#[derive(Clone, Copy, Serialize, Deserialize)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default)]
 pub struct Size {
     width: u32,
     height: u32,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default)]
 pub struct Position {
     x: i32,
     y: i32,
@@ -49,11 +49,5 @@ impl Position {
 
     pub fn y(&self) -> i32 {
         self.y
-    }
-}
-
-impl Default for Position {
-    fn default() -> Self {
-        Self::new(0, 0)
     }
 }
