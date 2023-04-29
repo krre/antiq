@@ -9,15 +9,16 @@ mod id;
 pub use application::Application;
 pub use color::Color;
 pub use id::Id;
+use serde::{Deserialize, Serialize};
 pub use window::Window;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Size {
     width: u32,
     height: u32,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Position {
     x: i32,
     y: i32,
