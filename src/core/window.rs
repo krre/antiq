@@ -6,6 +6,8 @@ use super::{layout::Layout, Application, Color, Position, Size};
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
 
+pub type DropHandler = dyn Fn(&Window);
+
 pub struct Window {
     id: Id,
     title: String,
@@ -14,6 +16,7 @@ pub struct Window {
     color: Color,
     position: Position,
     layout: Box<dyn Layout>,
+    drop_hanlder: Option<Box<DropHandler>>,
 }
 
 impl Id {
@@ -43,6 +46,7 @@ impl Window {
             color: Color::new(0.0, 0.0, 1.0, 1.0),
             position: Position::default(),
             layout,
+            drop_hanlder: None,
         }
     }
 
@@ -100,6 +104,10 @@ impl Window {
         self.winit_window.is_maximized()
     }
 
+    pub fn set_drop_handler(&mut self, handler: Box<DropHandler>) {
+        self.drop_hanlder = Some(handler);
+    }
+
     pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
         self.surface.resize(device, size.width, size.height);
         self.winit_window.request_redraw();
@@ -119,5 +127,13 @@ impl Window {
             .create_view(&wgpu::TextureViewDescriptor::default());
         gpu.clear_view(&view, &self.color.inner());
         frame.present();
+    }
+}
+
+impl Drop for Window {
+    fn drop(&mut self) {
+        if let Some(dh) = &self.drop_hanlder {
+            dh(self);
+        }
     }
 }
