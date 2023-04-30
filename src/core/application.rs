@@ -1,6 +1,7 @@
 use crate::gfx::Engine;
 
 use super::layout::Layout;
+use super::window::Settings;
 use super::Window;
 use super::{window, Position};
 use once_cell::sync::OnceCell;
@@ -64,8 +65,8 @@ impl Application {
         &self.engine
     }
 
-    pub fn create_window(&mut self, layout: Box<dyn Layout>) -> RefMut<Window> {
-        let w = RefCell::new(Window::new(self, layout));
+    pub fn create_window(&mut self, settings: Settings, layout: Box<dyn Layout>) -> RefMut<Window> {
+        let w = RefCell::new(Window::new(self, settings, layout));
         let id = w.borrow().id();
         self.windows.insert(id.winit_id(), w);
         self.window_mut(id)

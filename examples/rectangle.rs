@@ -1,5 +1,5 @@
 use antiq::{
-    core::{layout, Application},
+    core::{layout, window::Settings, Application},
     widget,
 };
 
@@ -12,8 +12,10 @@ fn main() {
     layout.set_widget(Box::new(widget::Rectangle::new()));
 
     {
-        let mut window = app.create_window(Box::new(layout));
-        window.set_title("Rectangle");
+        let mut settings = Settings::new();
+        settings.set_title("Rectangle");
+
+        app.create_window(settings, Box::new(layout));
     }
 
     app.run();

@@ -19,6 +19,15 @@ pub struct Window {
     drop_hanlder: Option<Box<DropHandler>>,
 }
 
+pub struct Settings {
+    title: String,
+    position: Option<Position>,
+    size: Option<Size>,
+    color: Color,
+    maximized: bool,
+    visible: bool,
+}
+
 impl Id {
     pub(crate) fn new(winit_id: winit::window::WindowId) -> Self {
         Self(winit_id)
@@ -30,21 +39,40 @@ impl Id {
 }
 
 impl Window {
-    pub(crate) fn new(app: &Application, layout: Box<dyn Layout>) -> Self {
-        let winit_window = winit::window::WindowBuilder::new()
-            .build(&app.event_loop())
-            .unwrap();
+    pub(crate) fn new(app: &Application, settings: Settings, layout: Box<dyn Layout>) -> Self {
+        let title = settings.title;
+        let mut builder = winit::window::WindowBuilder::new()
+            .with_title(title.clone())
+            .with_visible(settings.visible)
+            .with_maximized(settings.maximized);
+
+        let position = if let Some(position) = settings.position {
+            builder = builder.with_position(winit::dpi::PhysicalPosition::new(
+                position.x(),
+                position.y(),
+            ));
+            position
+        } else {
+            Position::new(200, 200)
+        };
+
+        if let Some(size) = settings.size {
+            builder =
+                builder.with_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
+        }
+
+        let winit_window = builder.build(&app.event_loop()).unwrap();
 
         let id = Id::new(winit_window.id());
         let surface = app.engine().gpu().create_surface(&winit_window);
 
         Self {
             id,
-            title: String::from(""),
+            title,
             winit_window,
             surface,
-            color: Color::new(0.0, 0.0, 1.0, 1.0),
-            position: Position::default(),
+            color: settings.color,
+            position,
             layout,
             drop_hanlder: None,
         }
@@ -134,6 +162,51 @@ impl Drop for Window {
     fn drop(&mut self) {
         if let Some(dh) = &self.drop_hanlder {
             dh(self);
+        }
+    }
+}
+
+impl Settings {
+    pub fn set_title(&mut self, title: &str) {
+        self.title = String::from(title);
+    }
+
+    pub fn set_visible(&mut self, visible: bool) {
+        self.visible = visible;
+    }
+
+    pub fn set_size(&mut self, size: Size) {
+        self.size = Some(size);
+    }
+
+    pub fn set_position(&mut self, position: Position) {
+        self.position = Some(position);
+    }
+
+    pub fn set_color(&mut self, color: Color) {
+        self.color = color;
+    }
+
+    pub fn set_maximized(&mut self, maximized: bool) {
+        self.maximized = maximized;
+    }
+}
+
+impl Settings {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            title: "Untitled".to_string(),
+            position: None,
+            size: None,
+            color: Color::new(0.0, 0.0, 1.0, 1.0),
+            maximized: false,
+            visible: true,
         }
     }
 }
