@@ -1,10 +1,12 @@
-use crate::gfx::{self, Gpu};
+use std::cell::RefCell;
+
+use crate::{
+    gfx::{self, Gpu},
+    widget::Widget,
+};
 use winit;
 
-use super::{
-    layout::{self, Layout},
-    Application, Color, Position, Size,
-};
+use super::{Application, Color, Position, Size};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -18,7 +20,7 @@ pub struct Window {
     surface: gfx::Surface,
     color: Color,
     position: Position,
-    layout: Box<dyn Layout>,
+    widgets: Vec<RefCell<Box<dyn Widget>>>,
     drop_hanlder: Option<Box<DropHandler>>,
 }
 
@@ -76,7 +78,7 @@ impl Window {
             surface,
             color: settings.color,
             position,
-            layout: Box::new(layout::Linear::new()),
+            widgets: Vec::new(),
             drop_hanlder: None,
         }
     }
@@ -146,7 +148,14 @@ impl Window {
 
     pub fn build(&self) {
         log::info!("Build window: {}", self.winit_window.title());
-        self.layout.build();
+
+        for widget in &self.widgets {
+            widget.borrow().build();
+        }
+    }
+
+    pub fn add_widget(&mut self, widget: Box<dyn Widget>) {
+        self.widgets.push(RefCell::new(widget));
     }
 
     pub fn render(&self, gpu: &Gpu) {

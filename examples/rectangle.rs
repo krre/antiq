@@ -1,4 +1,7 @@
-use antiq::core::{window::Settings, Application};
+use antiq::{
+    core::{window::Settings, Application},
+    widget::Rectangle,
+};
 
 fn main() {
     env_logger::init();
@@ -9,7 +12,8 @@ fn main() {
         let mut settings = Settings::new();
         settings.set_title("Rectangle");
 
-        app.create_window(settings);
+        let mut window = app.create_window(settings);
+        window.add_widget(Box::new(Rectangle::new()));
     }
 
     app.run();
