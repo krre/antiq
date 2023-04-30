@@ -15,7 +15,7 @@ fn main() {
         let mut settings = Settings::new();
         settings.set_title("Rectangle");
 
-        app.create_window(settings, Box::new(layout));
+        app.create_window(settings);
     }
 
     app.run();

@@ -1,7 +1,10 @@
 use crate::gfx::{self, Gpu};
 use winit;
 
-use super::{layout::Layout, Application, Color, Position, Size};
+use super::{
+    layout::{self, Layout},
+    Application, Color, Position, Size,
+};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -39,7 +42,7 @@ impl Id {
 }
 
 impl Window {
-    pub(crate) fn new(app: &Application, settings: Settings, layout: Box<dyn Layout>) -> Self {
+    pub(crate) fn new(app: &Application, settings: Settings) -> Self {
         let title = settings.title;
         let mut builder = winit::window::WindowBuilder::new()
             .with_title(title.clone())
@@ -73,7 +76,7 @@ impl Window {
             surface,
             color: settings.color,
             position,
-            layout,
+            layout: Box::new(layout::Box::new()),
             drop_hanlder: None,
         }
     }

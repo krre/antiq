@@ -1,4 +1,4 @@
-use antiq::core::{layout, window::Settings, Application, Color, Position, Size};
+use antiq::core::{window::Settings, Application, Color, Position, Size};
 
 fn main() {
     env_logger::init();
@@ -9,7 +9,7 @@ fn main() {
         let mut settings = Settings::new();
         settings.set_title("Window 1");
 
-        app.create_window(settings, Box::new(layout::Box::new()));
+        app.create_window(settings);
     }
 
     {
@@ -19,7 +19,7 @@ fn main() {
         settings.set_position(Position::new(500, 200));
         settings.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
 
-        app.create_window(settings, Box::new(layout::Box::new()));
+        app.create_window(settings);
     }
 
     app.run();

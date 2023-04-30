@@ -1,4 +1,4 @@
-use antiq::core::{layout, window::Settings, Application};
+use antiq::core::{window::Settings, Application};
 
 fn main() {
     env_logger::init();
@@ -9,7 +9,7 @@ fn main() {
         let mut settings = Settings::new();
         settings.set_title("Window");
 
-        app.create_window(settings, Box::new(layout::Box::new()));
+        app.create_window(settings);
     }
 
     app.run();
