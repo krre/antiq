@@ -1,15 +1,9 @@
-use antiq::{
-    core::{layout, window::Settings, Application},
-    widget,
-};
+use antiq::core::{window::Settings, Application};
 
 fn main() {
     env_logger::init();
 
     let mut app = Application::new();
-
-    let mut layout = layout::Box::new();
-    layout.set_widget(Box::new(widget::Rectangle::new()));
 
     {
         let mut settings = Settings::new();

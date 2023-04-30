@@ -76,7 +76,7 @@ impl Window {
             surface,
             color: settings.color,
             position,
-            layout: Box::new(layout::Box::new()),
+            layout: Box::new(layout::Linear::new()),
             drop_hanlder: None,
         }
     }
