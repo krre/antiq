@@ -9,5 +9,5 @@ impl Column {
 }
 
 impl Layout for Column {
-    fn draw(&self) {}
+    fn build(&self) {}
 }

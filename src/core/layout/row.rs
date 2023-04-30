@@ -9,5 +9,5 @@ impl Row {
 }
 
 impl Layout for Row {
-    fn draw(&self) {}
+    fn build(&self) {}
 }

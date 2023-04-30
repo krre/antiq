@@ -9,5 +9,5 @@ impl Rectangle {
 }
 
 impl Widget for Rectangle {
-    fn draw(&self) {}
+    fn build(&self) {}
 }

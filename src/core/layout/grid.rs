@@ -9,5 +9,5 @@ impl Grid {
 }
 
 impl Layout for Grid {
-    fn draw(&self) {}
+    fn build(&self) {}
 }

@@ -144,9 +144,9 @@ impl Window {
         self.winit_window.request_redraw();
     }
 
-    pub fn draw(&self) {
-        log::info!("Draw window: {}", self.winit_window.title());
-        self.layout.draw();
+    pub fn build(&self) {
+        log::info!("Build window: {}", self.winit_window.title());
+        self.layout.build();
     }
 
     pub fn render(&self, gpu: &Gpu) {

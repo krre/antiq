@@ -2,7 +2,7 @@ mod rectangle;
 pub use rectangle::Rectangle;
 
 pub trait Widget {
-    fn draw(&self);
+    fn build(&self);
 }
 
 pub struct EmptyWidget {}
@@ -14,5 +14,5 @@ impl EmptyWidget {
 }
 
 impl Widget for EmptyWidget {
-    fn draw(&self) {}
+    fn build(&self) {}
 }

@@ -9,5 +9,5 @@ pub use linear::Linear;
 pub use row::Row;
 
 pub trait Layout {
-    fn draw(&self);
+    fn build(&self);
 }

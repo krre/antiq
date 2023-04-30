@@ -97,7 +97,7 @@ impl Application {
                 }
 
                 Event::RedrawRequested(window_id) => {
-                    self.windows.get(&window_id).unwrap().borrow().draw();
+                    self.windows.get(&window_id).unwrap().borrow().build();
 
                     self.windows
                         .get(&window_id)

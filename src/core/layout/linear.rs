@@ -9,7 +9,7 @@ impl Linear {
 }
 
 impl Layout for Linear {
-    fn draw(&self) {
-        log::info!("Draw linear layout");
+    fn build(&self) {
+        log::info!("Build linear layout");
     }
 }
