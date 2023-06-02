@@ -3,9 +3,9 @@ use crate::gfx::Engine;
 use super::window::Settings;
 use super::Window;
 use super::{window, Position};
-use once_cell::sync::OnceCell;
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
+use std::sync::OnceLock;
 use winit::platform::run_return::EventLoopExtRunReturn;
 use winit::window::WindowId;
 use winit::{
@@ -13,8 +13,8 @@ use winit::{
     event_loop::EventLoop,
 };
 
-static ORGANIZATION: OnceCell<String> = OnceCell::new();
-static NAME: OnceCell<String> = OnceCell::new();
+static ORGANIZATION: OnceLock<String> = OnceLock::new();
+static NAME: OnceLock<String> = OnceLock::new();
 
 pub struct Application {
     event_loop: EventLoop<()>,
