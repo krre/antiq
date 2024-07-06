@@ -43,21 +43,13 @@ impl Gpu {
         return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
     }
 
-    pub fn create_surface(&self, window: &winit::window::Window) -> Surface {
-        let wgpu_surface = unsafe { self.instance.create_surface(&window).unwrap() };
-
-        let caps = wgpu_surface.get_capabilities(&self.adapter);
+    pub fn create_surface<'a>(&self, window: &'a winit::window::Window) -> Surface<'a> {
+        let wgpu_surface = self.instance.create_surface(window).unwrap();
         let size = window.inner_size();
 
-        let wgpu_config = wgpu::SurfaceConfiguration {
-            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: caps.formats[0],
-            width: size.width,
-            height: size.height,
-            present_mode: wgpu::PresentMode::Fifo,
-            alpha_mode: caps.alpha_modes[0],
-            view_formats: vec![],
-        };
+        let wgpu_config = wgpu_surface
+            .get_default_config(&self.adapter, size.width, size.height)
+            .unwrap();
 
         wgpu_surface.configure(&self.device, &wgpu_config);
 
@@ -79,10 +71,12 @@ impl Gpu {
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Clear(*color),
-                        store: true,
+                        store: wgpu::StoreOp::Store,
                     },
                 })],
                 depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
             });
         }
 

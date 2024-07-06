@@ -14,11 +14,21 @@ pub struct PipelineStorage {
 }
 
 impl PipelineStorage {
-    pub fn new(device: &wgpu::Device, shader_storage: &ShaderStorage) -> Self {
+    pub fn new(
+        adapter: &wgpu::Adapter,
+        device: &wgpu::Device,
+        surface: &wgpu::Surface,
+        shader_storage: &ShaderStorage,
+    ) -> Self {
         let mut pipelines = HashMap::new();
         pipelines.insert(
             PipelineName::Dot,
-            Self::create_pipeline(device, shader_storage.shader(ShaderName::Dot)),
+            Self::create_pipeline(
+                adapter,
+                device,
+                surface,
+                shader_storage.shader(ShaderName::Dot),
+            ),
         );
 
         Self { pipelines }
@@ -32,7 +42,9 @@ impl PipelineStorage {
     }
 
     fn create_pipeline(
+        adapter: &wgpu::Adapter,
         device: &wgpu::Device,
+        surface: &wgpu::Surface,
         shader: &wgpu::ShaderModule,
     ) -> Rc<wgpu::RenderPipeline> {
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -41,6 +53,9 @@ impl PipelineStorage {
             push_constant_ranges: &[],
         });
 
+        let swapchain_capabilities = surface.get_capabilities(&adapter);
+        let swapchain_format = swapchain_capabilities.formats[0];
+
         let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None,
             layout: Some(&pipeline_layout),
@@ -48,12 +63,13 @@ impl PipelineStorage {
                 module: &shader,
                 entry_point: "vs_main",
                 buffers: &[],
+                compilation_options: Default::default(),
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
                 entry_point: "fs_main",
-                // targets: &[Some(swapchain_format.into())],
-                targets: &[None],
+                targets: &[Some(swapchain_format.into())],
+                compilation_options: Default::default(),
             }),
             primitive: wgpu::PrimitiveState::default(),
             depth_stencil: None,

@@ -2,14 +2,14 @@ use crate::gfx::Gpu;
 
 use super::{
     renderer::{SceneRenderer, UIRenderer},
-    PipelineStorage, Renderer, ShaderStorage,
+    Renderer, ShaderStorage,
 };
 
 pub struct Engine {
     gpu: Gpu,
     renderers: Vec<Box<dyn Renderer>>,
     _shader_storage: ShaderStorage,
-    _pipeline_storage: PipelineStorage,
+    // _pipeline_storage: PipelineStorage,
 }
 
 impl Engine {
@@ -20,13 +20,13 @@ impl Engine {
             vec![Box::new(SceneRenderer::new()), Box::new(UIRenderer::new())];
 
         let shader_storage = ShaderStorage::new(gpu.device());
-        let pipeline_storage = PipelineStorage::new(gpu.device(), &shader_storage);
+        // let pipeline_storage = PipelineStorage::new(gpu.adapter(), gpu.device(), &shader_storage);
 
         Self {
             gpu,
             renderers,
             _shader_storage: shader_storage,
-            _pipeline_storage: pipeline_storage,
+            // _pipeline_storage: pipeline_storage,
         }
     }
 

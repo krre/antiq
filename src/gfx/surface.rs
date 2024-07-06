@@ -1,9 +1,9 @@
-pub struct Surface {
-    pub(crate) wgpu_surface: wgpu::Surface,
+pub struct Surface<'a> {
+    pub(crate) wgpu_surface: wgpu::Surface<'a>,
     pub(crate) wgpu_config: wgpu::SurfaceConfiguration,
 }
 
-impl Surface {
+impl Surface<'_> {
     pub fn current_frame(&self) -> wgpu::SurfaceTexture {
         self.wgpu_surface.get_current_texture().unwrap()
     }

@@ -13,11 +13,11 @@ pub struct Id(winit::window::WindowId);
 
 pub type DropHandler = dyn Fn(&Window);
 
-pub struct Window {
+pub struct Window<'a> {
     id: Id,
     title: String,
     winit_window: winit::window::Window,
-    surface: gfx::Surface,
+    surface: gfx::Surface<'a>,
     color: Color,
     position: Position,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
@@ -43,16 +43,15 @@ impl Id {
     }
 }
 
-impl Window {
+impl Window<'_> {
     pub(crate) fn new(app: &Application, settings: Settings) -> Self {
-        let title = settings.title;
-        let mut builder = winit::window::WindowBuilder::new()
-            .with_title(title.clone())
+        let mut window_attributes = winit::window::Window::default_attributes()
+            .with_title(&settings.title)
             .with_visible(settings.visible)
             .with_maximized(settings.maximized);
 
         let position = if let Some(position) = settings.position {
-            builder = builder.with_position(winit::dpi::PhysicalPosition::new(
+            window_attributes = window_attributes.with_position(winit::dpi::PhysicalPosition::new(
                 position.x(),
                 position.y(),
             ));
@@ -62,18 +61,18 @@ impl Window {
         };
 
         if let Some(size) = settings.size {
-            builder =
-                builder.with_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
+            window_attributes = window_attributes
+                .with_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
         }
 
-        let winit_window = builder.build(&app.event_loop()).unwrap();
+        let winit_window = app.event_loop().create_window(window_attributes).unwrap();
 
         let id = Id::new(winit_window.id());
         let surface = app.engine().gpu().create_surface(&winit_window);
 
         Self {
             id,
-            title,
+            title: settings.title.clone(),
             winit_window,
             surface,
             color: settings.color,
@@ -98,7 +97,7 @@ impl Window {
 
     pub fn set_size(&self, size: Size) {
         self.winit_window
-            .set_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
+            .request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
     }
 
     pub fn size(&self) -> Size {
@@ -170,7 +169,7 @@ impl Window {
     }
 }
 
-impl Drop for Window {
+impl Drop for Window<'_> {
     fn drop(&mut self) {
         if let Some(dh) = &self.drop_hanlder {
             dh(self);

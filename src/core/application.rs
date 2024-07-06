@@ -6,26 +6,27 @@ use super::{window, Position};
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
 use std::sync::OnceLock;
-use winit::platform::run_return::EventLoopExtRunReturn;
+use winit::application::ApplicationHandler;
+use winit::event::WindowEvent;
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::WindowId;
-use winit::{
-    event::{Event, WindowEvent},
-    event_loop::EventLoop,
-};
 
 static ORGANIZATION: OnceLock<String> = OnceLock::new();
 static NAME: OnceLock<String> = OnceLock::new();
 
-pub struct Application {
+pub struct Application<'a> {
     event_loop: EventLoop<()>,
-    windows: HashMap<WindowId, RefCell<Window>>,
+    windows: HashMap<WindowId, RefCell<Window<'a>>>,
     engine: Engine,
 }
 
-impl Application {
+impl Application<'_> {
     pub fn new() -> Self {
+        let event_loop = EventLoop::new().unwrap();
+        event_loop.set_control_flow(ControlFlow::Wait);
+
         Self {
-            event_loop: EventLoop::new(),
+            event_loop,
             windows: HashMap::new(),
             engine: Engine::new(),
         }
@@ -80,60 +81,62 @@ impl Application {
     }
 
     pub fn run(&mut self) {
-        self.event_loop.run_return(|event, _, control_flow| {
-            control_flow.set_wait();
+        // self.event_loop.run_app(self);
+        // self.event_loop.run_return(|event, _, control_flow| {
+        //     control_flow.set_wait();
+        // });
+    }
+}
 
-            match event {
-                Event::WindowEvent {
-                    window_id,
-                    event: WindowEvent::Resized(size),
-                    ..
-                } => {
-                    self.windows
-                        .get(&window_id)
-                        .unwrap()
-                        .borrow_mut()
-                        .resize(self.engine.gpu().device(), size);
-                }
+impl ApplicationHandler for Application<'_> {
+    fn resumed(&mut self, _: &ActiveEventLoop) {}
 
-                Event::RedrawRequested(window_id) => {
-                    self.windows.get(&window_id).unwrap().borrow().build();
-
-                    self.windows
-                        .get(&window_id)
-                        .unwrap()
-                        .borrow()
-                        .render(self.engine.gpu());
-                }
-
-                Event::WindowEvent {
-                    event: WindowEvent::CloseRequested,
-                    window_id,
-                } => {
-                    self.windows
-                        .get(&window_id)
-                        .unwrap()
-                        .borrow_mut()
-                        .set_visible(false);
-                    self.windows.remove(&window_id);
-
-                    if self.windows.len() == 0 {
-                        control_flow.set_exit();
-                    }
-                }
-
-                Event::WindowEvent {
-                    event: WindowEvent::Moved(pos),
-                    window_id,
-                } => {
-                    self.windows.get(&window_id).map(|w| {
-                        w.borrow_mut()
-                            .set_cache_position(Position::new(pos.x, pos.y))
-                    });
-                }
-
-                _ => (),
+    fn window_event(
+        &mut self,
+        event_loop: &ActiveEventLoop,
+        window_id: WindowId,
+        event: WindowEvent,
+    ) {
+        match event {
+            WindowEvent::Resized(size) => {
+                self.windows
+                    .get(&window_id)
+                    .unwrap()
+                    .borrow_mut()
+                    .resize(self.engine.gpu().device(), size);
             }
-        });
+
+            WindowEvent::RedrawRequested => {
+                self.windows.get(&window_id).unwrap().borrow().build();
+
+                self.windows
+                    .get(&window_id)
+                    .unwrap()
+                    .borrow()
+                    .render(self.engine.gpu());
+            }
+
+            WindowEvent::CloseRequested => {
+                self.windows
+                    .get(&window_id)
+                    .unwrap()
+                    .borrow_mut()
+                    .set_visible(false);
+                self.windows.remove(&window_id);
+
+                if self.windows.len() == 0 {
+                    event_loop.exit();
+                }
+            }
+
+            WindowEvent::Moved(pos) => {
+                self.windows.get(&window_id).map(|w| {
+                    w.borrow_mut()
+                        .set_cache_position(Position::new(pos.x, pos.y))
+                });
+            }
+
+            _ => (),
+        }
     }
 }
