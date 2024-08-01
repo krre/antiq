@@ -1,6 +1,12 @@
+use std::error::Error;
+
 use angie3d::Application;
 
-fn main() {
-    let _ = Application::create_window();
-    Application::run();
+fn main() -> Result<(), Box<dyn Error>> {
+    let app = Application::new().unwrap();
+
+    let _ = app.create_window();
+    app.run();
+
+    Ok(())
 }
