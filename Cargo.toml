@@ -8,3 +8,4 @@ repository = "https://github.com/krre/angie3d"
 
 [dependencies]
 thiserror = "1.0.63"
+winit = "0.30.4"
