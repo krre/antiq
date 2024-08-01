@@ -1,11 +1,13 @@
 use std::sync::OnceLock;
+use thiserror::Error;
 
 use super::Window;
 
 static INITED: OnceLock<bool> = OnceLock::new();
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum ApplicationError {
+    #[error("Application already inited")]
     AlreadyInited,
 }
 

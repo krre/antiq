@@ -7,3 +7,4 @@ description = "Toolkit for creating 3DUI applications"
 repository = "https://github.com/krre/angie3d"
 
 [dependencies]
+thiserror = "1.0.63"
