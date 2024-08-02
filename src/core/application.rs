@@ -25,7 +25,7 @@ impl Application {
 
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
         let event_loop = winit::event_loop::EventLoop::new()?;
-        let _ = event_loop.run_app(self);
+        event_loop.run_app(self)?;
         Ok(())
     }
 
