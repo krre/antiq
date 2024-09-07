@@ -14,13 +14,13 @@ use winit::window::WindowId;
 static ORGANIZATION: OnceLock<String> = OnceLock::new();
 static NAME: OnceLock<String> = OnceLock::new();
 
-pub struct Application<'a> {
+pub struct Application {
     event_loop: EventLoop<()>,
-    windows: HashMap<WindowId, RefCell<Window<'a>>>,
+    windows: HashMap<WindowId, RefCell<Window>>,
     engine: Engine,
 }
 
-impl Application<'_> {
+impl Application {
     pub fn new() -> Self {
         let event_loop = EventLoop::new().unwrap();
         event_loop.set_control_flow(ControlFlow::Wait);
@@ -88,7 +88,7 @@ impl Application<'_> {
     }
 }
 
-impl ApplicationHandler for Application<'_> {
+impl ApplicationHandler for Application {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(

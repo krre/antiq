@@ -13,11 +13,11 @@ pub struct Id(winit::window::WindowId);
 
 pub type DropHandler = dyn Fn(&Window);
 
-pub struct Window<'a> {
+pub struct Window {
     id: Id,
     title: String,
     winit_window: winit::window::Window,
-    surface: gfx::Surface<'a>,
+    surface: gfx::Surface<'static>,
     color: Color,
     position: Position,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
@@ -43,7 +43,7 @@ impl Id {
     }
 }
 
-impl Window<'_> {
+impl Window {
     pub(crate) fn new(app: &Application, settings: Settings) -> Self {
         let mut window_attributes = winit::window::Window::default_attributes()
             .with_title(&settings.title)
@@ -169,7 +169,7 @@ impl Window<'_> {
     }
 }
 
-impl Drop for Window<'_> {
+impl Drop for Window {
     fn drop(&mut self) {
         if let Some(dh) = &self.drop_hanlder {
             dh(self);
