@@ -75,6 +75,7 @@ impl PipelineStorage {
             depth_stencil: None,
             multisample: wgpu::MultisampleState::default(),
             multiview: None,
+            cache: None,
         });
 
         Rc::new(render_pipeline)
