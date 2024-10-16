@@ -17,7 +17,7 @@ pub struct Window {
     id: Id,
     title: String,
     winit_window: winit::window::Window,
-    surface: gfx::Surface<'static>,
+    // surface: gfx::Surface<'static>,
     color: Color,
     position: Position,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
@@ -68,13 +68,13 @@ impl Window {
         let winit_window = app.event_loop().create_window(window_attributes).unwrap();
 
         let id = Id::new(winit_window.id());
-        let surface = app.engine().gpu().create_surface(&winit_window);
+        // let surface = app.engine().gpu().create_surface(&winit_window);
 
         Self {
             id,
             title: settings.title.clone(),
             winit_window,
-            surface,
+            // surface,
             color: settings.color,
             position,
             widgets: Vec::new(),
@@ -141,7 +141,7 @@ impl Window {
     }
 
     pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
-        self.surface.resize(device, size.width, size.height);
+        // self.surface.resize(device, size.width, size.height);
         self.winit_window.request_redraw();
     }
 
@@ -160,12 +160,12 @@ impl Window {
     pub fn render(&self, gpu: &Gpu) {
         log::info!("Render window: {}", self.title);
 
-        let frame = self.surface.current_frame();
-        let view = frame
-            .texture
-            .create_view(&wgpu::TextureViewDescriptor::default());
-        gpu.clear_view(&view, &self.color.inner());
-        frame.present();
+        // let frame = self.surface.current_frame();
+        // let view = frame
+        //     .texture
+        //     .create_view(&wgpu::TextureViewDescriptor::default());
+        // gpu.clear_view(&view, &self.color.inner());
+        // frame.present();
     }
 }
 
