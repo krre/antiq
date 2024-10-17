@@ -5,16 +5,14 @@ use super::Window;
 use super::{window, Position};
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
-use std::sync::OnceLock;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::WindowId;
 
-static ORGANIZATION: OnceLock<String> = OnceLock::new();
-
 pub struct Application {
     name: String,
+    organization: String,
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
@@ -27,18 +25,19 @@ impl Application {
 
         Ok(Self {
             name: "".to_string(),
+            organization: "".to_string(),
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
         })
     }
 
-    pub fn set_organization(organization: &str) {
-        ORGANIZATION.set(organization.to_string()).unwrap();
+    pub fn set_organization(&mut self, organization: &str) {
+        self.organization = organization.to_string();
     }
 
-    pub fn organization() -> Option<String> {
-        ORGANIZATION.get().cloned()
+    pub fn organization(&self) -> String {
+        self.organization.clone()
     }
 
     pub fn set_name(&mut self, name: &str) {
