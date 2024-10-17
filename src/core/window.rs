@@ -1,9 +1,6 @@
 use std::cell::RefCell;
 
-use crate::{
-    gfx::{self, Gpu},
-    widget::Widget,
-};
+use crate::{gfx::Gpu, widget::Widget};
 use winit;
 
 use super::{Application, Color, Position, Size};
