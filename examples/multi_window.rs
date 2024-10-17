@@ -1,9 +1,9 @@
 use antiq::core::{window::Settings, Application, Color, Position, Size};
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
-    let mut app = Application::new();
+    let mut app = Application::new()?;
 
     {
         let mut settings = Settings::new();
@@ -23,4 +23,6 @@ fn main() {
     }
 
     app.run();
+
+    Ok(())
 }

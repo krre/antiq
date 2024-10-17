@@ -21,15 +21,15 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Self {
-        let event_loop = EventLoop::new().unwrap();
+    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+        let event_loop = EventLoop::new()?;
         event_loop.set_control_flow(ControlFlow::Wait);
 
-        Self {
+        Ok(Self {
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
-        }
+        })
     }
 
     pub fn set_organization(organization: &str) {
