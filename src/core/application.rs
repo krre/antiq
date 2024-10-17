@@ -17,7 +17,7 @@ static NAME: OnceLock<String> = OnceLock::new();
 pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, RefCell<Window>>,
-    engine: Engine,
+    gfx_engine: Engine,
 }
 
 impl Application {
@@ -28,7 +28,7 @@ impl Application {
         Self {
             event_loop,
             windows: HashMap::new(),
-            engine: Engine::new(),
+            gfx_engine: Engine::new(),
         }
     }
 
@@ -61,8 +61,8 @@ impl Application {
         &self.event_loop
     }
 
-    pub(crate) fn engine(&self) -> &Engine {
-        &self.engine
+    pub(crate) fn gfx_engine(&self) -> &Engine {
+        &self.gfx_engine
     }
 
     pub fn create_window(&mut self, settings: Settings) -> RefMut<Window> {
@@ -103,7 +103,7 @@ impl ApplicationHandler for Application {
                     .get(&window_id)
                     .unwrap()
                     .borrow_mut()
-                    .resize(self.engine.gpu().device(), size);
+                    .resize(self.gfx_engine.gpu().device(), size);
             }
 
             WindowEvent::RedrawRequested => {
@@ -113,7 +113,7 @@ impl ApplicationHandler for Application {
                     .get(&window_id)
                     .unwrap()
                     .borrow()
-                    .render(self.engine.gpu());
+                    .render(self.gfx_engine.gpu());
             }
 
             WindowEvent::CloseRequested => {
