@@ -12,9 +12,9 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::WindowId;
 
 static ORGANIZATION: OnceLock<String> = OnceLock::new();
-static NAME: OnceLock<String> = OnceLock::new();
 
 pub struct Application {
+    name: String,
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
@@ -26,6 +26,7 @@ impl Application {
         event_loop.set_control_flow(ControlFlow::Wait);
 
         Ok(Self {
+            name: "".to_string(),
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
@@ -40,12 +41,12 @@ impl Application {
         ORGANIZATION.get().cloned()
     }
 
-    pub fn set_name(name: &str) {
-        NAME.set(name.to_string()).unwrap();
+    pub fn set_name(&mut self, name: &str) {
+        self.name = name.to_string();
     }
 
-    pub fn name() -> Option<String> {
-        NAME.get().cloned()
+    pub fn name(&self) -> String {
+        self.name.clone()
     }
 
     pub fn file_name() -> Option<String> {
