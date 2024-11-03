@@ -1,2 +1,2 @@
 # Antiq
-GUI toolkit.
+3DUI toolkit.
