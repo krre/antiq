@@ -29,12 +29,12 @@ impl Application {
         builder.build()
     }
 
-    pub fn organization(&self) -> String {
-        self.organization.clone()
+    pub fn organization(&self) -> &str {
+        &self.organization
     }
 
-    pub fn name(&self) -> String {
-        self.name.clone()
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     pub fn file_name() -> Option<String> {
@@ -138,13 +138,13 @@ impl ApplicationBuilder {
         }
     }
 
-    pub fn name(mut self, name: String) -> Self {
-        self.name = name;
+    pub fn name(mut self, name: &str) -> Self {
+        self.name = name.to_owned();
         self
     }
 
-    pub fn organization(mut self, organization: String) -> Self {
-        self.organization = organization;
+    pub fn organization(mut self, organization: &str) -> Self {
+        self.organization = organization.to_owned();
         self
     }
 
