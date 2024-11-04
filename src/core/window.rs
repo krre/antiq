@@ -21,7 +21,7 @@ pub struct Window {
     drop_hanlder: Option<Box<DropHandler>>,
 }
 
-pub struct Settings {
+pub struct WindowSettings {
     title: String,
     position: Option<Position>,
     size: Option<Size>,
@@ -41,7 +41,7 @@ impl Id {
 }
 
 impl Window {
-    pub(crate) fn new(app: &Application, settings: Settings) -> Self {
+    pub(crate) fn new(app: &Application, settings: WindowSettings) -> Self {
         let mut window_attributes = winit::window::Window::default_attributes()
             .with_title(&settings.title)
             .with_visible(settings.visible)
@@ -174,7 +174,7 @@ impl Drop for Window {
     }
 }
 
-impl Settings {
+impl WindowSettings {
     pub fn set_title(&mut self, title: &str) {
         self.title = String::from(title);
     }
@@ -200,13 +200,13 @@ impl Settings {
     }
 }
 
-impl Settings {
+impl WindowSettings {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl Default for Settings {
+impl Default for WindowSettings {
     fn default() -> Self {
         Self {
             title: "Untitled".to_string(),

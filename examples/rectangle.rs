@@ -1,5 +1,5 @@
 use antiq::{
-    core::{window::Settings, Application},
+    core::{window::WindowSettings, Application},
     widget::Rectangle,
 };
 
@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut app = Application::new()?;
 
     {
-        let mut settings = Settings::new();
+        let mut settings = WindowSettings::new();
         settings.set_title("Rectangle");
 
         let mut window = app.create_window(settings);

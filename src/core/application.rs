@@ -1,6 +1,6 @@
 use crate::gfx::Engine;
 
-use super::window::Settings;
+use super::window::WindowSettings;
 use super::Window;
 use super::{window, Position};
 use std::cell::{Ref, RefCell, RefMut};
@@ -54,7 +54,7 @@ impl Application {
         &self.gfx_engine
     }
 
-    pub fn create_window(&mut self, settings: Settings) -> RefMut<Window> {
+    pub fn create_window(&mut self, settings: WindowSettings) -> RefMut<Window> {
         let w = RefCell::new(Window::new(self, settings));
         let id = w.borrow().id();
         self.windows.insert(id.winit_id(), w);
