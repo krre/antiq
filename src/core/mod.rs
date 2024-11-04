@@ -6,7 +6,7 @@ mod application;
 mod color;
 mod id;
 
-pub use application::Application;
+pub use application::{Application, ApplicationBuilder};
 pub use color::Color;
 pub use id::Id;
 use serde::{Deserialize, Serialize};

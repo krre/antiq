@@ -18,30 +18,19 @@ pub struct Application {
     gfx_engine: Engine,
 }
 
+pub struct ApplicationBuilder {
+    name: String,
+    organization: String,
+}
+
 impl Application {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let event_loop = EventLoop::new()?;
-        event_loop.set_control_flow(ControlFlow::Wait);
-
-        Ok(Self {
-            name: Self::file_name().unwrap_or("application".to_string()),
-            organization: Self::file_name().unwrap_or("Unknown organization".to_string()),
-            event_loop,
-            windows: HashMap::new(),
-            gfx_engine: Engine::new(),
-        })
-    }
-
-    pub fn set_organization(&mut self, organization: &str) {
-        self.organization = organization.to_string();
+        let builder = ApplicationBuilder::new();
+        builder.build()
     }
 
     pub fn organization(&self) -> String {
         self.organization.clone()
-    }
-
-    pub fn set_name(&mut self, name: &str) {
-        self.name = name.to_string();
     }
 
     pub fn name(&self) -> String {
@@ -138,5 +127,37 @@ impl ApplicationHandler for Application {
 
             _ => (),
         }
+    }
+}
+
+impl ApplicationBuilder {
+    pub fn new() -> Self {
+        Self {
+            name: Application::file_name().unwrap_or("application".to_string()),
+            organization: Application::file_name().unwrap_or("a".to_string()),
+        }
+    }
+
+    pub fn name(mut self, name: String) -> Self {
+        self.name = name;
+        self
+    }
+
+    pub fn organization(mut self, organization: String) -> Self {
+        self.organization = organization;
+        self
+    }
+
+    pub fn build(self) -> Result<Application, Box<dyn std::error::Error>> {
+        let event_loop = EventLoop::new()?;
+        event_loop.set_control_flow(ControlFlow::Wait);
+
+        Ok(Application {
+            name: self.name,
+            organization: self.organization,
+            event_loop,
+            windows: HashMap::new(),
+            gfx_engine: Engine::new(),
+        })
     }
 }
