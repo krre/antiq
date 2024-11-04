@@ -24,8 +24,8 @@ impl Application {
         event_loop.set_control_flow(ControlFlow::Wait);
 
         Ok(Self {
-            name: Self::file_name().unwrap_or("".to_string()),
-            organization: "".to_string(),
+            name: Self::file_name().unwrap_or("application".to_string()),
+            organization: Self::file_name().unwrap_or("Unknown organization".to_string()),
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
