@@ -17,6 +17,7 @@ pub struct Application {
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
     context: RefCell<AppContext>,
+    on_run: Option<Box<dyn Fn(&mut AppContext)>>,
 }
 
 pub struct ApplicationBuilder {
@@ -72,20 +73,23 @@ impl Application {
 
     pub fn run<F>(&mut self, on_run: F)
     where
-        F: FnOnce(&mut AppContext),
+        F: 'static + Fn(&mut AppContext),
     {
         // self.event_loop.run_app(self);
         // self.event_loop.run_return(|event, _, control_flow| {
         //     control_flow.set_wait();
         // });
-
-        let mut ctx = &mut *self.context.borrow_mut();
-        on_run(&mut ctx);
+        self.on_run = Some(Box::new(on_run));
     }
 }
 
 impl ApplicationHandler for Application {
-    fn resumed(&mut self, _: &ActiveEventLoop) {}
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        if let Some(on_run) = &self.on_run {
+            let mut ctx = &mut *self.context.borrow_mut();
+            on_run(&mut ctx);
+        }
+    }
 
     fn window_event(
         &mut self,
@@ -166,6 +170,7 @@ impl ApplicationBuilder {
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
             context: RefCell::new(AppContext::new()),
+            on_run: None,
         })
     }
 }
