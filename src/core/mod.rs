@@ -4,13 +4,16 @@ pub mod window;
 
 mod application;
 mod color;
+mod context;
 mod id;
 
 pub use application::{Application, ApplicationBuilder};
 pub use color::Color;
+pub use context::AppContext;
 pub use id::Id;
-use serde::{Deserialize, Serialize};
 pub use window::Window;
+
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default)]
 pub struct Size {

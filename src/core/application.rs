@@ -1,8 +1,8 @@
 use crate::gfx::Engine;
 
 use super::window::WindowSettings;
-use super::Window;
 use super::{window, Position};
+use super::{AppContext, Window};
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
 use winit::application::ApplicationHandler;
@@ -16,6 +16,7 @@ pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
+    context: RefCell<AppContext>,
 }
 
 pub struct ApplicationBuilder {
@@ -69,11 +70,17 @@ impl Application {
         self.windows.get(&id.winit_id()).unwrap().borrow_mut()
     }
 
-    pub fn run(&mut self) {
+    pub fn run<F>(&mut self, on_run: F)
+    where
+        F: FnOnce(&mut AppContext),
+    {
         // self.event_loop.run_app(self);
         // self.event_loop.run_return(|event, _, control_flow| {
         //     control_flow.set_wait();
         // });
+
+        let mut ctx = &mut *self.context.borrow_mut();
+        on_run(&mut ctx);
     }
 }
 
@@ -158,6 +165,7 @@ impl ApplicationBuilder {
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
+            context: RefCell::new(AppContext::new()),
         })
     }
 }
