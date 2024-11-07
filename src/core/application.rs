@@ -16,7 +16,7 @@ pub struct Application {
     event_loop: EventLoop<()>,
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
-    context: RefCell<AppContext>,
+    context: AppContext,
     on_run: Option<Box<dyn Fn(&mut AppContext)>>,
 }
 
@@ -86,8 +86,7 @@ impl Application {
 impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if let Some(on_run) = &self.on_run {
-            let mut ctx = &mut *self.context.borrow_mut();
-            on_run(&mut ctx);
+            on_run(&mut self.context);
         }
     }
 
@@ -169,7 +168,7 @@ impl ApplicationBuilder {
             event_loop,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
-            context: RefCell::new(AppContext::new()),
+            context: AppContext::new(),
             on_run: None,
         })
     }
