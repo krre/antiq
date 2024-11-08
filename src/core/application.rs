@@ -143,8 +143,8 @@ impl ApplicationHandler for Application {
 impl ApplicationBuilder {
     pub fn new() -> Self {
         Self {
-            name: Application::file_name().unwrap_or("application".to_string()),
-            organization: Application::file_name().unwrap_or("a".to_string()),
+            name: Application::file_name().unwrap_or("Application".to_string()),
+            organization: Application::file_name().unwrap_or("Antiq".to_string()),
         }
     }
 
