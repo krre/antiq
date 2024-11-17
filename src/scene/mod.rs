@@ -1,6 +1,6 @@
-pub struct View2d {}
+pub struct Scene {}
 
-impl View2d {
+impl Scene {
     pub fn new() -> Self {
         Self {}
     }
