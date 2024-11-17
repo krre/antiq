@@ -1,4 +1,4 @@
 pub mod core;
-pub mod gfx;
+pub mod renderer;
 pub mod scene;
 pub mod widget;

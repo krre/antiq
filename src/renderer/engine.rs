@@ -1,4 +1,4 @@
-use crate::gfx::Gpu;
+use crate::renderer::Gpu;
 
 use super::ShaderStorage;
 

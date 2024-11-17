@@ -1,4 +1,4 @@
-use crate::gfx::Engine;
+use crate::renderer::Engine;
 
 use super::window::WindowSettings;
 use super::{window, Position};
