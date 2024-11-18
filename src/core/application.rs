@@ -28,7 +28,9 @@ pub struct ApplicationBuilder {
     organization: String,
 }
 
-pub struct UserEvent {}
+pub enum UserEvent {
+    WindowCreating,
+}
 
 impl Application {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
@@ -88,7 +90,7 @@ impl Application {
     }
 }
 
-impl ApplicationHandler for Application {
+impl ApplicationHandler<UserEvent> for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if let Some(on_run) = &self.on_run {
             on_run(&mut self.context);
@@ -141,6 +143,14 @@ impl ApplicationHandler for Application {
             }
 
             _ => (),
+        }
+    }
+
+    fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
+        match event {
+            UserEvent::WindowCreating => {
+                println!("user event creating window");
+            }
         }
     }
 }
