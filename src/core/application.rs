@@ -7,13 +7,16 @@ use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
-use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::event_loop::{
+    ActiveEventLoop, ControlFlow, EventLoop, EventLoopBuilder, EventLoopProxy,
+};
 use winit::window::WindowId;
 
 pub struct Application {
     name: String,
     organization: String,
-    event_loop: EventLoop<()>,
+    event_loop: EventLoop<UserEvent>,
+    event_loop_proxy: EventLoopProxy<UserEvent>,
     windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
     context: AppContext,
@@ -24,6 +27,8 @@ pub struct ApplicationBuilder {
     name: String,
     organization: String,
 }
+
+pub struct UserEvent {}
 
 impl Application {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
@@ -48,7 +53,7 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn event_loop(&self) -> &EventLoop<()> {
+    pub(crate) fn event_loop(&self) -> &EventLoop<UserEvent> {
         &self.event_loop
     }
 
@@ -159,13 +164,16 @@ impl ApplicationBuilder {
     }
 
     pub fn build(self) -> Result<Application, Box<dyn std::error::Error>> {
-        let event_loop = EventLoop::new()?;
+        let mut builder: EventLoopBuilder<UserEvent> = EventLoop::with_user_event();
+        let event_loop = builder.build()?;
         event_loop.set_control_flow(ControlFlow::Wait);
+        let event_loop_proxy = event_loop.create_proxy();
 
         Ok(Application {
             name: self.name,
             organization: self.organization,
             event_loop,
+            event_loop_proxy,
             windows: HashMap::new(),
             gfx_engine: Engine::new(),
             context: AppContext::new(),
