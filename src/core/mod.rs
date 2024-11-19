@@ -15,13 +15,13 @@ pub use window::Window;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Serialize, Deserialize, Default)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
 pub struct Size {
     width: u32,
     height: u32,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Default)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
 pub struct Position {
     x: i32,
     y: i32,

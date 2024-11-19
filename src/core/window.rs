@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use crate::{renderer::Gpu, widget::Widget};
 use winit;
 
-use super::{Application, Color, Position, Size};
+use super::{application::UserEvent, AppContext, Color, Position, Size};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -11,9 +11,8 @@ pub struct Id(winit::window::WindowId);
 pub type DropHandler = dyn Fn(&Window);
 
 pub struct Window {
-    id: Id,
+    // id: Id,
     title: String,
-    winit_window: winit::window::Window,
     // surface: gfx::Surface<'static>,
     color: Color,
     position: Position,
@@ -21,13 +20,14 @@ pub struct Window {
     drop_hanlder: Option<Box<DropHandler>>,
 }
 
+#[derive(Debug)]
 pub struct WindowSettings {
-    title: String,
-    position: Option<Position>,
-    size: Option<Size>,
-    color: Color,
-    maximized: bool,
-    visible: bool,
+    pub title: String,
+    pub position: Option<Position>,
+    pub size: Option<Size>,
+    pub color: Color,
+    pub maximized: bool,
+    pub visible: bool,
 }
 
 impl Id {
@@ -41,77 +41,62 @@ impl Id {
 }
 
 impl Window {
-    pub(crate) fn new(app: &Application, settings: WindowSettings) -> Self {
-        let mut window_attributes = winit::window::Window::default_attributes()
-            .with_title(&settings.title)
-            .with_visible(settings.visible)
-            .with_maximized(settings.maximized);
+    pub fn new(ctx: &AppContext, settings: WindowSettings) -> Self {
+        // let winit_window = ctx.event_loop_proxy(). app.event_loop().create_window(window_attributes).unwrap();
 
-        let position = if let Some(position) = settings.position {
-            window_attributes = window_attributes.with_position(winit::dpi::PhysicalPosition::new(
-                position.x(),
-                position.y(),
-            ));
-            position
-        } else {
-            Position::new(200, 200)
-        };
-
-        if let Some(size) = settings.size {
-            window_attributes = window_attributes
-                .with_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
-        }
-
-        let winit_window = app.event_loop().create_window(window_attributes).unwrap();
-
-        let id = Id::new(winit_window.id());
+        // let id = Id::new(winit_window.id());
         // let surface = app.engine().gpu().create_surface(&winit_window);
 
+        let color = settings.color.clone();
+        let title = settings.title.clone();
+        let position = settings.position.unwrap_or(Position::new(200, 200));
+
+        ctx.event_loop_proxy()
+            .send_event(UserEvent::CreateWindow(settings))
+            .expect("Event loop closed");
+
         Self {
-            id,
-            title: settings.title.clone(),
-            winit_window,
-            // surface,
-            color: settings.color,
+            // id,
+            title,
+            color,
             position,
             widgets: Vec::new(),
             drop_hanlder: None,
         }
     }
 
-    pub fn id(&self) -> Id {
-        self.id
-    }
+    // pub fn id(&self) -> Id {
+    //     self.id
+    // }
 
     pub fn set_title(&mut self, title: &str) {
-        self.winit_window.set_title(title);
+        // self.winit_window.set_title(title);
         self.title = String::from(title);
     }
 
     pub fn set_visible(&self, visible: bool) {
-        self.winit_window.set_visible(visible);
+        // self.winit_window.set_visible(visible);
     }
 
     pub fn set_size(&self, size: Size) {
-        self.winit_window
-            .request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
+        // self.winit_window.request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn size(&self) -> Size {
-        Size::new(
-            self.winit_window.inner_size().width,
-            self.winit_window.inner_size().height,
-        )
-    }
+    // pub fn size(&self) -> Size {
+    //     Size::new(
+    //         self.winit_window.inner_size().width,
+    //         self.winit_window.inner_size().height,
+    //     )
+    // }
 
-    pub fn set_position(&mut self, position: Position) {
-        self.winit_window
-            .set_outer_position(winit::dpi::PhysicalPosition::new(
-                position.x(),
-                position.y(),
-            ));
-        self.set_cache_position(position)
-    }
+    // pub fn set_position(&mut self, position: Position) {
+    //     self.winit_window
+    //         .set_outer_position(winit::dpi::PhysicalPosition::new(
+    //             position.x(),
+    //             position.y(),
+    //         ));
+    //     self.set_cache_position(position)
+    // }
 
     pub(crate) fn set_cache_position(&mut self, position: Position) {
         self.position = position;
@@ -126,12 +111,12 @@ impl Window {
     }
 
     pub fn set_maximized(&self, maximized: bool) {
-        self.winit_window.set_maximized(maximized);
+        // self.winit_window.set_maximized(maximized);
     }
 
-    pub fn is_maximized(&self) -> bool {
-        self.winit_window.is_maximized()
-    }
+    // pub fn is_maximized(&self) -> bool {
+    // self.winit_window.is_maximized()
+    // }
 
     pub fn set_drop_handler(&mut self, handler: Box<DropHandler>) {
         self.drop_hanlder = Some(handler);
@@ -139,11 +124,11 @@ impl Window {
 
     pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
         // self.surface.resize(device, size.width, size.height);
-        self.winit_window.request_redraw();
+        // self.winit_window.request_redraw();
     }
 
     pub fn build(&self) {
-        log::info!("Build window: {}", self.winit_window.title());
+        // log::info!("Build window: {}", self.winit_window.title());
 
         for widget in &self.widgets {
             widget.borrow().build();

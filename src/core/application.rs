@@ -1,23 +1,15 @@
 use crate::renderer::Engine;
 
 use super::window::WindowSettings;
-use super::{window, Position};
-use super::{AppContext, Window};
-use std::cell::{Ref, RefCell, RefMut};
-use std::collections::HashMap;
+use super::AppContext;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
-use winit::event_loop::{
-    ActiveEventLoop, ControlFlow, EventLoop, EventLoopBuilder, EventLoopProxy,
-};
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop, EventLoopBuilder};
 use winit::window::WindowId;
 
 pub struct Application {
     name: String,
     organization: String,
-    event_loop: EventLoop<UserEvent>,
-    event_loop_proxy: EventLoopProxy<UserEvent>,
-    windows: HashMap<WindowId, RefCell<Window>>,
     gfx_engine: Engine,
     context: AppContext,
     on_run: Option<Box<dyn Fn(&mut AppContext)>>,
@@ -28,8 +20,9 @@ pub struct ApplicationBuilder {
     organization: String,
 }
 
+#[derive(Debug)]
 pub enum UserEvent {
-    WindowCreating,
+    CreateWindow(WindowSettings),
 }
 
 impl Application {
@@ -55,43 +48,36 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn event_loop(&self) -> &EventLoop<UserEvent> {
-        &self.event_loop
-    }
-
     pub(crate) fn gfx_engine(&self) -> &Engine {
         &self.gfx_engine
     }
 
-    pub fn create_window(&mut self, settings: WindowSettings) -> RefMut<Window> {
-        let w = RefCell::new(Window::new(self, settings));
-        let id = w.borrow().id();
-        self.windows.insert(id.winit_id(), w);
-        self.window_mut(id)
-    }
+    // pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
+    // self.windows.get(&id.winit_id()).unwrap().borrow()
+    // }
 
-    pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
-        self.windows.get(&id.winit_id()).unwrap().borrow()
-    }
-
-    pub fn window_mut(&self, id: window::Id) -> RefMut<Window> {
-        self.windows.get(&id.winit_id()).unwrap().borrow_mut()
-    }
+    // pub fn window_mut(&self, id: window::Id) -> RefMut<Window> {
+    // self.windows.get(&id.winit_id()).unwrap().borrow_mut()
+    // }
 
     pub fn run<F>(&mut self, on_run: F)
     where
         F: 'static + Fn(&mut AppContext),
     {
-        // self.event_loop.run_app(self);
-        // self.event_loop.run_return(|event, _, control_flow| {
-        //     control_flow.set_wait();
-        // });
         self.on_run = Some(Box::new(on_run));
+
+        let mut builder: EventLoopBuilder<UserEvent> = EventLoop::with_user_event();
+        let event_loop = builder.build().unwrap();
+        event_loop.set_control_flow(ControlFlow::Wait);
+        self.context = AppContext::new();
+        self.context.set_event_loop_proxy(event_loop.create_proxy());
+
+        event_loop.run_app(self).unwrap();
     }
 }
 
 impl ApplicationHandler<UserEvent> for Application {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+    fn resumed(&mut self, _event_loop: &ActiveEventLoop) {
         if let Some(on_run) = &self.on_run {
             on_run(&mut self.context);
         }
@@ -105,41 +91,41 @@ impl ApplicationHandler<UserEvent> for Application {
     ) {
         match event {
             WindowEvent::Resized(size) => {
-                self.windows
-                    .get(&window_id)
-                    .unwrap()
-                    .borrow_mut()
-                    .resize(self.gfx_engine.gpu().device(), size);
+                // self.windows
+                //     .get(&window_id)
+                //     .unwrap()
+                //     .borrow_mut()
+                //     .resize(self.gfx_engine.gpu().device(), size);
             }
 
             WindowEvent::RedrawRequested => {
-                self.windows.get(&window_id).unwrap().borrow().build();
+                // self.windows.get(&window_id).unwrap().borrow().build();
 
-                self.windows
-                    .get(&window_id)
-                    .unwrap()
-                    .borrow()
-                    .render(self.gfx_engine.gpu());
+                // self.windows
+                //     .get(&window_id)
+                //     .unwrap()
+                //     .borrow()
+                //     .render(self.gfx_engine.gpu());
             }
 
             WindowEvent::CloseRequested => {
-                self.windows
-                    .get(&window_id)
-                    .unwrap()
-                    .borrow_mut()
-                    .set_visible(false);
-                self.windows.remove(&window_id);
+                // self.windows
+                //     .get(&window_id)
+                //     .unwrap()
+                //     .borrow_mut()
+                //     .set_visible(false);
+                // self.windows.remove(&window_id);
 
-                if self.windows.len() == 0 {
-                    event_loop.exit();
-                }
+                // if self.windows.len() == 0 {
+                //     event_loop.exit();
+                // }
             }
 
             WindowEvent::Moved(pos) => {
-                self.windows.get(&window_id).map(|w| {
-                    w.borrow_mut()
-                        .set_cache_position(Position::new(pos.x, pos.y))
-                });
+                // self.windows.get(&window_id).map(|w| {
+                //     w.borrow_mut()
+                //         .set_cache_position(Position::new(pos.x, pos.y))
+                // });
             }
 
             _ => (),
@@ -148,8 +134,35 @@ impl ApplicationHandler<UserEvent> for Application {
 
     fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
         match event {
-            UserEvent::WindowCreating => {
+            UserEvent::CreateWindow(settings) => {
                 println!("user event creating window");
+                let mut window_attributes = winit::window::Window::default_attributes()
+                    .with_title(&settings.title)
+                    .with_visible(settings.visible)
+                    .with_maximized(settings.maximized);
+
+                // let position = if let Some(position) = settings.position {
+                //     window_attributes = window_attributes.with_position(
+                //         winit::dpi::PhysicalPosition::new(position.x(), position.y()),
+                //     );
+                //     position
+                // } else {
+                //     Position::new(200, 200)
+                // };
+
+                if let Some(size) = settings.size {
+                    window_attributes = window_attributes
+                        .with_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
+                }
+
+                let window = event_loop.create_window(window_attributes).unwrap();
+                let id = window.id();
+                self.context.add_window(id, window);
+
+                // let w = RefCell::new(Window::new(self, settings));
+                // let id = w.borrow().id();
+                // self.windows.insert(id.winit_id(), w);
+                // self.window_mut(id)
             }
         }
     }
@@ -174,17 +187,9 @@ impl ApplicationBuilder {
     }
 
     pub fn build(self) -> Result<Application, Box<dyn std::error::Error>> {
-        let mut builder: EventLoopBuilder<UserEvent> = EventLoop::with_user_event();
-        let event_loop = builder.build()?;
-        event_loop.set_control_flow(ControlFlow::Wait);
-        let event_loop_proxy = event_loop.create_proxy();
-
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            event_loop,
-            event_loop_proxy,
-            windows: HashMap::new(),
             gfx_engine: Engine::new(),
             context: AppContext::new(),
             on_run: None,
