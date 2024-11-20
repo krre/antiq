@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use crate::{renderer::Gpu, widget::Widget};
+use crate::{renderer::Renderer, widget::Widget};
 use winit;
 
 use super::{application::UserEvent, AppContext, Color, Position, Size};
@@ -139,7 +139,7 @@ impl Window {
         self.widgets.push(RefCell::new(widget));
     }
 
-    pub fn render(&self, gpu: &Gpu) {
+    pub fn render(&self, renderer: &Renderer) {
         log::info!("Render window: {}", self.title);
 
         // let frame = self.surface.current_frame();

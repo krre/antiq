@@ -1,4 +1,4 @@
-use crate::renderer::Engine;
+use crate::renderer::Renderer;
 
 use super::window::WindowSettings;
 use super::AppContext;
@@ -10,7 +10,7 @@ use winit::window::WindowId;
 pub struct Application {
     name: String,
     organization: String,
-    gfx_engine: Engine,
+    renderer: Renderer,
     context: AppContext,
     on_run: Option<Box<dyn Fn(&mut AppContext)>>,
 }
@@ -48,8 +48,8 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn gfx_engine(&self) -> &Engine {
-        &self.gfx_engine
+    pub(crate) fn renderer(&self) -> &Renderer {
+        &self.renderer
     }
 
     // pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
@@ -190,7 +190,7 @@ impl ApplicationBuilder {
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            gfx_engine: Engine::new(),
+            renderer: Renderer::new(),
             context: AppContext::new(),
             on_run: None,
         })
