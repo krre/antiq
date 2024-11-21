@@ -24,4 +24,12 @@ impl AppContext {
     pub(crate) fn add_window(&self, id: WindowId, window: winit::window::Window) {
         self.windows.borrow_mut().insert(id, window);
     }
+
+    pub(crate) fn remove_window(&self, id: WindowId) {
+        self.windows.borrow_mut().remove(&id);
+    }
+
+    pub(crate) fn windows_count(&self) -> usize {
+        self.windows.borrow().len()
+    }
 }

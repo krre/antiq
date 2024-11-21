@@ -110,16 +110,11 @@ impl ApplicationHandler<UserEvent> for Application {
             }
 
             WindowEvent::CloseRequested => {
-                // self.windows
-                //     .get(&window_id)
-                //     .unwrap()
-                //     .borrow_mut()
-                //     .set_visible(false);
-                // self.windows.remove(&window_id);
+                self.context.as_ref().unwrap().remove_window(window_id);
 
-                // if self.windows.len() == 0 {
-                //     event_loop.exit();
-                // }
+                if self.context.as_ref().unwrap().windows_count() == 0 {
+                    event_loop.exit();
+                }
             }
 
             WindowEvent::Moved(pos) => {
