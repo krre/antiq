@@ -8,8 +8,6 @@ use super::{application::UserEvent, AppContext, Color, Position, Size};
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
 
-pub type DropHandler = dyn Fn(&Window);
-
 pub struct Window {
     id: Id,
     title: String,
@@ -17,7 +15,6 @@ pub struct Window {
     color: Color,
     position: Position,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
-    drop_hanlder: Option<Box<DropHandler>>,
     context: Rc<AppContext>,
 }
 
@@ -62,7 +59,6 @@ impl Window {
             color,
             position,
             widgets: Vec::new(),
-            drop_hanlder: None,
             context: ctx,
         }
     }
@@ -120,10 +116,6 @@ impl Window {
     // self.winit_window.is_maximized()
     // }
 
-    pub fn set_drop_handler(&mut self, handler: Box<DropHandler>) {
-        self.drop_hanlder = Some(handler);
-    }
-
     pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
         // self.surface.resize(device, size.width, size.height);
         // self.winit_window.request_redraw();
@@ -154,11 +146,7 @@ impl Window {
 }
 
 impl Drop for Window {
-    fn drop(&mut self) {
-        if let Some(dh) = &self.drop_hanlder {
-            dh(self);
-        }
-    }
+    fn drop(&mut self) {}
 }
 
 impl WindowSettings {
