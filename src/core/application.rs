@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::renderer::Renderer;
 
 use super::window::WindowSettings;
@@ -11,8 +13,8 @@ pub struct Application {
     name: String,
     organization: String,
     renderer: Renderer,
-    context: AppContext,
-    on_run: Option<Box<dyn Fn(&mut AppContext)>>,
+    context: Option<Rc<AppContext>>,
+    on_run: Option<Box<dyn Fn(Rc<AppContext>)>>,
 }
 
 pub struct ApplicationBuilder {
@@ -62,15 +64,14 @@ impl Application {
 
     pub fn run<F>(&mut self, on_run: F)
     where
-        F: 'static + Fn(&mut AppContext),
+        F: 'static + Fn(Rc<AppContext>),
     {
         self.on_run = Some(Box::new(on_run));
 
         let mut builder: EventLoopBuilder<UserEvent> = EventLoop::with_user_event();
         let event_loop = builder.build().unwrap();
         event_loop.set_control_flow(ControlFlow::Wait);
-        self.context = AppContext::new();
-        self.context.set_event_loop_proxy(event_loop.create_proxy());
+        self.context = Some(Rc::new(AppContext::new(event_loop.create_proxy())));
 
         event_loop.run_app(self).unwrap();
     }
@@ -79,7 +80,7 @@ impl Application {
 impl ApplicationHandler<UserEvent> for Application {
     fn resumed(&mut self, _event_loop: &ActiveEventLoop) {
         if let Some(on_run) = &self.on_run {
-            on_run(&mut self.context);
+            on_run(self.context.as_ref().unwrap().clone());
         }
     }
 
@@ -157,7 +158,7 @@ impl ApplicationHandler<UserEvent> for Application {
 
                 let window = event_loop.create_window(window_attributes).unwrap();
                 let id = window.id();
-                self.context.add_window(id, window);
+                self.context.as_ref().unwrap().add_window(id, window);
 
                 // let w = RefCell::new(Window::new(self, settings));
                 // let id = w.borrow().id();
@@ -191,7 +192,7 @@ impl ApplicationBuilder {
             name: self.name,
             organization: self.organization,
             renderer: Renderer::new(),
-            context: AppContext::new(),
+            context: None,
             on_run: None,
         })
     }

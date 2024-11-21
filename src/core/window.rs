@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::{cell::RefCell, rc::Rc};
 
 use crate::{renderer::Renderer, widget::Widget};
 use winit;
@@ -18,6 +18,7 @@ pub struct Window {
     position: Position,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     drop_hanlder: Option<Box<DropHandler>>,
+    context: Rc<AppContext>,
 }
 
 #[derive(Debug)]
@@ -41,7 +42,7 @@ impl Id {
 }
 
 impl Window {
-    pub fn new(ctx: &AppContext, settings: WindowSettings) -> Self {
+    pub fn new(ctx: Rc<AppContext>, settings: WindowSettings) -> Self {
         // let winit_window = ctx.event_loop_proxy(). app.event_loop().create_window(window_attributes).unwrap();
 
         // let id = Id::new(winit_window.id());
@@ -62,6 +63,7 @@ impl Window {
             position,
             widgets: Vec::new(),
             drop_hanlder: None,
+            context: ctx,
         }
     }
 
