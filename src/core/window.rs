@@ -11,7 +11,7 @@ pub struct Id(winit::window::WindowId);
 pub type DropHandler = dyn Fn(&Window);
 
 pub struct Window {
-    // id: Id,
+    id: Id,
     title: String,
     // surface: gfx::Surface<'static>,
     color: Color,
@@ -35,7 +35,7 @@ impl Id {
         Self(winit_id)
     }
 
-    pub(crate) fn winit_id(&self) -> winit::window::WindowId {
+    pub(crate) fn inner(&self) -> winit::window::WindowId {
         self.0
     }
 }
@@ -56,7 +56,7 @@ impl Window {
             .expect("Event loop closed");
 
         Self {
-            // id,
+            id: Id::new(winit::window::WindowId::dummy()),
             title,
             color,
             position,
@@ -65,9 +65,9 @@ impl Window {
         }
     }
 
-    // pub fn id(&self) -> Id {
-    //     self.id
-    // }
+    pub fn id(&self) -> Id {
+        self.id
+    }
 
     pub fn set_title(&mut self, title: &str) {
         // self.winit_window.set_title(title);
