@@ -93,12 +93,7 @@ impl Window {
     //             position.x(),
     //             position.y(),
     //         ));
-    //     self.set_cache_position(position)
     // }
-
-    pub(crate) fn set_cache_position(&mut self, position: Position) {
-        self.position = position;
-    }
 
     pub fn position(&self) -> Position {
         self.position

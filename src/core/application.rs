@@ -117,13 +117,6 @@ impl ApplicationHandler<UserEvent> for Application {
                 }
             }
 
-            WindowEvent::Moved(pos) => {
-                // self.windows.get(&window_id).map(|w| {
-                //     w.borrow_mut()
-                //         .set_cache_position(Position::new(pos.x, pos.y))
-                // });
-            }
-
             _ => (),
         }
     }
