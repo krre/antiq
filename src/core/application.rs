@@ -54,14 +54,6 @@ impl Application {
         &self.renderer
     }
 
-    // pub fn window_ref(&self, id: window::Id) -> Ref<Window> {
-    // self.windows.get(&id.winit_id()).unwrap().borrow()
-    // }
-
-    // pub fn window_mut(&self, id: window::Id) -> RefMut<Window> {
-    // self.windows.get(&id.winit_id()).unwrap().borrow_mut()
-    // }
-
     pub fn run<F>(&mut self, on_run: F)
     where
         F: 'static + Fn(Rc<AppContext>),
@@ -110,9 +102,14 @@ impl ApplicationHandler<UserEvent> for Application {
             }
 
             WindowEvent::CloseRequested => {
-                self.context.as_ref().unwrap().remove_window(window_id);
+                self.context
+                    .as_ref()
+                    .unwrap()
+                    .windows()
+                    .borrow_mut()
+                    .remove(&window_id);
 
-                if self.context.as_ref().unwrap().windows_count() == 0 {
+                if self.context.as_ref().unwrap().windows().borrow().len() == 0 {
                     event_loop.exit();
                 }
             }
@@ -146,12 +143,12 @@ impl ApplicationHandler<UserEvent> for Application {
 
                 let window = event_loop.create_window(window_attributes).unwrap();
                 let id = window.id();
-                self.context.as_ref().unwrap().add_window(id, window);
-
-                // let w = RefCell::new(Window::new(self, settings));
-                // let id = w.borrow().id();
-                // self.windows.insert(id.winit_id(), w);
-                // self.window_mut(id)
+                self.context
+                    .as_ref()
+                    .unwrap()
+                    .windows()
+                    .borrow_mut()
+                    .insert(id, window);
             }
         }
     }
