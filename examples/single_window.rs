@@ -1,4 +1,4 @@
-use antiq::core::{window::WindowSettings, Application, Window};
+use antiq::core::{Application, Window, WindowSettings};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();

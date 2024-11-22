@@ -1,5 +1,5 @@
 use antiq::{
-    core::{window::WindowSettings, Application, Window},
+    core::{Application, Window, WindowSettings},
     widget::Rectangle,
 };
 

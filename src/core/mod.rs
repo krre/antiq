@@ -12,6 +12,7 @@ pub use color::Color;
 pub use context::AppContext;
 pub use id::Id;
 pub use window::Window;
+pub use window::WindowSettings;
 
 use serde::{Deserialize, Serialize};
 
