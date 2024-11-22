@@ -182,7 +182,7 @@ impl Default for WindowSettings {
             title: "Untitled".to_string(),
             position: None,
             size: None,
-            color: Color::new(0.5, 0.5, 0.5, 1.0),
+            color: Color::new(0.05, 0.027, 0.15, 1.0),
             maximized: false,
             visible: true,
         }
