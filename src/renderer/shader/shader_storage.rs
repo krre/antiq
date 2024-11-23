@@ -13,8 +13,10 @@ pub enum ShaderName {
 
 impl ShaderStorage {
     pub fn new(device: &wgpu::Device) -> Self {
-        let mut shaders = HashMap::new();
-        Self::load(&device, &mut shaders);
+        let shaders = HashMap::from([(
+            ShaderName::Dot,
+            Self::load_shader(&device, include_str!("sources/dot.wgsl")),
+        )]);
 
         Self { shaders }
     }
@@ -24,13 +26,6 @@ impl ShaderStorage {
             .shaders
             .get(&name)
             .expect(&format!("Shader {:?} not found", name))
-    }
-
-    fn load(device: &wgpu::Device, shaders: &mut Shaders) {
-        shaders.insert(
-            ShaderName::Dot,
-            Self::load_shader(&device, include_str!("sources/dot.wgsl")),
-        );
     }
 
     fn load_shader(device: &wgpu::Device, source: &str) -> Rc<wgpu::ShaderModule> {

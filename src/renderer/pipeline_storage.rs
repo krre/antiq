@@ -20,8 +20,7 @@ impl PipelineStorage {
         surface: &wgpu::Surface,
         shader_storage: &ShaderStorage,
     ) -> Self {
-        let mut pipelines = HashMap::new();
-        pipelines.insert(
+        let pipelines = HashMap::from([(
             PipelineName::Dot,
             Self::create_pipeline(
                 adapter,
@@ -29,7 +28,7 @@ impl PipelineStorage {
                 surface,
                 shader_storage.shader(ShaderName::Dot),
             ),
-        );
+        )]);
 
         Self { pipelines }
     }
