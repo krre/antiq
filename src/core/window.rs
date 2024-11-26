@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::{renderer::Renderer, widget::Widget};
 use winit;
 
-use super::{application::UserEvent, AppContext, Color, Pos2d, Size};
+use super::{application::UserEvent, AppContext, Color, Pos2d, Size2d};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -22,7 +22,7 @@ pub struct Window {
 pub struct WindowSettings {
     pub title: String,
     pub position: Option<Pos2d>,
-    pub size: Option<Size>,
+    pub size: Option<Size2d>,
     pub color: Color,
     pub maximized: bool,
     pub visible: bool,
@@ -76,7 +76,7 @@ impl Window {
         // self.winit_window.set_visible(visible);
     }
 
-    pub fn set_size(&self, size: Size) {
+    pub fn set_size(&self, size: Size2d) {
         // self.winit_window.request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
     }
 
@@ -153,7 +153,7 @@ impl WindowSettings {
         self.visible = visible;
     }
 
-    pub fn set_size(&mut self, size: Size) {
+    pub fn set_size(&mut self, size: Size2d) {
         self.size = Some(size);
     }
 
