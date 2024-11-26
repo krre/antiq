@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::{renderer::Renderer, widget::Widget};
 use winit;
 
-use super::{application::UserEvent, AppContext, Color, Position, Size};
+use super::{application::UserEvent, AppContext, Color, Pos2d, Size};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -13,7 +13,7 @@ pub struct Window {
     title: String,
     // surface: gfx::Surface<'static>,
     color: Color,
-    position: Position,
+    position: Pos2d,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<AppContext>,
 }
@@ -21,7 +21,7 @@ pub struct Window {
 #[derive(Debug)]
 pub struct WindowSettings {
     pub title: String,
-    pub position: Option<Position>,
+    pub position: Option<Pos2d>,
     pub size: Option<Size>,
     pub color: Color,
     pub maximized: bool,
@@ -47,7 +47,7 @@ impl Window {
 
         let color = settings.color.clone();
         let title = settings.title.clone();
-        let position = settings.position.unwrap_or(Position::new(200, 200));
+        let position = settings.position.unwrap_or(Pos2d::new(200, 200));
 
         ctx.event_loop_proxy()
             .send_event(UserEvent::CreateWindow(settings))
@@ -95,7 +95,7 @@ impl Window {
     //         ));
     // }
 
-    pub fn position(&self) -> Position {
+    pub fn position(&self) -> Pos2d {
         self.position
     }
 
@@ -157,7 +157,7 @@ impl WindowSettings {
         self.size = Some(size);
     }
 
-    pub fn set_position(&mut self, position: Position) {
+    pub fn set_position(&mut self, position: Pos2d) {
         self.position = Some(position);
     }
 
