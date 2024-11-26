@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::{renderer::Renderer, widget::Widget};
 use winit;
 
-use super::{application::UserEvent, AppContext, Color, Pos2d, Size2d};
+use super::{application::UserEvent, AppContext, Color, Pos2D, Size2D};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -13,7 +13,7 @@ pub struct Window {
     title: String,
     // surface: gfx::Surface<'static>,
     color: Color,
-    position: Pos2d,
+    position: Pos2D,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<AppContext>,
 }
@@ -21,8 +21,8 @@ pub struct Window {
 #[derive(Debug)]
 pub struct WindowSettings {
     pub title: String,
-    pub position: Option<Pos2d>,
-    pub size: Option<Size2d>,
+    pub position: Option<Pos2D>,
+    pub size: Option<Size2D>,
     pub color: Color,
     pub maximized: bool,
     pub visible: bool,
@@ -47,7 +47,7 @@ impl Window {
 
         let color = settings.color.clone();
         let title = settings.title.clone();
-        let position = settings.position.unwrap_or(Pos2d::new(200, 200));
+        let position = settings.position.unwrap_or(Pos2D::new(200, 200));
 
         ctx.event_loop_proxy()
             .send_event(UserEvent::CreateWindow(settings))
@@ -76,7 +76,7 @@ impl Window {
         // self.winit_window.set_visible(visible);
     }
 
-    pub fn set_size(&self, size: Size2d) {
+    pub fn set_size(&self, size: Size2D) {
         // self.winit_window.request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
     }
 
@@ -95,7 +95,7 @@ impl Window {
     //         ));
     // }
 
-    pub fn position(&self) -> Pos2d {
+    pub fn position(&self) -> Pos2D {
         self.position
     }
 
@@ -153,11 +153,11 @@ impl WindowSettings {
         self.visible = visible;
     }
 
-    pub fn set_size(&mut self, size: Size2d) {
+    pub fn set_size(&mut self, size: Size2D) {
         self.size = Some(size);
     }
 
-    pub fn set_position(&mut self, position: Pos2d) {
+    pub fn set_position(&mut self, position: Pos2D) {
         self.position = Some(position);
     }
 

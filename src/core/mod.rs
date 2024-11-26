@@ -19,18 +19,18 @@ pub use window::WindowSettings;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
-pub struct Size2d {
+pub struct Size2D {
     width: u32,
     height: u32,
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
-pub struct Pos2d {
+pub struct Pos2D {
     x: i32,
     y: i32,
 }
 
-impl Size2d {
+impl Size2D {
     pub fn new(width: u32, height: u32) -> Self {
         Self { width, height }
     }
@@ -44,7 +44,7 @@ impl Size2d {
     }
 }
 
-impl Pos2d {
+impl Pos2D {
     pub fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
