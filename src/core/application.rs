@@ -3,15 +3,16 @@ use std::rc::Rc;
 use crate::renderer::Renderer;
 
 use super::window::WindowSettings;
-use super::AppContext;
+use super::{AppContext, EventLoop};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
-use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop, EventLoopBuilder};
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoopBuilder};
 use winit::window::WindowId;
 
 pub struct Application {
     name: String,
     organization: String,
+    event_loop: EventLoop,
     renderer: Renderer,
     context: Option<Rc<AppContext>>,
     on_run: Option<Box<dyn Fn(Rc<AppContext>)>>,
@@ -54,18 +55,23 @@ impl Application {
         &self.renderer
     }
 
-    pub fn run<F>(&mut self, on_run: F)
-    where
-        F: 'static + Fn(Rc<AppContext>),
-    {
-        self.on_run = Some(Box::new(on_run));
+    // pub fn run<F>(&mut self, on_run: F)
+    // where
+    //     F: 'static + Fn(Rc<AppContext>),
+    // {
+    //     self.on_run = Some(Box::new(on_run));
 
-        let mut builder: EventLoopBuilder<UserEvent> = EventLoop::with_user_event();
-        let event_loop = builder.build().unwrap();
-        event_loop.set_control_flow(ControlFlow::Wait);
-        self.context = Some(Rc::new(AppContext::new(event_loop.create_proxy())));
+    //     let mut builder: EventLoopBuilder<UserEvent> =
+    //         winit::event_loop::EventLoop::with_user_event();
+    //     let event_loop = builder.build().unwrap();
+    //     event_loop.set_control_flow(ControlFlow::Wait);
+    //     self.context = Some(Rc::new(AppContext::new(event_loop.create_proxy())));
 
-        event_loop.run_app(self).unwrap();
+    //     event_loop.run_app(self).unwrap();
+    // }
+
+    pub fn run(&self) {
+        self.event_loop.run();
     }
 }
 
@@ -176,6 +182,7 @@ impl ApplicationBuilder {
         Ok(Application {
             name: self.name,
             organization: self.organization,
+            event_loop: EventLoop::new(),
             renderer: Renderer::new(),
             context: None,
             on_run: None,

@@ -1,3 +1,4 @@
+pub mod event_loop;
 pub mod layout;
 pub mod node;
 pub mod window;
@@ -10,6 +11,7 @@ mod id;
 pub use application::{Application, ApplicationBuilder};
 pub use color::Color;
 pub use context::AppContext;
+pub use event_loop::EventLoop;
 pub use id::Id;
 pub use window::Window;
 pub use window::WindowSettings;
