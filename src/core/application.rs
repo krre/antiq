@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::renderer::Renderer;
 
 use super::window::WindowSettings;
-use super::{AppContext, EventLoop};
+use super::{Context, EventLoop};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoopBuilder};
@@ -14,8 +14,8 @@ pub struct Application {
     organization: String,
     event_loop: EventLoop,
     renderer: Renderer,
-    context: Rc<AppContext>,
-    on_run: Option<Box<dyn Fn(Rc<AppContext>)>>,
+    context: Rc<Context>,
+    on_run: Option<Box<dyn Fn(Rc<Context>)>>,
 }
 
 pub struct ApplicationBuilder {
@@ -51,7 +51,7 @@ impl Application {
             .into()
     }
 
-    pub fn context(&self) -> Rc<AppContext> {
+    pub fn context(&self) -> Rc<Context> {
         self.context.clone()
     }
 
@@ -188,7 +188,7 @@ impl ApplicationBuilder {
             organization: self.organization,
             event_loop: EventLoop::new(),
             renderer: Renderer::new(),
-            context: Rc::new(AppContext::new()),
+            context: Rc::new(Context::new()),
             on_run: None,
         })
     }

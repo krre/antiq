@@ -4,12 +4,12 @@ use winit::{event_loop::EventLoopProxy, window::WindowId};
 
 use super::application::UserEvent;
 
-pub struct AppContext {
+pub struct Context {
     // event_loop_proxy: EventLoopProxy<UserEvent>,
     windows: RefCell<HashMap<WindowId, winit::window::Window>>,
 }
 
-impl AppContext {
+impl Context {
     pub(crate) fn new() -> Self {
         Self {
             // event_loop_proxy,

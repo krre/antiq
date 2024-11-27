@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::{renderer::Renderer, widget::Widget};
 use winit;
 
-use super::{application::UserEvent, AppContext, Color, Pos2D, Size2D};
+use super::{application::UserEvent, Color, Context, Pos2D, Size2D};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Id(winit::window::WindowId);
@@ -15,7 +15,7 @@ pub struct Window {
     color: Color,
     position: Pos2D,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
-    context: Rc<AppContext>,
+    context: Rc<Context>,
 }
 
 #[derive(Debug)]
@@ -39,7 +39,7 @@ impl Id {
 }
 
 impl Window {
-    pub fn new(ctx: Rc<AppContext>, settings: WindowSettings) -> Self {
+    pub fn new(ctx: Rc<Context>, settings: WindowSettings) -> Self {
         // let winit_window = ctx.event_loop_proxy(). app.event_loop().create_window(window_attributes).unwrap();
 
         // let id = Id::new(winit_window.id());
