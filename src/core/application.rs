@@ -14,7 +14,7 @@ pub struct Application {
     organization: String,
     event_loop: EventLoop,
     renderer: Renderer,
-    context: Option<Rc<AppContext>>,
+    context: Rc<AppContext>,
     on_run: Option<Box<dyn Fn(Rc<AppContext>)>>,
 }
 
@@ -51,6 +51,10 @@ impl Application {
             .into()
     }
 
+    pub fn context(&self) -> Rc<AppContext> {
+        self.context.clone()
+    }
+
     pub(crate) fn renderer(&self) -> &Renderer {
         &self.renderer
     }
@@ -78,7 +82,7 @@ impl Application {
 impl ApplicationHandler<UserEvent> for Application {
     fn resumed(&mut self, _event_loop: &ActiveEventLoop) {
         if let Some(on_run) = &self.on_run {
-            on_run(self.context.as_ref().unwrap().clone());
+            // on_run(self.context.as_ref().unwrap().clone());
         }
     }
 
@@ -108,16 +112,16 @@ impl ApplicationHandler<UserEvent> for Application {
             }
 
             WindowEvent::CloseRequested => {
-                self.context
-                    .as_ref()
-                    .unwrap()
-                    .windows()
-                    .borrow_mut()
-                    .remove(&window_id);
+                // self.context
+                //     .as_ref()
+                //     .unwrap()
+                //     .windows()
+                //     .borrow_mut()
+                //     .remove(&window_id);
 
-                if self.context.as_ref().unwrap().windows().borrow().len() == 0 {
-                    event_loop.exit();
-                }
+                // if self.context.as_ref().unwrap().windows().borrow().len() == 0 {
+                //     event_loop.exit();
+                // }
             }
 
             _ => (),
@@ -149,12 +153,12 @@ impl ApplicationHandler<UserEvent> for Application {
 
                 let window = event_loop.create_window(window_attributes).unwrap();
                 let id = window.id();
-                self.context
-                    .as_ref()
-                    .unwrap()
-                    .windows()
-                    .borrow_mut()
-                    .insert(id, window);
+                // self.context
+                //     .as_ref()
+                //     .unwrap()
+                //     .windows()
+                //     .borrow_mut()
+                //     .insert(id, window);
             }
         }
     }
@@ -184,7 +188,7 @@ impl ApplicationBuilder {
             organization: self.organization,
             event_loop: EventLoop::new(),
             renderer: Renderer::new(),
-            context: None,
+            context: Rc::new(AppContext::new()),
             on_run: None,
         })
     }

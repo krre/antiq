@@ -49,9 +49,9 @@ impl Window {
         let title = settings.title.clone();
         let position = settings.position.unwrap_or(Pos2D::new(200, 200));
 
-        ctx.event_loop_proxy()
-            .send_event(UserEvent::CreateWindow(settings))
-            .expect("Event loop closed");
+        // ctx.event_loop_proxy()
+        //     .send_event(UserEvent::CreateWindow(settings))
+        //     .expect("Event loop closed");
 
         Self {
             id: Id::new(winit::window::WindowId::dummy()),
