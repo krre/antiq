@@ -5,7 +5,7 @@ mod surface;
 pub use pipeline_storage::PipelineStorage;
 pub use shader::ShaderStorage;
 pub use surface::Surface;
-use wgpu::{Adapter, Device, Instance, Queue};
+use wgpu::{Adapter, Device, Instance, Queue, SurfaceTarget};
 
 pub struct Renderer {
     instance: Instance,
@@ -57,12 +57,11 @@ impl Renderer {
         return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
     }
 
-    pub fn create_surface<'a>(&self, window: &'a winit::window::Window) -> Surface<'a> {
+    pub fn create_surface<'a>(&self, window: impl Into<SurfaceTarget<'a>>) -> Surface<'a> {
         let wgpu_surface = self.instance.create_surface(window).unwrap();
-        let size = window.inner_size();
 
         let wgpu_config = wgpu_surface
-            .get_default_config(&self.adapter, size.width, size.height)
+            .get_default_config(&self.adapter, 800, 600)
             .unwrap();
 
         wgpu_surface.configure(&self.device, &wgpu_config);

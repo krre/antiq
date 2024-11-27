@@ -1,15 +1,10 @@
 use std::{cell::RefCell, rc::Rc};
 
 use crate::{renderer::Renderer, widget::Widget};
-use winit;
 
-use super::{application::UserEvent, Color, Context, Pos2D, Size2D};
-
-#[derive(Debug, Clone, Copy)]
-pub struct Id(winit::window::WindowId);
+use super::{Color, Context, Pos2D, Size2D};
 
 pub struct Window {
-    id: Id,
     title: String,
     // surface: gfx::Surface<'static>,
     color: Color,
@@ -28,33 +23,13 @@ pub struct WindowSettings {
     pub visible: bool,
 }
 
-impl Id {
-    pub(crate) fn new(winit_id: winit::window::WindowId) -> Self {
-        Self(winit_id)
-    }
-
-    pub(crate) fn inner(&self) -> winit::window::WindowId {
-        self.0
-    }
-}
-
 impl Window {
     pub fn new(ctx: Rc<Context>, settings: WindowSettings) -> Self {
-        // let winit_window = ctx.event_loop_proxy(). app.event_loop().create_window(window_attributes).unwrap();
-
-        // let id = Id::new(winit_window.id());
-        // let surface = app.engine().gpu().create_surface(&winit_window);
-
         let color = settings.color.clone();
         let title = settings.title.clone();
         let position = settings.position.unwrap_or(Pos2D::new(200, 200));
 
-        // ctx.event_loop_proxy()
-        //     .send_event(UserEvent::CreateWindow(settings))
-        //     .expect("Event loop closed");
-
         Self {
-            id: Id::new(winit::window::WindowId::dummy()),
             title,
             color,
             position,
@@ -63,37 +38,13 @@ impl Window {
         }
     }
 
-    pub fn id(&self) -> Id {
-        self.id
-    }
-
     pub fn set_title(&mut self, title: &str) {
-        // self.winit_window.set_title(title);
         self.title = String::from(title);
     }
 
-    pub fn set_visible(&self, visible: bool) {
-        // self.winit_window.set_visible(visible);
-    }
+    pub fn set_visible(&self, visible: bool) {}
 
-    pub fn set_size(&self, size: Size2D) {
-        // self.winit_window.request_inner_size(winit::dpi::PhysicalSize::new(size.width, size.height));
-    }
-
-    // pub fn size(&self) -> Size {
-    //     Size::new(
-    //         self.winit_window.inner_size().width,
-    //         self.winit_window.inner_size().height,
-    //     )
-    // }
-
-    // pub fn set_position(&mut self, position: Position) {
-    //     self.winit_window
-    //         .set_outer_position(winit::dpi::PhysicalPosition::new(
-    //             position.x(),
-    //             position.y(),
-    //         ));
-    // }
+    pub fn set_size(&self, size: Size2D) {}
 
     pub fn position(&self) -> Pos2D {
         self.position
@@ -103,22 +54,11 @@ impl Window {
         self.color = color;
     }
 
-    pub fn set_maximized(&self, maximized: bool) {
-        // self.winit_window.set_maximized(maximized);
-    }
+    pub fn set_maximized(&self, maximized: bool) {}
 
-    // pub fn is_maximized(&self) -> bool {
-    // self.winit_window.is_maximized()
-    // }
-
-    pub fn resize(&mut self, device: &wgpu::Device, size: winit::dpi::PhysicalSize<u32>) {
-        // self.surface.resize(device, size.width, size.height);
-        // self.winit_window.request_redraw();
-    }
+    pub fn resize(&mut self, device: &wgpu::Device, size: Size2D) {}
 
     pub fn build(&self) {
-        // log::info!("Build window: {}", self.winit_window.title());
-
         for widget in &self.widgets {
             widget.borrow().build();
         }
