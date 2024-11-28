@@ -15,3 +15,7 @@ serde_json = "1.0.133"
 
 [dev-dependencies]
 env_logger = "0.11.5"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+wayland-client = "0.31.7"
+wayland-protocols = "0.32.5"
