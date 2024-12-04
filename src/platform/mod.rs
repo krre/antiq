@@ -15,3 +15,7 @@ cfg_if::cfg_if! {
         compile_error!("Platform not supported")
     }
 }
+
+pub trait PlatformEventLoop {
+    fn run(&self);
+}
