@@ -23,7 +23,7 @@ impl Renderer {
         let adapter = if let Some(adapter) = Self::find_adapter(&instance) {
             adapter
         } else {
-            panic!("Graphics not found!")
+            panic!("Graphics adapter not found!")
         };
 
         log::info!("Graphics adapter: {}", adapter.get_info().name);
