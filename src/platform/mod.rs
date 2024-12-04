@@ -7,7 +7,7 @@ cfg_if::cfg_if! {
         pub mod macos;
         #[allow(unused_imports)]
         pub use macos::*;
-    } else if #[cfg(windows)] {
+    } else if #[cfg(win64)] {
         pub mod windows;
         #[allow(unused_imports)]
         pub use windows::*;
