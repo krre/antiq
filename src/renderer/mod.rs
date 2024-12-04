@@ -20,7 +20,11 @@ impl Renderer {
     pub fn new() -> Self {
         let instance = wgpu::Instance::default();
         // FIXME: Founded adapter may not match the window surface. Better use instance.request_adapter() with appropriate surface.
-        let adapter = Self::find_adapter(&instance);
+        let adapter = if let Some(adapter) = Self::find_adapter(&instance) {
+            adapter
+        } else {
+            panic!("Graphics not found!")
+        };
 
         log::info!("Graphics adapter: {}", adapter.get_info().name);
 
@@ -43,10 +47,10 @@ impl Renderer {
 
     pub fn render(&self) {}
 
-    fn find_adapter(instance: &Instance) -> Adapter {
+    fn find_adapter(instance: &Instance) -> Option<Adapter> {
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
             if adapter.get_info().device_type == wgpu::DeviceType::DiscreteGpu {
-                return adapter;
+                return Some(adapter);
             }
         }
 
@@ -54,7 +58,7 @@ impl Renderer {
             ..Default::default()
         };
 
-        return pollster::block_on(instance.request_adapter(&adapter_options)).unwrap();
+        return pollster::block_on(instance.request_adapter(&adapter_options));
     }
 
     pub fn create_surface<'a>(&self, window: impl Into<SurfaceTarget<'a>>) -> Surface<'a> {
