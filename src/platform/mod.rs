@@ -16,8 +16,10 @@ cfg_if::cfg_if! {
     }
 }
 
+pub trait PlatformApplication {}
+
+pub trait PlatformWindow {}
+
 pub trait PlatformEventLoop {
     fn run(&self);
 }
-
-pub trait PlatformWindow {}

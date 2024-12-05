@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::renderer::Renderer;
+use crate::{platform, renderer::Renderer};
 
 use super::{Context, EventLoop};
 
@@ -10,6 +10,7 @@ pub struct Application {
     event_loop: EventLoop,
     renderer: Renderer,
     context: Rc<Context>,
+    platform_application: Box<dyn platform::PlatformApplication>,
 }
 
 pub struct ApplicationBuilder {
@@ -78,6 +79,7 @@ impl ApplicationBuilder {
             event_loop: EventLoop::new(),
             renderer: Renderer::new(),
             context: Rc::new(Context::new()),
+            platform_application: Box::new(platform::Application::new()),
         })
     }
 }
