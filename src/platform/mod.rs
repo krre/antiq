@@ -19,3 +19,5 @@ cfg_if::cfg_if! {
 pub trait PlatformEventLoop {
     fn run(&self);
 }
+
+pub trait PlatformWindow {}

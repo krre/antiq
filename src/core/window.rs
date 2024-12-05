@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{renderer::Renderer, widget::Widget};
+use crate::{platform, renderer::Renderer, widget::Widget};
 
 use super::{Color, Context, Pos2D, Size2D};
 
@@ -11,6 +11,7 @@ pub struct Window {
     position: Pos2D,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
+    platform_window: Box<dyn platform::PlatformWindow>,
 }
 
 #[derive(Debug)]
@@ -35,6 +36,7 @@ impl Window {
             position,
             widgets: Vec::new(),
             context: ctx,
+            platform_window: Box::new(platform::Window::new()),
         }
     }
 
