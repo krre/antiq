@@ -1,3 +1,5 @@
+use crate::platform::PlatformWindow;
+
 pub struct Window {}
 
 impl Window {
