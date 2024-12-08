@@ -76,10 +76,10 @@ impl ApplicationBuilder {
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            event_loop: EventLoop::new(),
+            event_loop: EventLoop::new()?,
             renderer: Renderer::new(),
             context: Rc::new(Context::new()),
-            platform_application: Box::new(platform::Application::new()?),
+            platform_application: platform::Application::new()?,
         })
     }
 }

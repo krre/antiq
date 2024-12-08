@@ -4,10 +4,10 @@ pub struct EventLoop {
 }
 
 impl EventLoop {
-    pub fn new() -> Self {
-        Self {
-            platform_event_loop: Box::new(platform::EventLoop::new()),
-        }
+    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+        Ok(Self {
+            platform_event_loop: platform::EventLoop::new()?,
+        })
     }
 
     pub fn run(&self) {

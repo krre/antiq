@@ -7,10 +7,10 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Box<dyn PlatformApplication>, Box<dyn std::error::Error>> {
         let connection = Rc::new(wayland_client::Connection::connect_to_env()?);
 
-        Ok(Self { connection })
+        Ok(Box::new(Self { connection }))
     }
 }
 

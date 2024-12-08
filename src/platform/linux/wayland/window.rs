@@ -3,8 +3,8 @@ use crate::platform::PlatformWindow;
 pub struct Window {}
 
 impl Window {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new() -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+        Ok(Box::new(Self {}))
     }
 }
 

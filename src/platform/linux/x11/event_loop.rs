@@ -10,6 +10,6 @@ impl EventLoop {
 
 impl PlatformEventLoop for EventLoop {
     fn run(&self) {
-        println!("macOS event loop runned");
+        println!("Linux X11 event loop runned");
     }
 }

@@ -3,8 +3,8 @@ use crate::platform::PlatformEventLoop;
 pub struct EventLoop {}
 
 impl EventLoop {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new() -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+        Ok(Box::new(Self {}))
     }
 }
 

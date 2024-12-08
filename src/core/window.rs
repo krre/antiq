@@ -25,19 +25,22 @@ pub struct WindowSettings {
 }
 
 impl Window {
-    pub fn new(ctx: Rc<Context>, settings: WindowSettings) -> Self {
+    pub fn new(
+        ctx: Rc<Context>,
+        settings: WindowSettings,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
         let color = settings.color.clone();
         let title = settings.title.clone();
         let position = settings.position.unwrap_or(Pos2D::new(200, 200));
 
-        Self {
+        Ok(Self {
             title,
             color,
             position,
             widgets: Vec::new(),
             context: ctx,
-            platform_window: Box::new(platform::Window::new()),
-        }
+            platform_window: platform::Window::new()?,
+        })
     }
 
     pub fn set_title(&mut self, title: &str) {
