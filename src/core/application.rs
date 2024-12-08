@@ -79,7 +79,7 @@ impl ApplicationBuilder {
             event_loop: EventLoop::new(),
             renderer: Renderer::new(),
             context: Rc::new(Context::new()),
-            platform_application: Box::new(platform::Application::new()),
+            platform_application: Box::new(platform::Application::new()?),
         })
     }
 }
