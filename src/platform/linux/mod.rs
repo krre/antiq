@@ -1,3 +1,5 @@
+use std::env;
+
 use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 
 pub mod wayland;
@@ -7,20 +9,27 @@ pub mod x11;
 enum Backend {
     Wayland,
     X11,
+    Unknown,
 }
 
 fn backend() -> Backend {
-    Backend::X11
+    if let Ok(_) = env::var("WAYLAND_DISPLAY") {
+        Backend::Wayland
+    } else if let Ok(_) = env::var("DISPLAY") {
+        Backend::X11
+    } else {
+        Backend::Unknown
+    }
 }
 
 pub struct Application;
 
 impl Application {
     pub fn new() -> Result<Box<dyn PlatformApplication>, Box<dyn std::error::Error>> {
-        if backend() == Backend::Wayland {
-            wayland::Application::new()
-        } else {
-            x11::Application::new()
+        match backend() {
+            Backend::Wayland => wayland::Application::new(),
+            Backend::X11 => x11::Application::new(),
+            Backend::Unknown => panic!("Display server is not supported!"),
         }
     }
 }
