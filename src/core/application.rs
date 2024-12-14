@@ -77,12 +77,14 @@ impl ApplicationBuilder {
             return Err(Box::new(ApplicationError::AlreadyExists));
         }
 
+        let context = Rc::new(Context::new()?);
+
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            event_loop: EventLoop::new()?,
+            event_loop: EventLoop::new(context.clone())?,
             renderer: Renderer::new(),
-            context: Rc::new(Context::new()?),
+            context,
             platform_application: platform::Application::new()?,
         })
     }
