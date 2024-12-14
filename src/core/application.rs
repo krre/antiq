@@ -1,8 +1,8 @@
-use std::rc::Rc;
-
+use super::{error::ApplicationError, Context, EventLoop};
 use crate::{platform, renderer::Renderer};
+use std::{rc::Rc, sync::OnceLock};
 
-use super::{Context, EventLoop};
+static APP_LOCK: OnceLock<()> = OnceLock::new();
 
 pub struct Application {
     name: String,
@@ -73,6 +73,10 @@ impl ApplicationBuilder {
     }
 
     pub fn build(self) -> Result<Application, Box<dyn std::error::Error>> {
+        if let Err(_) = APP_LOCK.set(()) {
+            return Err(Box::new(ApplicationError::AlreadyExists));
+        }
+
         Ok(Application {
             name: self.name,
             organization: self.organization,
