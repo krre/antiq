@@ -1,5 +1,5 @@
 cfg_if::cfg_if! {
-    if  #[cfg(linux)] {
+    if #[cfg(linux)] {
         pub mod linux;
         #[allow(unused_imports)]
         pub use linux::*;
