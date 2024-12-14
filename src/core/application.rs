@@ -82,7 +82,7 @@ impl ApplicationBuilder {
             organization: self.organization,
             event_loop: EventLoop::new()?,
             renderer: Renderer::new(),
-            context: Rc::new(Context::new()),
+            context: Rc::new(Context::new()?),
             platform_application: platform::Application::new()?,
         })
     }

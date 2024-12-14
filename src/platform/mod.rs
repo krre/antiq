@@ -23,3 +23,5 @@ pub trait PlatformWindow {}
 pub trait PlatformEventLoop {
     fn run(&self);
 }
+
+pub trait PlatformContext {}

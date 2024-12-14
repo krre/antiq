@@ -1,6 +1,6 @@
 use std::env;
 
-use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
+use super::{PlatformApplication, PlatformContext, PlatformEventLoop, PlatformWindow};
 
 pub mod wayland;
 pub mod x11;
@@ -54,6 +54,18 @@ impl Window {
             wayland::Window::new()
         } else {
             x11::Window::new()
+        }
+    }
+}
+
+pub struct Context;
+
+impl Context {
+    pub fn new() -> Result<Box<dyn PlatformContext>, Box<dyn std::error::Error>> {
+        if backend() == Backend::Wayland {
+            wayland::Context::new()
+        } else {
+            x11::Context::new()
         }
     }
 }
