@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, rc::Rc};
 
 use super::{PlatformApplication, PlatformContext, PlatformEventLoop, PlatformWindow};
 
@@ -37,11 +37,13 @@ impl Application {
 pub struct EventLoop;
 
 impl EventLoop {
-    pub fn new() -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    pub fn new(
+        ctx: Rc<dyn PlatformContext>,
+    ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::EventLoop::new()
         } else {
-            x11::EventLoop::new()
+            x11::EventLoop::new(ctx)
         }
     }
 }

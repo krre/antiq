@@ -1,12 +1,20 @@
-use std::any::Any;
+use std::{any::Any, rc::Rc};
 
-use crate::platform::PlatformEventLoop;
+use x11rb::connection::Connection;
 
-pub struct EventLoop {}
+use crate::platform::{PlatformContext, PlatformEventLoop};
+
+use super::Context;
+
+pub struct EventLoop {
+    context: Rc<dyn PlatformContext>,
+}
 
 impl EventLoop {
-    pub fn new() -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        Ok(Box::new(Self {}))
+    pub fn new(
+        ctx: Rc<dyn PlatformContext>,
+    ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+        Ok(Box::new(Self { context: ctx }))
     }
 }
 
@@ -16,6 +24,13 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn run(&self) {
+        let x11_context = self.context.as_any().downcast_ref::<Context>().unwrap();
+        let conn = x11_context.connection.as_ref();
+
         println!("Linux X11 event loop runned");
+
+        loop {
+            println!("Event: {:?}", conn.wait_for_event().unwrap());
+        }
     }
 }
