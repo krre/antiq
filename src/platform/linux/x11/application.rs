@@ -4,8 +4,8 @@ use crate::platform::PlatformApplication;
 use x11rb::rust_connection::RustConnection;
 
 pub struct Application {
-    connection: Rc<RustConnection>,
-    screen_num: usize,
+    pub(crate) connection: Rc<RustConnection>,
+    pub(crate) screen_num: usize,
 }
 
 impl Application {
@@ -16,14 +16,6 @@ impl Application {
             connection: Rc::new(conn),
             screen_num,
         }))
-    }
-
-    pub fn connection(&self) -> Rc<RustConnection> {
-        self.connection.clone()
-    }
-
-    pub fn screen_num(&self) -> usize {
-        self.screen_num
     }
 }
 

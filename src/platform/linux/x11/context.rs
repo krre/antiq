@@ -18,8 +18,8 @@ impl Context {
         let x11_app = app.as_any().downcast_ref::<Application>().unwrap();
 
         Ok(Box::new(Self {
-            connection: x11_app.connection().clone(),
-            screen_num: x11_app.screen_num(),
+            connection: x11_app.connection.clone(),
+            screen_num: x11_app.screen_num,
         }))
     }
 }
