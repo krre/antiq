@@ -49,11 +49,13 @@ impl EventLoop {
 pub struct Window;
 
 impl Window {
-    pub fn new() -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+    pub fn new(
+        ctx: &dyn PlatformContext,
+    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::Window::new()
         } else {
-            x11::Window::new()
+            x11::Window::new(ctx)
         }
     }
 }

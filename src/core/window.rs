@@ -32,6 +32,7 @@ impl Window {
         let color = settings.color.clone();
         let title = settings.title.clone();
         let position = settings.position.unwrap_or(Pos2D::new(200, 200));
+        let platform_window = platform::Window::new(ctx.platform_context.as_ref())?;
 
         Ok(Self {
             title,
@@ -39,7 +40,7 @@ impl Window {
             position,
             widgets: Vec::new(),
             context: ctx,
-            platform_window: platform::Window::new()?,
+            platform_window,
         })
     }
 

@@ -1,7 +1,7 @@
 use crate::platform::{self, PlatformApplication};
 
 pub struct Context {
-    platform_context: Box<dyn platform::PlatformContext>,
+    pub(crate) platform_context: Box<dyn platform::PlatformContext>,
 }
 
 impl Context {

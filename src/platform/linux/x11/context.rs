@@ -7,7 +7,8 @@ use crate::platform::{PlatformApplication, PlatformContext};
 use super::Application;
 
 pub struct Context {
-    connection: Rc<RustConnection>,
+    pub(crate) connection: Rc<RustConnection>,
+    pub(crate) screen_num: usize,
 }
 
 impl Context {
@@ -18,11 +19,8 @@ impl Context {
 
         Ok(Box::new(Self {
             connection: x11_app.connection().clone(),
+            screen_num: x11_app.screen_num(),
         }))
-    }
-
-    pub fn connection(&self) -> Rc<RustConnection> {
-        self.connection.clone()
     }
 }
 
