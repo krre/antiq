@@ -52,7 +52,7 @@ pub struct Window;
 
 impl Window {
     pub fn new(
-        ctx: &dyn PlatformContext,
+        ctx: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::Window::new()

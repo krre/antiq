@@ -1,4 +1,4 @@
-use std::any::Any;
+use std::{any::Any, rc::Rc};
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
 use x11rb::wrapper::ConnectionExt as _;
@@ -8,11 +8,13 @@ use crate::platform::{PlatformContext, PlatformWindow};
 
 use super::Context;
 
-pub struct Window {}
+pub struct Window {
+    context: Rc<dyn PlatformContext>,
+}
 
 impl Window {
     pub fn new(
-        ctx: &dyn PlatformContext,
+        ctx: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         let x11_context = ctx.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
@@ -47,7 +49,7 @@ impl Window {
         conn.map_window(win_id)?;
         conn.flush()?;
 
-        Ok(Box::new(Self {}))
+        Ok(Box::new(Self { context: ctx }))
     }
 }
 
