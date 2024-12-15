@@ -5,7 +5,6 @@ use crate::{platform, renderer::Renderer, widget::Widget};
 use super::{Color, Context, Pos2D, Size2D};
 
 pub struct Window {
-    title: String,
     // surface: gfx::Surface<'static>,
     color: Color,
     position: Pos2D,
@@ -33,19 +32,21 @@ impl Window {
         let title = settings.title.clone();
         let position = settings.position.unwrap_or(Pos2D::new(200, 200));
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
-
-        Ok(Self {
-            title,
+        let window = Self {
             color,
             position,
             widgets: Vec::new(),
             context: ctx,
             platform_window,
-        })
+        };
+
+        window.set_title(&title.clone());
+
+        Ok(window)
     }
 
-    pub fn set_title(&mut self, title: &str) {
-        self.title = String::from(title);
+    pub fn set_title(&self, title: &str) {
+        self.platform_window.set_title(title);
     }
 
     pub fn set_visible(&self, visible: bool) {}
@@ -75,7 +76,7 @@ impl Window {
     }
 
     pub fn render(&self, renderer: &Renderer) {
-        log::info!("Render window: {}", self.title);
+        // log::info!("Render window: {}", self.title);
 
         // let frame = self.surface.current_frame();
         // let view = frame

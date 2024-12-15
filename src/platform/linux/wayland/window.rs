@@ -14,4 +14,6 @@ impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self
     }
+
+    fn set_title(&self, title: &str) {}
 }

@@ -24,6 +24,8 @@ pub trait PlatformApplication: Any {
 
 pub trait PlatformWindow: Any {
     fn as_any(&self) -> &dyn Any;
+
+    fn set_title(&self, title: &str);
 }
 
 pub trait PlatformEventLoop: Any {
