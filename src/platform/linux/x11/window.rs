@@ -1,6 +1,7 @@
 use std::any::Any;
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
+use x11rb::wrapper::ConnectionExt as _;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::platform::{PlatformContext, PlatformWindow};
@@ -18,6 +19,7 @@ impl Window {
 
         let screen = &conn.setup().roots[x11_context.screen_num];
         let win_id = conn.generate_id()?;
+
         conn.create_window(
             COPY_DEPTH_FROM_PARENT,
             win_id,
@@ -31,6 +33,17 @@ impl Window {
             0,
             &CreateWindowAux::new().background_pixel(screen.white_pixel),
         )?;
+
+        let title = "Antiq Window";
+
+        conn.change_property8(
+            PropMode::REPLACE,
+            win_id,
+            AtomEnum::WM_NAME,
+            AtomEnum::STRING,
+            title.as_bytes(),
+        )?;
+
         conn.map_window(win_id)?;
         conn.flush()?;
 
