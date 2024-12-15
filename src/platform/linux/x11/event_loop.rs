@@ -23,14 +23,12 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self) {
+    fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let x11_context = self.context.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
 
         println!("Linux X11 event loop runned");
 
-        loop {
-            println!("Event: {:?}", conn.wait_for_event().unwrap());
-        }
+        Ok(while let Ok(_) = conn.wait_for_event() {})
     }
 }

@@ -29,7 +29,7 @@ pub trait PlatformWindow: Any {
 pub trait PlatformEventLoop: Any {
     fn as_any(&self) -> &dyn Any;
 
-    fn run(&self);
+    fn run(&self) -> Result<(), Box<dyn std::error::Error>>;
 }
 
 pub trait PlatformContext: Any {

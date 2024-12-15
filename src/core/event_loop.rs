@@ -18,7 +18,8 @@ impl EventLoop {
         })
     }
 
-    pub fn run(&self) {
-        self.platform_event_loop.run();
+    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.platform_event_loop.run()?;
+        Ok(())
     }
 }
