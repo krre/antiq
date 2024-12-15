@@ -9,6 +9,10 @@ impl EventLoop {
 }
 
 impl PlatformEventLoop for EventLoop {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
     fn run(&self) {
         println!("macOS event loop runned");
     }

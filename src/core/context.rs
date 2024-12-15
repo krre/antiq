@@ -1,13 +1,13 @@
-use crate::platform;
+use crate::platform::{self, PlatformApplication};
 
 pub struct Context {
     platform_context: Box<dyn platform::PlatformContext>,
 }
 
 impl Context {
-    pub(crate) fn new() -> Result<Self, Box<dyn std::error::Error>> {
+    pub(crate) fn new(app: &dyn PlatformApplication) -> Result<Self, Box<dyn std::error::Error>> {
         Ok(Self {
-            platform_context: platform::Context::new()?,
+            platform_context: platform::Context::new(app)?,
         })
     }
 }

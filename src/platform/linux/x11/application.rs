@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{any::Any, rc::Rc};
 
 use crate::platform::PlatformApplication;
 use x11rb::rust_connection::RustConnection;
@@ -27,4 +27,8 @@ impl Application {
     }
 }
 
-impl PlatformApplication for Application {}
+impl PlatformApplication for Application {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}

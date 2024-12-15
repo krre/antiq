@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{any::Any, rc::Rc};
 use wayland_client::Connection;
 
 use crate::platform::PlatformApplication;
@@ -18,4 +18,8 @@ impl Application {
     }
 }
 
-impl PlatformApplication for Application {}
+impl PlatformApplication for Application {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}

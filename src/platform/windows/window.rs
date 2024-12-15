@@ -8,4 +8,8 @@ impl Window {
     }
 }
 
-impl PlatformWindow for Window {}
+impl PlatformWindow for Window {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}

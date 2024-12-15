@@ -1,3 +1,5 @@
+use std::any::Any;
+
 cfg_if::cfg_if! {
     if #[cfg(linux)] {
         pub mod linux;
@@ -16,12 +18,20 @@ cfg_if::cfg_if! {
     }
 }
 
-pub trait PlatformApplication {}
+pub trait PlatformApplication: Any {
+    fn as_any(&self) -> &dyn Any;
+}
 
-pub trait PlatformWindow {}
+pub trait PlatformWindow: Any {
+    fn as_any(&self) -> &dyn Any;
+}
 
-pub trait PlatformEventLoop {
+pub trait PlatformEventLoop: Any {
+    fn as_any(&self) -> &dyn Any;
+
     fn run(&self);
 }
 
-pub trait PlatformContext {}
+pub trait PlatformContext: Any {
+    fn as_any(&self) -> &dyn Any;
+}

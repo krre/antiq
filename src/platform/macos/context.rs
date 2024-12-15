@@ -8,4 +8,8 @@ impl Context {
     }
 }
 
-impl PlatformContext for Context {}
+impl PlatformContext for Context {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}

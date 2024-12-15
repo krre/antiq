@@ -77,7 +77,8 @@ impl ApplicationBuilder {
             return Err(Box::new(ApplicationError::AlreadyExists));
         }
 
-        let context = Rc::new(Context::new()?);
+        let platform_application = platform::Application::new()?;
+        let context = Rc::new(Context::new(platform_application.as_ref())?);
 
         Ok(Application {
             name: self.name,
@@ -85,7 +86,7 @@ impl ApplicationBuilder {
             event_loop: EventLoop::new(context.clone())?,
             renderer: Renderer::new(),
             context,
-            platform_application: platform::Application::new()?,
+            platform_application,
         })
     }
 }

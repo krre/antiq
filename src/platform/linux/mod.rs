@@ -61,11 +61,13 @@ impl Window {
 pub struct Context;
 
 impl Context {
-    pub fn new() -> Result<Box<dyn PlatformContext>, Box<dyn std::error::Error>> {
+    pub fn new(
+        app: &dyn PlatformApplication,
+    ) -> Result<Box<dyn PlatformContext>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::Context::new()
+            wayland::Context::new(app)
         } else {
-            x11::Context::new()
+            x11::Context::new(app)
         }
     }
 }
