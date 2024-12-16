@@ -43,6 +43,10 @@ impl Size2D {
     pub fn height(&self) -> u32 {
         self.height
     }
+
+    pub fn size(&self) -> (u32, u32) {
+        (self.width, self.height)
+    }
 }
 
 impl Pos2D {
