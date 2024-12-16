@@ -5,18 +5,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Application::new()?;
 
-    let mut settings1 = WindowSettings::new();
-    settings1.set_title("Window 1");
+    let window_1 = Window::new(app.context().clone(), WindowSettings::new())?;
+    window_1.set_title("Multi Window 1");
 
-    let _ = Window::new(app.context().clone(), settings1);
+    let mut settings_2 = WindowSettings::new();
+    settings_2.set_size(Size2D::new(600, 400));
+    settings_2.set_position(Pos2D::new(500, 200));
+    settings_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
 
-    let mut settings2 = WindowSettings::new();
-    settings2.set_title("Window 2");
-    settings2.set_size(Size2D::new(600, 400));
-    settings2.set_position(Pos2D::new(500, 200));
-    settings2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
-
-    let _ = Window::new(app.context(), settings2);
+    let window_2 = Window::new(app.context(), settings_2)?;
+    window_2.set_title("Multi Window 2");
 
     app.run();
 
