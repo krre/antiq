@@ -7,6 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let window = Window::new(app.context().clone(), WindowSettings::new())?;
     window.set_title("Simple Window");
+    window.set_visible(true);
 
     app.run();
 

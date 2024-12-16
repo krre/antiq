@@ -7,6 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let window_1 = Window::new(app.context().clone(), WindowSettings::new())?;
     window_1.set_title("Multi Window 1");
+    window_1.set_visible(true);
 
     let mut settings_2 = WindowSettings::new();
     settings_2.set_size(Size2D::new(600, 400));
@@ -15,6 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let window_2 = Window::new(app.context(), settings_2)?;
     window_2.set_title("Multi Window 2");
+    window_2.set_visible(true);
 
     app.run();
 

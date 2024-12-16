@@ -28,6 +28,8 @@ pub trait PlatformWindow: Any {
     fn set_title(&self, title: &str);
 
     fn title(&self) -> String;
+
+    fn set_visible(&self, visible: bool);
 }
 
 pub trait PlatformEventLoop: Any {

@@ -20,7 +20,6 @@ pub struct WindowSettings {
     pub size: Option<Size2D>,
     pub color: Color,
     pub maximized: bool,
-    pub visible: bool,
 }
 
 impl Window {
@@ -53,7 +52,9 @@ impl Window {
         self.platform_window.title()
     }
 
-    pub fn set_visible(&self, visible: bool) {}
+    pub fn set_visible(&self, visible: bool) {
+        self.platform_window.set_visible(visible);
+    }
 
     pub fn set_size(&self, size: Size2D) {}
 
@@ -100,10 +101,6 @@ impl WindowSettings {
         self.title = String::from(title);
     }
 
-    pub fn set_visible(&mut self, visible: bool) {
-        self.visible = visible;
-    }
-
     pub fn set_size(&mut self, size: Size2D) {
         self.size = Some(size);
     }
@@ -135,7 +132,6 @@ impl Default for WindowSettings {
             size: None,
             color: Color::new(0.05, 0.027, 0.15, 1.0),
             maximized: false,
-            visible: true,
         }
     }
 }

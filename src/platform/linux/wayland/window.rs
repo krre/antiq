@@ -20,4 +20,6 @@ impl PlatformWindow for Window {
     fn title(&self) -> String {
         String::new()
     }
+
+    fn set_visible(&self, visible: bool) {}
 }

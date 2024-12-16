@@ -37,7 +37,6 @@ impl Window {
             &CreateWindowAux::new().background_pixel(screen.white_pixel),
         )?;
 
-        conn.map_window(win_id)?;
         conn.flush()?;
 
         Ok(Box::new(Self {
@@ -82,5 +81,15 @@ impl PlatformWindow for Window {
             .reply()
             .unwrap();
         String::from_utf8(reply.value).unwrap()
+    }
+
+    fn set_visible(&self, visible: bool) {
+        if visible {
+            self.conn().map_window(self.id).unwrap();
+        } else {
+            self.conn().unmap_window(self.id).unwrap();
+        }
+
+        self.conn().flush().unwrap();
     }
 }
