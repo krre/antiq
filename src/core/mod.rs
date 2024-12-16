@@ -61,4 +61,8 @@ impl Pos2D {
     pub fn y(&self) -> i32 {
         self.y
     }
+
+    pub fn pos(&self) -> (i32, i32) {
+        (self.x, self.y)
+    }
 }
