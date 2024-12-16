@@ -49,6 +49,10 @@ impl Window {
         self.platform_window.set_title(title);
     }
 
+    pub fn title(&self) -> String {
+        self.platform_window.title()
+    }
+
     pub fn set_visible(&self, visible: bool) {}
 
     pub fn set_size(&self, size: Size2D) {}

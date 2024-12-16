@@ -16,4 +16,8 @@ impl PlatformWindow for Window {
     }
 
     fn set_title(&self, title: &str) {}
+
+    fn title(&self) -> String {
+        String::new()
+    }
 }
