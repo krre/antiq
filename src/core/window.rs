@@ -15,7 +15,6 @@ pub struct Window {
 #[derive(Debug)]
 pub struct WindowSettings {
     pub title: String,
-    pub size: Option<Size2D>,
     pub color: Color,
     pub maximized: bool,
 }
@@ -56,7 +55,9 @@ impl Window {
         self.platform_window.set_position(pos);
     }
 
-    pub fn set_size(&self, size: Size2D) {}
+    pub fn set_size(&self, size: Size2D) {
+        self.platform_window.set_size(size);
+    }
 
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
@@ -97,10 +98,6 @@ impl WindowSettings {
         self.title = String::from(title);
     }
 
-    pub fn set_size(&mut self, size: Size2D) {
-        self.size = Some(size);
-    }
-
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
     }
@@ -120,7 +117,6 @@ impl Default for WindowSettings {
     fn default() -> Self {
         Self {
             title: "Untitled".to_string(),
-            size: None,
             color: Color::new(0.05, 0.027, 0.15, 1.0),
             maximized: false,
         }

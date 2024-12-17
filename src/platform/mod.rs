@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::core::Pos2D;
+use crate::core::{Pos2D, Size2D};
 
 cfg_if::cfg_if! {
     if #[cfg(linux)] {
@@ -34,6 +34,8 @@ pub trait PlatformWindow: Any {
     fn set_visible(&self, visible: bool);
 
     fn set_position(&self, pos: Pos2D);
+
+    fn set_size(&self, size: Size2D);
 }
 
 pub trait PlatformEventLoop: Any {

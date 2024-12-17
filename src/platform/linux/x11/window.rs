@@ -6,7 +6,7 @@ use x11rb::wrapper::ConnectionExt as _;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
-    core::Pos2D,
+    core::{Pos2D, Size2D},
     platform::{PlatformContext, PlatformWindow},
 };
 
@@ -99,6 +99,18 @@ impl PlatformWindow for Window {
     fn set_position(&self, pos: Pos2D) {
         self.conn()
             .configure_window(self.id, &ConfigureWindowAux::new().x(pos.x()).y(pos.y()))
+            .unwrap();
+        self.conn().flush().unwrap();
+    }
+
+    fn set_size(&self, size: Size2D) {
+        self.conn()
+            .configure_window(
+                self.id,
+                &ConfigureWindowAux::new()
+                    .width(size.width())
+                    .height(size.height()),
+            )
             .unwrap();
         self.conn().flush().unwrap();
     }
