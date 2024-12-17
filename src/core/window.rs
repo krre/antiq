@@ -12,21 +12,11 @@ pub struct Window {
     platform_window: Box<dyn platform::PlatformWindow>,
 }
 
-#[derive(Debug)]
-pub struct WindowSettings {
-    pub color: Color,
-    pub maximized: bool,
-}
-
 impl Window {
-    pub fn new(
-        ctx: Rc<Context>,
-        settings: WindowSettings,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let color = settings.color.clone();
+    pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let window = Self {
-            color,
+            color: Color::new(0.05, 0.027, 0.15, 1.0),
             widgets: Vec::new(),
             context: ctx,
             platform_window,
@@ -57,9 +47,7 @@ impl Window {
         self.platform_window.set_size(size);
     }
 
-    pub fn set_color(&mut self, color: Color) {
-        self.color = color;
-    }
+    pub fn set_color(&self, color: Color) {}
 
     pub fn set_maximized(&self, maximized: bool) {}
 
@@ -89,29 +77,4 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {}
-}
-
-impl WindowSettings {
-    pub fn set_color(&mut self, color: Color) {
-        self.color = color;
-    }
-
-    pub fn set_maximized(&mut self, maximized: bool) {
-        self.maximized = maximized;
-    }
-}
-
-impl WindowSettings {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
-impl Default for WindowSettings {
-    fn default() -> Self {
-        Self {
-            color: Color::new(0.05, 0.027, 0.15, 1.0),
-            maximized: false,
-        }
-    }
 }

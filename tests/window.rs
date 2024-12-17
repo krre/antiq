@@ -1,6 +1,5 @@
 use antiq::core::Application;
 use antiq::core::Window;
-use antiq::core::WindowSettings;
 
 #[test]
 fn create_window() {
@@ -8,7 +7,7 @@ fn create_window() {
 
     let title = "Window title".to_string();
 
-    let window = Window::new(app.context().clone(), WindowSettings::new()).unwrap();
+    let window = Window::new(app.context().clone()).unwrap();
     window.set_title(&title);
 
     assert_eq!(window.title(), title);

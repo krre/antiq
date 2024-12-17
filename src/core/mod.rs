@@ -15,7 +15,6 @@ pub use context::Context;
 pub use event_loop::EventLoop;
 pub use id::Id;
 pub use window::Window;
-pub use window::WindowSettings;
 
 use serde::{Deserialize, Serialize};
 
