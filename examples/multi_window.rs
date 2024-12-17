@@ -14,9 +14,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let window_2 = Window::new(app.context(), settings_2)?;
     window_2.set_title("Multi Window 2");
+    window_2.set_visible(true);
     window_2.set_position(Pos2D::new(500, 200));
     window_2.set_size(Size2D::new(300, 300));
-    window_2.set_visible(true);
 
     app.run();
 
