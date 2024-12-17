@@ -14,7 +14,6 @@ pub struct Window {
 
 #[derive(Debug)]
 pub struct WindowSettings {
-    pub title: String,
     pub color: Color,
     pub maximized: bool,
 }
@@ -25,7 +24,6 @@ impl Window {
         settings: WindowSettings,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         let color = settings.color.clone();
-        let title = settings.title.clone();
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let window = Self {
             color,
@@ -34,7 +32,7 @@ impl Window {
             platform_window,
         };
 
-        window.set_title(&title.clone());
+        window.set_title("Untitled");
 
         Ok(window)
     }
@@ -94,10 +92,6 @@ impl Drop for Window {
 }
 
 impl WindowSettings {
-    pub fn set_title(&mut self, title: &str) {
-        self.title = String::from(title);
-    }
-
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
     }
@@ -116,7 +110,6 @@ impl WindowSettings {
 impl Default for WindowSettings {
     fn default() -> Self {
         Self {
-            title: "Untitled".to_string(),
             color: Color::new(0.05, 0.027, 0.15, 1.0),
             maximized: false,
         }
