@@ -7,7 +7,6 @@ use super::{Color, Context, Pos2D, Size2D};
 pub struct Window {
     // surface: gfx::Surface<'static>,
     color: Color,
-    position: Pos2D,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
@@ -16,7 +15,6 @@ pub struct Window {
 #[derive(Debug)]
 pub struct WindowSettings {
     pub title: String,
-    pub position: Option<Pos2D>,
     pub size: Option<Size2D>,
     pub color: Color,
     pub maximized: bool,
@@ -29,11 +27,9 @@ impl Window {
     ) -> Result<Self, Box<dyn std::error::Error>> {
         let color = settings.color.clone();
         let title = settings.title.clone();
-        let position = settings.position.unwrap_or(Pos2D::new(200, 200));
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let window = Self {
             color,
-            position,
             widgets: Vec::new(),
             context: ctx,
             platform_window,
@@ -56,11 +52,11 @@ impl Window {
         self.platform_window.set_visible(visible);
     }
 
-    pub fn set_size(&self, size: Size2D) {}
-
-    pub fn position(&self) -> Pos2D {
-        self.position
+    pub fn set_position(&self, pos: Pos2D) {
+        self.platform_window.set_position(pos);
     }
+
+    pub fn set_size(&self, size: Size2D) {}
 
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
@@ -105,10 +101,6 @@ impl WindowSettings {
         self.size = Some(size);
     }
 
-    pub fn set_position(&mut self, position: Pos2D) {
-        self.position = Some(position);
-    }
-
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
     }
@@ -128,7 +120,6 @@ impl Default for WindowSettings {
     fn default() -> Self {
         Self {
             title: "Untitled".to_string(),
-            position: None,
             size: None,
             color: Color::new(0.05, 0.027, 0.15, 1.0),
             maximized: false,

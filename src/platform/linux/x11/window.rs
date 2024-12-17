@@ -5,7 +5,10 @@ use x11rb::rust_connection::RustConnection;
 use x11rb::wrapper::ConnectionExt as _;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
-use crate::platform::{PlatformContext, PlatformWindow};
+use crate::{
+    core::Pos2D,
+    platform::{PlatformContext, PlatformWindow},
+};
 
 use super::Context;
 
@@ -90,6 +93,13 @@ impl PlatformWindow for Window {
             self.conn().unmap_window(self.id).unwrap();
         }
 
+        self.conn().flush().unwrap();
+    }
+
+    fn set_position(&self, pos: Pos2D) {
+        self.conn()
+            .configure_window(self.id, &ConfigureWindowAux::new().x(pos.x()).y(pos.y()))
+            .unwrap();
         self.conn().flush().unwrap();
     }
 }

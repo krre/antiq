@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::platform::PlatformWindow;
+use crate::{core::Pos2D, platform::PlatformWindow};
 
 pub struct Window {}
 
@@ -22,4 +22,6 @@ impl PlatformWindow for Window {
     }
 
     fn set_visible(&self, visible: bool) {}
+
+    fn set_position(&self, pos: Pos2D) {}
 }
