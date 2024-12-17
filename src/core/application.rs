@@ -8,7 +8,7 @@ pub struct Application {
     name: String,
     organization: String,
     event_loop: EventLoop,
-    renderer: Renderer,
+    renderer: Rc<Renderer>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
 }
@@ -78,13 +78,17 @@ impl ApplicationBuilder {
         }
 
         let platform_application = platform::Application::new()?;
-        let context = Rc::new(Context::new(platform_application.as_ref())?);
+        let renderer = Rc::new(Renderer::new());
+        let context = Rc::new(Context::new(
+            platform_application.as_ref(),
+            renderer.clone(),
+        )?);
 
         Ok(Application {
             name: self.name,
             organization: self.organization,
             event_loop: EventLoop::new(context.clone())?,
-            renderer: Renderer::new(),
+            renderer: renderer,
             context,
             platform_application,
         })
