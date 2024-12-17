@@ -10,16 +10,20 @@ pub struct Window {
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
+    renderer: Rc<Renderer>,
 }
 
 impl Window {
     pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
+        let renderer = ctx.renderer().clone();
+
         let window = Self {
             color: Color::new(0.05, 0.027, 0.15, 1.0),
             widgets: Vec::new(),
             context: ctx,
             platform_window,
+            renderer,
         };
 
         window.set_title("Untitled");
@@ -63,7 +67,7 @@ impl Window {
         self.widgets.push(RefCell::new(widget));
     }
 
-    pub fn render(&self, renderer: &Renderer) {
+    pub fn render(&self) {
         // log::info!("Render window: {}", self.title);
 
         // let frame = self.surface.current_frame();
