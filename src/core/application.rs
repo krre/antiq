@@ -49,8 +49,8 @@ impl Application {
         &self.renderer
     }
 
-    pub fn run(&self) {
-        self.event_loop.run();
+    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.event_loop.run()
     }
 }
 

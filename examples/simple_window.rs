@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     window.set_title("Simple Window");
     window.set_visible(true);
 
-    app.run();
+    app.run()?;
 
     Ok(())
 }

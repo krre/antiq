@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     window_2.set_size(Size2D::new(300, 300));
     window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
 
-    app.run();
+    app.run()?;
 
     Ok(())
 }
