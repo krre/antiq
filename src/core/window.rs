@@ -1,22 +1,27 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{platform, renderer::Renderer, widget::Widget};
+use crate::{
+    platform,
+    renderer::{Renderer, Surface},
+    widget::Widget,
+};
 
 use super::{Color, Context, Pos2D, Size2D};
 
 pub struct Window {
-    // surface: gfx::Surface<'static>,
     color: Color,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
     renderer: Rc<Renderer>,
+    surface: Surface,
 }
 
 impl Window {
     pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let renderer = ctx.renderer().clone();
+        let surface = Surface::new(platform_window.as_ref(), &renderer);
 
         let window = Self {
             color: Color::new(0.05, 0.027, 0.15, 1.0),
@@ -24,6 +29,7 @@ impl Window {
             context: ctx,
             platform_window,
             renderer,
+            surface,
         };
 
         window.set_title("Untitled");

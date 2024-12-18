@@ -1,5 +1,8 @@
 use std::any::Any;
 
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
+use wgpu::SurfaceTarget;
+
 use crate::core::{Pos2D, Size2D};
 
 cfg_if::cfg_if! {
@@ -36,6 +39,28 @@ pub trait PlatformWindow: Any {
     fn set_position(&self, pos: Pos2D);
 
     fn set_size(&self, size: Size2D);
+}
+
+impl HasWindowHandle for &dyn PlatformWindow {
+    fn window_handle(
+        &self,
+    ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
+        todo!()
+    }
+}
+
+impl HasDisplayHandle for &dyn PlatformWindow {
+    fn display_handle(
+        &self,
+    ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
+        todo!()
+    }
+}
+
+impl<'w> Into<SurfaceTarget<'w>> for &dyn PlatformWindow {
+    fn into(self) -> SurfaceTarget<'w> {
+        todo!()
+    }
 }
 
 pub trait PlatformEventLoop: Any {
