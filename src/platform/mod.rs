@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use wgpu::SurfaceTarget;
+use wgpu::{SurfaceTarget, WindowHandle};
 
 use crate::core::{Pos2D, Size2D};
 
@@ -30,6 +30,8 @@ pub trait PlatformApplication: Any {
 pub trait PlatformWindow: Any {
     fn as_any(&self) -> &dyn Any;
 
+    fn window_handle(&self) -> Box<dyn WindowHandle + 'static>;
+
     fn set_title(&self, title: &str);
 
     fn title(&self) -> String;
@@ -41,25 +43,9 @@ pub trait PlatformWindow: Any {
     fn set_size(&self, size: Size2D);
 }
 
-impl HasWindowHandle for &dyn PlatformWindow {
-    fn window_handle(
-        &self,
-    ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
-    }
-}
-
-impl HasDisplayHandle for &dyn PlatformWindow {
-    fn display_handle(
-        &self,
-    ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
-    }
-}
-
 impl<'w> Into<SurfaceTarget<'w>> for &dyn PlatformWindow {
     fn into(self) -> SurfaceTarget<'w> {
-        todo!()
+        SurfaceTarget::Window(self.window_handle())
     }
 }
 

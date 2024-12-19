@@ -1,3 +1,4 @@
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use std::{any::Any, rc::Rc};
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
@@ -16,6 +17,8 @@ pub struct Window {
     context: Rc<dyn PlatformContext>,
     id: u32,
 }
+
+struct X11WindowHandle {}
 
 impl Window {
     pub fn new(
@@ -60,6 +63,10 @@ impl Window {
 impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self
+    }
+
+    fn window_handle(&self) -> Box<dyn wgpu::WindowHandle + 'static> {
+        Box::new(X11WindowHandle {})
     }
 
     fn set_title(&self, title: &str) {
@@ -113,5 +120,21 @@ impl PlatformWindow for Window {
             )
             .unwrap();
         self.conn().flush().unwrap();
+    }
+}
+
+impl HasWindowHandle for X11WindowHandle {
+    fn window_handle(
+        &self,
+    ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
+        todo!()
+    }
+}
+
+impl HasDisplayHandle for X11WindowHandle {
+    fn display_handle(
+        &self,
+    ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
+        todo!()
     }
 }
