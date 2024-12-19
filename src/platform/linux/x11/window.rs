@@ -1,5 +1,5 @@
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use std::{any::Any, rc::Rc};
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle, XcbDisplayHandle, XcbWindowHandle};
+use std::{any::Any, num::NonZeroU32, rc::Rc};
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
 use x11rb::rust_connection::RustConnection;
@@ -18,7 +18,10 @@ pub struct Window {
     id: u32,
 }
 
-struct X11WindowHandle {}
+struct X11WindowHandle {
+    window_id: u32,
+    screen_num: i32,
+}
 
 impl Window {
     pub fn new(
@@ -66,7 +69,10 @@ impl PlatformWindow for Window {
     }
 
     fn window_handle(&self) -> Box<dyn wgpu::WindowHandle + 'static> {
-        Box::new(X11WindowHandle {})
+        Box::new(X11WindowHandle {
+            window_id: self.id,
+            screen_num: self.context().screen_num as i32,
+        })
     }
 
     fn set_title(&self, title: &str) {
@@ -127,7 +133,9 @@ impl HasWindowHandle for X11WindowHandle {
     fn window_handle(
         &self,
     ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
+        let window_handle = XcbWindowHandle::new(NonZeroU32::new(self.window_id).unwrap());
+        let raw_handle = raw_window_handle::RawWindowHandle::Xcb(window_handle);
+        unsafe { Ok(raw_window_handle::WindowHandle::borrow_raw(raw_handle)) }
     }
 }
 
@@ -135,6 +143,8 @@ impl HasDisplayHandle for X11WindowHandle {
     fn display_handle(
         &self,
     ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
+        let display_handle = XcbDisplayHandle::new(None, self.screen_num);
+        let raw_handle = raw_window_handle::RawDisplayHandle::Xcb(display_handle);
+        unsafe { Ok(raw_window_handle::DisplayHandle::borrow_raw(raw_handle)) }
     }
 }
