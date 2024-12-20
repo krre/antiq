@@ -22,7 +22,10 @@ env_logger = "0.11.5"
 wayland-client = "0.31.7"
 wayland-protocols = "0.32.5"
 wayland-backend = { version = "0.3.7", features = ["client_system"] }
-x11rb = { version = "0.13.1", features = ["all-extensions"] }
+x11rb = { version = "0.13.1", features = [
+    "all-extensions",
+    "allow-unsafe-code",
+] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = "0.58.0"

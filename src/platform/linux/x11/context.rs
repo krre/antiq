@@ -1,13 +1,13 @@
 use std::{any::Any, rc::Rc};
 
-use x11rb::rust_connection::RustConnection;
+use x11rb::xcb_ffi::XCBConnection;
 
 use crate::platform::{PlatformApplication, PlatformContext};
 
 use super::Application;
 
 pub struct Context {
-    pub(crate) connection: Rc<RustConnection>,
+    pub(crate) connection: Rc<XCBConnection>,
     pub(crate) screen_num: usize,
 }
 

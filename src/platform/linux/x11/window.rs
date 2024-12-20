@@ -2,8 +2,8 @@ use raw_window_handle::{HasDisplayHandle, HasWindowHandle, XcbDisplayHandle, Xcb
 use std::{any::Any, num::NonZeroU32, rc::Rc};
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
-use x11rb::rust_connection::RustConnection;
 use x11rb::wrapper::ConnectionExt as _;
+use x11rb::xcb_ffi::XCBConnection;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
@@ -58,7 +58,7 @@ impl Window {
         self.context.as_any().downcast_ref::<Context>().unwrap()
     }
 
-    fn conn(&self) -> &RustConnection {
+    fn conn(&self) -> &XCBConnection {
         self.context().connection.as_ref()
     }
 }
