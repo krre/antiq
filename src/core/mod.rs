@@ -1,13 +1,12 @@
-pub mod error;
-pub mod event_loop;
-pub mod layout;
-pub mod node;
-pub mod window;
-
 mod application;
 mod color;
 mod context;
+mod error;
+mod event_loop;
 mod id;
+mod layout;
+mod node;
+mod window;
 
 pub use application::{Application, ApplicationBuilder};
 pub use color::Color;
