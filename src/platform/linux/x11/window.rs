@@ -45,7 +45,7 @@ impl Window {
             0,
             WindowClass::INPUT_OUTPUT,
             0,
-            &CreateWindowAux::new().background_pixel(screen.white_pixel),
+            &CreateWindowAux::new().background_pixel(screen.black_pixel),
         )?;
 
         conn.flush()?;
