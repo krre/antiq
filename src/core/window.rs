@@ -74,14 +74,14 @@ impl Window {
     }
 
     pub fn render(&self) {
-        // log::info!("Render window: {}", self.title);
+        println!("Render window: {}", self.title());
 
-        // let frame = self.surface.current_frame();
-        // let view = frame
-        //     .texture
-        //     .create_view(&wgpu::TextureViewDescriptor::default());
-        // gpu.clear_view(&view, &self.color.inner());
-        // frame.present();
+        let frame = self.surface.current_frame();
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+        self.renderer.clear_view(&view, &self.color.inner());
+        frame.present();
     }
 }
 
