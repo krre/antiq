@@ -1,4 +1,7 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 
 use crate::{
     platform,
@@ -15,6 +18,7 @@ pub struct Window {
     platform_window: Box<dyn platform::PlatformWindow>,
     renderer: Rc<Renderer>,
     surface: Surface,
+    visible: Cell<bool>,
 }
 
 impl Window {
@@ -30,6 +34,7 @@ impl Window {
             platform_window,
             renderer,
             surface,
+            visible: Cell::new(false),
         };
 
         window.set_title("Untitled");
@@ -47,6 +52,11 @@ impl Window {
 
     pub fn set_visible(&self, visible: bool) {
         self.platform_window.set_visible(visible);
+        self.visible.set(true);
+    }
+
+    pub fn is_visible(&self) -> bool {
+        self.visible.get()
     }
 
     pub fn set_position(&self, pos: Pos2D) {
