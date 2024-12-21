@@ -26,6 +26,7 @@ x11rb = { version = "0.13.1", features = [
     "all-extensions",
     "allow-unsafe-code",
 ] }
+as-raw-xcb-connection = "1.0.1"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = "0.58.0"

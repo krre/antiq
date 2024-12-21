@@ -1,6 +1,7 @@
 use std::any::Any;
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
+use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{Pos2D, Size2D},
@@ -22,8 +23,10 @@ impl PlatformWindow for Window {
         self
     }
 
-    fn window_handle(&self) -> Box<dyn wgpu::WindowHandle + 'static> {
-        Box::new(WaylandWindowHandle {})
+    fn surface_target(&self) -> SurfaceTargetUnsafe {
+        let window = WaylandWindowHandle {};
+
+        unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
     }
 
     fn set_title(&self, title: &str) {}

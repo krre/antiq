@@ -9,7 +9,12 @@ pub struct Surface {
 
 impl Surface {
     pub fn new(window: &dyn PlatformWindow, renderer: &Renderer) -> Self {
-        let surface = renderer.instance().create_surface(window).unwrap();
+        let surface = unsafe {
+            renderer
+                .instance()
+                .create_surface_unsafe(window.surface_target())
+                .unwrap()
+        };
 
         let config = surface
             .get_default_config(&renderer.adapter(), 800, 600)

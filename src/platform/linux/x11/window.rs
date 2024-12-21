@@ -1,5 +1,6 @@
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle, XcbDisplayHandle, XcbWindowHandle};
-use std::{any::Any, num::NonZeroU32, rc::Rc};
+use std::{any::Any, ffi::c_void, num::NonZeroU32, ptr::NonNull, rc::Rc};
+use wgpu::SurfaceTargetUnsafe;
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
 use x11rb::wrapper::ConnectionExt as _;
@@ -19,6 +20,7 @@ pub struct Window {
 }
 
 struct X11WindowHandle {
+    connection: *mut c_void,
     window_id: u32,
     screen_num: i32,
 }
@@ -68,11 +70,17 @@ impl PlatformWindow for Window {
         self
     }
 
-    fn window_handle(&self) -> Box<dyn wgpu::WindowHandle + 'static> {
-        Box::new(X11WindowHandle {
+    fn surface_target(&self) -> SurfaceTargetUnsafe {
+        let connection =
+            as_raw_xcb_connection::AsRawXcbConnection::as_raw_xcb_connection(self.conn()) as *mut _;
+
+        let window = X11WindowHandle {
+            connection,
             window_id: self.id,
             screen_num: self.context().screen_num as i32,
-        })
+        };
+
+        unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
     }
 
     fn set_title(&self, title: &str) {
@@ -143,7 +151,7 @@ impl HasDisplayHandle for X11WindowHandle {
     fn display_handle(
         &self,
     ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
-        let display_handle = XcbDisplayHandle::new(None, self.screen_num);
+        let display_handle = XcbDisplayHandle::new(NonNull::new(self.connection), self.screen_num);
         let raw_handle = raw_window_handle::RawDisplayHandle::Xcb(display_handle);
         unsafe { Ok(raw_window_handle::DisplayHandle::borrow_raw(raw_handle)) }
     }
