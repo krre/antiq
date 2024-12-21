@@ -61,6 +61,10 @@ impl Window {
         *self.color.borrow_mut() = color;
     }
 
+    pub fn color(&self) -> Color {
+        self.color.borrow().clone()
+    }
+
     pub fn set_maximized(&self, maximized: bool) {}
 
     pub fn resize(&mut self, device: &wgpu::Device, size: Size2D) {}
