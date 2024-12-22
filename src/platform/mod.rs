@@ -1,7 +1,6 @@
 use std::any::Any;
 
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use wgpu::{SurfaceTarget, SurfaceTargetUnsafe, WindowHandle};
+use wgpu::SurfaceTargetUnsafe;
 
 use crate::core::{Pos2D, Size2D};
 
