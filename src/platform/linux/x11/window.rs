@@ -15,7 +15,7 @@ use crate::{
 use super::Context;
 
 pub struct Window {
-    context: Rc<dyn PlatformContext>,
+    context: Rc<Context>,
     id: u32,
 }
 
@@ -35,9 +35,7 @@ x11rb::atom_manager! {
 }
 
 impl Window {
-    pub fn new(
-        ctx: Rc<dyn PlatformContext>,
-    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+    pub fn new(ctx: Rc<Context>) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         let x11_context = ctx.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
         let screen = &conn.setup().roots[x11_context.screen_num];
@@ -77,12 +75,8 @@ impl Window {
         }))
     }
 
-    fn context(&self) -> &Context {
-        self.context.as_any().downcast_ref::<Context>().unwrap()
-    }
-
     fn conn(&self) -> &XCBConnection {
-        self.context().connection.as_ref()
+        self.context.connection.as_ref()
     }
 }
 
@@ -98,7 +92,7 @@ impl PlatformWindow for Window {
         let window = X11WindowHandle {
             connection,
             window_id: self.id,
-            screen_num: self.context().screen_num as i32,
+            screen_num: self.context.screen_num as i32,
         };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
