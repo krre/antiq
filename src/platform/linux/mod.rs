@@ -43,8 +43,7 @@ impl EventLoop {
         if backend() == Backend::Wayland {
             wayland::EventLoop::new()
         } else {
-            let context = ctx.as_any().downcast_ref::<Rc<x11::Context>>().unwrap();
-            x11::EventLoop::new(context.clone())
+            x11::EventLoop::new(ctx)
         }
     }
 }
@@ -58,8 +57,7 @@ impl Window {
         if backend() == Backend::Wayland {
             wayland::Window::new()
         } else {
-            let context = ctx.as_any().downcast_ref::<Rc<x11::Context>>().unwrap();
-            x11::Window::new(context.clone())
+            x11::Window::new(ctx)
         }
     }
 }

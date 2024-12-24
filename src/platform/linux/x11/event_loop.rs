@@ -7,11 +7,13 @@ use crate::platform::{x11::Atoms, PlatformContext, PlatformEventLoop};
 use super::Context;
 
 pub struct EventLoop {
-    context: Rc<Context>,
+    context: Rc<dyn PlatformContext>,
 }
 
 impl EventLoop {
-    pub fn new(ctx: Rc<Context>) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    pub fn new(
+        ctx: Rc<dyn PlatformContext>,
+    ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         Ok(Box::new(Self { context: ctx }))
     }
 }
