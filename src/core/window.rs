@@ -88,8 +88,6 @@ impl Window {
 
     pub fn set_maximized(&self, maximized: bool) {}
 
-    pub fn resize(&mut self, device: &wgpu::Device, size: Size2D) {}
-
     pub fn build(&self) {
         for widget in &self.widgets {
             widget.borrow().build();
