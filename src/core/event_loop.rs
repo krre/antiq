@@ -2,7 +2,8 @@ use std::rc::Rc;
 
 use crate::platform;
 
-use super::Context;
+use super::{event::Event, Context};
+
 pub struct EventLoop {
     context: Rc<Context>,
     platform_event_loop: Box<dyn platform::PlatformEventLoop>,
@@ -18,8 +19,8 @@ impl EventLoop {
         })
     }
 
-    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.platform_event_loop.run()?;
+    pub fn run(&self, event_handler: &dyn Event) -> Result<(), Box<dyn std::error::Error>> {
+        self.platform_event_loop.run(event_handler)?;
         Ok(())
     }
 }

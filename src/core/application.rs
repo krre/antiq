@@ -1,4 +1,8 @@
-use super::{error::ApplicationError, Context, EventLoop};
+use super::{
+    error::ApplicationError,
+    event::{Event, WindowEvent},
+    Context, EventLoop, WindowId,
+};
 use crate::{platform, renderer::Renderer};
 use std::{rc::Rc, sync::OnceLock};
 
@@ -17,6 +21,8 @@ pub struct ApplicationBuilder {
     name: String,
     organization: String,
 }
+
+struct EventHandler {}
 
 impl Application {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
@@ -50,7 +56,8 @@ impl Application {
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.event_loop.run()
+        let event_handler = EventHandler {};
+        self.event_loop.run(&event_handler)
     }
 }
 
@@ -92,5 +99,11 @@ impl ApplicationBuilder {
             context,
             platform_application,
         })
+    }
+}
+
+impl Event for EventHandler {
+    fn window_event(&self, id: WindowId, event: WindowEvent) {
+        println!("window event");
     }
 }
