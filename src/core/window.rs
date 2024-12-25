@@ -11,7 +11,11 @@ use crate::{
 
 use super::{Color, Context, Pos2D, Size2D};
 
+#[derive(Copy, Clone)]
+pub struct WindowId(usize);
+
 pub struct Window {
+    id: WindowId,
     title: RefCell<String>,
     color: Cell<Color>,
     position: Cell<Pos2D>,
@@ -24,6 +28,16 @@ pub struct Window {
     visible: Cell<bool>,
 }
 
+impl WindowId {
+    pub fn new(id: usize) -> Self {
+        Self(id)
+    }
+
+    pub fn inner(&self) -> usize {
+        self.0
+    }
+}
+
 impl Window {
     pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
@@ -31,6 +45,7 @@ impl Window {
         let surface = Surface::new(platform_window.as_ref(), &renderer);
 
         let window = Self {
+            id: platform_window.id(),
             title: RefCell::new(String::new()),
             color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
             position: Cell::new(Pos2D::new(0, 0)),
@@ -47,6 +62,10 @@ impl Window {
         window.set_size(Size2D::new(800, 600));
 
         Ok(window)
+    }
+
+    pub fn id(&self) -> WindowId {
+        self.id
     }
 
     pub fn set_title(&self, title: &str) {

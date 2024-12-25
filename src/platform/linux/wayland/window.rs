@@ -4,7 +4,7 @@ use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
-    core::{Pos2D, Size2D},
+    core::{Pos2D, Size2D, WindowId},
     platform::PlatformWindow,
 };
 
@@ -21,6 +21,10 @@ impl Window {
 impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self
+    }
+
+    fn id(&self) -> WindowId {
+        WindowId::new(0)
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {

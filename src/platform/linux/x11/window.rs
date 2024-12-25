@@ -8,7 +8,7 @@ use x11rb::xcb_ffi::XCBConnection;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
-    core::{Pos2D, Size2D},
+    core::{Pos2D, Size2D, WindowId},
     platform::{PlatformContext, PlatformWindow},
 };
 
@@ -89,6 +89,10 @@ impl Window {
 impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self
+    }
+
+    fn id(&self) -> WindowId {
+        WindowId::new(self.id as usize)
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {

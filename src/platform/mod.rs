@@ -2,7 +2,7 @@ use std::any::Any;
 
 use wgpu::SurfaceTargetUnsafe;
 
-use crate::core::{Pos2D, Size2D};
+use crate::core::{Pos2D, Size2D, WindowId};
 
 cfg_if::cfg_if! {
     if #[cfg(linux)] {
@@ -28,6 +28,8 @@ pub trait PlatformApplication: Any {
 
 pub trait PlatformWindow: Any {
     fn as_any(&self) -> &dyn Any;
+
+    fn id(&self) -> WindowId;
 
     fn surface_target(&self) -> SurfaceTargetUnsafe;
 
