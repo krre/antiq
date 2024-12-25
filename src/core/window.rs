@@ -15,6 +15,7 @@ use super::{Color, Context, Pos2D, Size2D};
 pub struct Window {
     title: RefCell<String>,
     color: Cell<Color>,
+    position: Cell<Pos2D>,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
@@ -32,6 +33,7 @@ impl Window {
         let window = Self {
             title: RefCell::new(String::new()),
             color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
+            position: Cell::new(Pos2D::new(0, 0)),
             widgets: Vec::new(),
             context: ctx,
             platform_window,
@@ -65,6 +67,11 @@ impl Window {
 
     pub fn set_position(&self, pos: Pos2D) {
         self.platform_window.set_position(pos);
+        self.position.set(pos);
+    }
+
+    pub fn position(&self) -> Pos2D {
+        self.position.get()
     }
 
     pub fn set_size(&self, size: Size2D) {
