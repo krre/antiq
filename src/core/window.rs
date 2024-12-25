@@ -12,7 +12,7 @@ use crate::{
 use super::{Color, Context, Pos2D, Size2D};
 
 pub struct Window {
-    color: RefCell<Color>,
+    color: Cell<Color>,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
@@ -28,7 +28,7 @@ impl Window {
         let surface = Surface::new(platform_window.as_ref(), &renderer);
 
         let window = Self {
-            color: RefCell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
+            color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
             widgets: Vec::new(),
             context: ctx,
             platform_window,
@@ -68,11 +68,11 @@ impl Window {
     }
 
     pub fn set_color(&self, color: Color) {
-        *self.color.borrow_mut() = color;
+        self.color.set(color);
     }
 
     pub fn color(&self) -> Color {
-        self.color.borrow().clone()
+        self.color.get()
     }
 
     pub fn set_maximized(&self, maximized: bool) {}
@@ -96,8 +96,7 @@ impl Window {
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        self.renderer
-            .clear_view(&view, &self.color.borrow().inner());
+        self.renderer.clear_view(&view, &self.color.get().inner());
         frame.present();
     }
 }
