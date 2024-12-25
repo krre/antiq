@@ -33,8 +33,6 @@ pub trait PlatformWindow: Any {
 
     fn set_title(&self, title: &str);
 
-    fn title(&self) -> String;
-
     fn set_visible(&self, visible: bool);
 
     fn set_position(&self, pos: Pos2D);

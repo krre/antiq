@@ -118,16 +118,6 @@ impl PlatformWindow for Window {
         self.conn().flush().unwrap();
     }
 
-    fn title(&self) -> String {
-        let reply = self
-            .conn()
-            .get_property(false, self.id, AtomEnum::WM_NAME, AtomEnum::STRING, 0, 1024)
-            .unwrap()
-            .reply()
-            .unwrap();
-        String::from_utf8(reply.value).unwrap()
-    }
-
     fn set_visible(&self, visible: bool) {
         if visible {
             self.conn().map_window(self.id).unwrap();

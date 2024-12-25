@@ -1,4 +1,5 @@
 use std::{
+    borrow::Borrow,
     cell::{Cell, RefCell},
     rc::Rc,
 };
@@ -12,6 +13,7 @@ use crate::{
 use super::{Color, Context, Pos2D, Size2D};
 
 pub struct Window {
+    title: RefCell<String>,
     color: Cell<Color>,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
     context: Rc<Context>,
@@ -28,6 +30,7 @@ impl Window {
         let surface = Surface::new(platform_window.as_ref(), &renderer);
 
         let window = Self {
+            title: RefCell::new(String::new()),
             color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
             widgets: Vec::new(),
             context: ctx,
@@ -44,10 +47,11 @@ impl Window {
 
     pub fn set_title(&self, title: &str) {
         self.platform_window.set_title(title);
+        *self.title.borrow_mut() = title.to_string();
     }
 
     pub fn title(&self) -> String {
-        self.platform_window.title()
+        self.title.borrow().clone()
     }
 
     pub fn set_visible(&self, visible: bool) {

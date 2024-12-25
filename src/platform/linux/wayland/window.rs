@@ -31,10 +31,6 @@ impl PlatformWindow for Window {
 
     fn set_title(&self, title: &str) {}
 
-    fn title(&self) -> String {
-        String::new()
-    }
-
     fn set_visible(&self, visible: bool) {}
 
     fn set_position(&self, pos: Pos2D) {}
