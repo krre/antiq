@@ -8,7 +8,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let window_1 = Window::new(app.context().clone())?.upgrade().unwrap();
     window_1.set_title("Multi Window 1");
     window_1.set_visible(true);
-    window_1.render();
 
     let window_2 = Window::new(app.context())?.upgrade().unwrap();
     window_2.set_title("Multi Window 2");
@@ -16,7 +15,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     window_2.set_position(Pos2D::new(500, 200));
     window_2.set_size(Size2D::new(300, 300));
     window_2.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
-    window_2.render();
 
     app.run()?;
 
