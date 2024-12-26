@@ -24,7 +24,7 @@ pub struct Window {
     context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
     renderer: Rc<Renderer>,
-    surface: Surface,
+    surface: RefCell<Surface>,
     visible: Cell<bool>,
 }
 
@@ -50,7 +50,7 @@ impl Window {
     pub fn new(ctx: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let renderer = ctx.renderer().clone();
-        let surface = Surface::new(platform_window.as_ref(), &renderer);
+        let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();
         let context = ctx.clone();
 
@@ -109,6 +109,9 @@ impl Window {
 
     pub fn set_size(&self, size: Size2D) {
         self.platform_window.set_size(size);
+        self.surface
+            .borrow_mut()
+            .set_size(self.renderer.device(), size);
         self.size.set(size);
     }
 
@@ -118,6 +121,7 @@ impl Window {
 
     pub fn set_color(&self, color: Color) {
         self.color.set(color);
+        self.render();
     }
 
     pub fn color(&self) -> Color {
@@ -139,7 +143,7 @@ impl Window {
     pub fn render(&self) {
         println!("Render window: {}", self.title());
 
-        let frame = self.surface.current_frame();
+        let frame = self.surface.borrow().current_frame();
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());

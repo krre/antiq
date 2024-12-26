@@ -1,4 +1,4 @@
-use crate::platform::PlatformWindow;
+use crate::{core::Size2D, platform::PlatformWindow};
 
 use super::Renderer;
 
@@ -29,9 +29,9 @@ impl Surface {
         self.surface.get_current_texture().unwrap()
     }
 
-    pub fn resize(&mut self, device: &wgpu::Device, width: u32, height: u32) {
-        self.config.width = width;
-        self.config.height = height;
+    pub fn set_size(&mut self, device: &wgpu::Device, size: Size2D) {
+        self.config.width = size.width();
+        self.config.height = size.height();
         self.surface.configure(device, &self.config);
     }
 }
