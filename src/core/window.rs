@@ -1,6 +1,6 @@
 use std::{
     cell::{Cell, RefCell},
-    rc::Rc,
+    rc::{Rc, Weak},
 };
 
 use crate::{
@@ -11,7 +11,7 @@ use crate::{
 
 use super::{Color, Context, Pos2D, Size2D};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Hash)]
 pub struct WindowId(usize);
 
 pub struct Window {
@@ -38,30 +38,42 @@ impl WindowId {
     }
 }
 
+impl PartialEq for WindowId {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+
+impl Eq for WindowId {}
+
 impl Window {
-    pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(ctx: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(ctx.platform_context.clone())?;
         let renderer = ctx.renderer().clone();
         let surface = Surface::new(platform_window.as_ref(), &renderer);
+        let id = platform_window.id();
+        let context = ctx.clone();
 
-        let window = Self {
-            id: platform_window.id(),
+        let window = Rc::new(Self {
+            id,
             title: RefCell::new(String::new()),
             color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
             position: Cell::new(Pos2D::new(0, 0)),
             size: Cell::new(Size2D::new(0, 0)),
             widgets: Vec::new(),
-            context: ctx,
+            context,
             platform_window,
             renderer,
             surface,
             visible: Cell::new(false),
-        };
+        });
+
+        ctx.add_window(id, window.clone());
 
         window.set_title("Untitled");
         window.set_size(Size2D::new(800, 600));
 
-        Ok(window)
+        Ok(Rc::downgrade(&window))
     }
 
     pub fn id(&self) -> WindowId {
@@ -137,5 +149,7 @@ impl Window {
 }
 
 impl Drop for Window {
-    fn drop(&mut self) {}
+    fn drop(&mut self) {
+        self.context.remove_window(self.id);
+    }
 }

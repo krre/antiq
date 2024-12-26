@@ -5,12 +5,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Application::new()?;
 
-    let window_1 = Window::new(app.context().clone())?;
+    let window_1 = Window::new(app.context().clone())?.upgrade().unwrap();
     window_1.set_title("Multi Window 1");
     window_1.set_visible(true);
     window_1.render();
 
-    let window_2 = Window::new(app.context())?;
+    let window_2 = Window::new(app.context())?.upgrade().unwrap();
     window_2.set_title("Multi Window 2");
     window_2.set_visible(true);
     window_2.set_position(Pos2D::new(500, 200));
