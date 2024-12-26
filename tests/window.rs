@@ -7,7 +7,10 @@ fn create_window() {
 
     let title = "Window title".to_string();
 
-    let window = Window::new(app.context().clone()).unwrap();
+    let window = Window::new(app.context().clone())
+        .unwrap()
+        .upgrade()
+        .unwrap();
     window.set_title(&title);
 
     assert_eq!(window.title(), title);
