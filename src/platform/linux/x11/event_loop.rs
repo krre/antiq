@@ -51,13 +51,9 @@ impl PlatformEventLoop for EventLoop {
                 protocol::Event::ConfigureNotify(event) => {}
                 protocol::Event::ClientMessage(event) => {
                     let data = event.data.as_data32();
-                    if event.format == 32
-                    // && event.window == win_id
-                    && data[0] == atoms.WM_DELETE_WINDOW
-                    {
+                    if event.format == 32 && data[0] == atoms.WM_DELETE_WINDOW {
                         event_handler
                             .window_event(WindowId::new(event.window as usize), WindowEvent::Close);
-                        println!("Window was asked to close");
                         break;
                     }
                 }
