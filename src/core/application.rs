@@ -22,7 +22,9 @@ pub struct ApplicationBuilder {
     organization: String,
 }
 
-struct EventHandler {}
+struct EventHandler {
+    context: Rc<Context>,
+}
 
 impl Application {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
@@ -56,7 +58,9 @@ impl Application {
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let event_handler = EventHandler {};
+        let event_handler = EventHandler {
+            context: self.context.clone(),
+        };
         self.event_loop.run(&event_handler)
     }
 }
@@ -104,6 +108,13 @@ impl ApplicationBuilder {
 
 impl Event for EventHandler {
     fn window_event(&self, id: WindowId, event: WindowEvent) {
-        println!("window event");
+        match event {
+            WindowEvent::Redraw => {
+                self.context.render_window(id);
+            }
+            WindowEvent::Close => {
+                self.context.remove_window(id);
+            }
+        }
     }
 }
