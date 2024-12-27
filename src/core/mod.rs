@@ -20,7 +20,7 @@ pub use window::WindowId;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Size2D {
     width: u32,
     height: u32,

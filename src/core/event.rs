@@ -1,8 +1,9 @@
-use super::WindowId;
+use super::{Size2D, WindowId};
 
 pub enum WindowEvent {
     Redraw,
     Close,
+    Resize(Size2D),
 }
 
 pub trait Event {

@@ -5,7 +5,7 @@ use x11rb::{connection::Connection, protocol};
 use crate::{
     core::{
         event::{Event, WindowEvent},
-        WindowId,
+        Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
 };
@@ -36,6 +36,8 @@ impl PlatformEventLoop for EventLoop {
 
         println!("Linux X11 event loop runned");
 
+        let mut prev_window_size = Size2D::new(0, 0);
+
         loop {
             let event = conn.wait_for_event()?;
             println!("Got event {event:?}");
@@ -48,7 +50,17 @@ impl PlatformEventLoop for EventLoop {
                         );
                     }
                 }
-                protocol::Event::ConfigureNotify(event) => {}
+                protocol::Event::ConfigureNotify(event) => {
+                    let window_size = Size2D::new(event.width as u32, event.height as u32);
+
+                    if window_size != prev_window_size {
+                        event_handler.window_event(
+                            WindowId::new(event.window as usize),
+                            WindowEvent::Resize(window_size),
+                        );
+                        prev_window_size = window_size;
+                    }
+                }
                 protocol::Event::ClientMessage(event) => {
                     let data = event.data.as_data32();
                     if event.format == 32 && data[0] == atoms.WM_DELETE_WINDOW {
