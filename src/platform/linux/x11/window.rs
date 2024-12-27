@@ -86,6 +86,13 @@ impl Window {
     }
 }
 
+impl Drop for Window {
+    fn drop(&mut self) {
+        self.conn().destroy_window(self.id).unwrap();
+        self.conn().flush().unwrap();
+    }
+}
+
 impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self

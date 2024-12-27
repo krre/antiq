@@ -5,10 +5,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Application::new()?;
 
-    let window = Window::new(app.context().clone())?.upgrade().unwrap();
-    window.set_title("Simple Window");
-    window.set_visible(true);
-    window.render();
+    let window = Window::new(app.context().clone())?;
+
+    {
+        let w = window.upgrade().unwrap();
+        w.set_title("Simple Window");
+        w.set_visible(true);
+    }
 
     app.run()?;
 

@@ -34,7 +34,8 @@ impl Context {
     }
 
     pub(crate) fn remove_window(&self, id: WindowId) {
-        self.windows.borrow_mut().remove(&id);
+        #[allow(unused_variables)]
+        let window = self.windows.borrow_mut().remove(&id);
     }
 
     pub(crate) fn render_window(&self, id: WindowId) {

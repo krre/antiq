@@ -11,7 +11,7 @@ use crate::{
 
 use super::{Color, Context, Pos2D, Size2D};
 
-#[derive(Copy, Clone, Hash)]
+#[derive(Copy, Clone, Hash, Debug)]
 pub struct WindowId(usize);
 
 pub struct Window {
