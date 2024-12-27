@@ -53,8 +53,8 @@ impl Application {
         self.context.clone()
     }
 
-    pub(crate) fn renderer(&self) -> &Renderer {
-        &self.renderer
+    pub fn renderer(&self) -> Rc<Renderer> {
+        self.renderer.clone()
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -99,7 +99,7 @@ impl ApplicationBuilder {
             name: self.name,
             organization: self.organization,
             event_loop: EventLoop::new(context.clone())?,
-            renderer: renderer,
+            renderer,
             context,
             platform_application,
         })
