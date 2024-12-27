@@ -5,7 +5,7 @@ use x11rb::{connection::Connection, protocol};
 use crate::{
     core::{
         event::{Event, WindowEvent},
-        Size2D, WindowId,
+        Pos2D, Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
 };
@@ -37,6 +37,7 @@ impl PlatformEventLoop for EventLoop {
         println!("Linux X11 event loop runned");
 
         let mut prev_window_size = Size2D::new(0, 0);
+        let mut prev_window_pos = Pos2D::new(0, 0);
 
         loop {
             let event = conn.wait_for_event()?;
@@ -59,6 +60,17 @@ impl PlatformEventLoop for EventLoop {
                             WindowEvent::Resize(window_size),
                         );
                         prev_window_size = window_size;
+                    }
+
+                    let window_pos = Pos2D::new(event.x as i32, event.y as i32);
+
+                    if window_pos != prev_window_pos {
+                        event_handler.window_event(
+                            WindowId::new(event.window as usize),
+                            WindowEvent::Move(window_pos),
+                        );
+
+                        prev_window_pos = window_pos;
                     }
                 }
                 protocol::Event::ClientMessage(event) => {

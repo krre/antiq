@@ -118,6 +118,9 @@ impl Event for EventHandler {
             WindowEvent::Resize(size) => {
                 println!("size {size:?}");
             }
+            WindowEvent::Move(pos) => {
+                println!("pos {pos:?}");
+            }
         }
     }
 }

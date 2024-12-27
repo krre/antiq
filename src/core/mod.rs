@@ -26,7 +26,7 @@ pub struct Size2D {
     height: u32,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Pos2D {
     x: i32,
     y: i32,
