@@ -116,7 +116,7 @@ impl Event for EventHandler {
                 self.context.remove_window(id);
             }
             WindowEvent::Resize(size) => {
-                println!("size {size:?}");
+                self.context.update_window_size(id, size);
             }
             WindowEvent::Move(pos) => {
                 println!("pos {pos:?}");

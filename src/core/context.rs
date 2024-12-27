@@ -5,7 +5,7 @@ use crate::{
     renderer::Renderer,
 };
 
-use super::{Window, WindowId};
+use super::{Size2D, Window, WindowId};
 
 pub struct Context {
     pub(crate) platform_context: Rc<dyn platform::PlatformContext>,
@@ -39,5 +39,9 @@ impl Context {
 
     pub(crate) fn render_window(&self, id: WindowId) {
         self.windows.borrow().get(&id).unwrap().render();
+    }
+
+    pub(crate) fn update_window_size(&self, id: WindowId, size: Size2D) {
+        self.windows.borrow().get(&id).unwrap().update_size(size);
     }
 }

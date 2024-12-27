@@ -115,6 +115,13 @@ impl Window {
         self.size.set(size);
     }
 
+    pub(crate) fn update_size(&self, size: Size2D) {
+        self.surface
+            .borrow_mut()
+            .set_size(self.renderer.device(), size);
+        self.size.set(size);
+    }
+
     pub fn size(&self) -> Size2D {
         self.size.get()
     }
