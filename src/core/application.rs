@@ -119,7 +119,7 @@ impl Event for EventHandler {
                 self.context.update_window_size(id, size);
             }
             WindowEvent::Move(pos) => {
-                println!("pos {pos:?}");
+                self.context.update_window_position(id, pos);
             }
         }
     }

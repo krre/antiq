@@ -103,6 +103,10 @@ impl Window {
         self.position.set(pos);
     }
 
+    pub(crate) fn update_position(&self, pos: Pos2D) {
+        self.position.set(pos);
+    }
+
     pub fn position(&self) -> Pos2D {
         self.position.get()
     }
