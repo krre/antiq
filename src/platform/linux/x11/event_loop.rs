@@ -18,9 +18,9 @@ pub struct EventLoop {
 
 impl EventLoop {
     pub fn new(
-        ctx: Rc<dyn PlatformContext>,
+        context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        Ok(Box::new(Self { context: ctx }))
+        Ok(Box::new(Self { context }))
     }
 }
 

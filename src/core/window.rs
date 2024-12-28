@@ -47,12 +47,12 @@ impl PartialEq for WindowId {
 impl Eq for WindowId {}
 
 impl Window {
-    pub fn new(ctx: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
-        let platform_window = platform::Window::new(ctx.platform_context.clone())?;
-        let renderer = ctx.renderer().clone();
+    pub fn new(context: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
+        let platform_window = platform::Window::new(context.platform_context.clone())?;
+        let renderer = context.renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();
-        let context = ctx.clone();
+        let tmp_context = context.clone();
 
         let window = Rc::new(Self {
             id,
@@ -68,7 +68,7 @@ impl Window {
             visible: Cell::new(false),
         });
 
-        ctx.add_window(id, window.clone());
+        tmp_context.add_window(id, window.clone());
 
         window.set_title("Untitled");
         window.set_size(Size2D::new(800, 600));

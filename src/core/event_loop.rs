@@ -10,11 +10,11 @@ pub struct EventLoop {
 }
 
 impl EventLoop {
-    pub fn new(ctx: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
-        let platform_event_loop = platform::EventLoop::new(ctx.platform_context.clone())?;
+    pub fn new(context: Rc<Context>) -> Result<Self, Box<dyn std::error::Error>> {
+        let platform_event_loop = platform::EventLoop::new(context.platform_context.clone())?;
 
         Ok(Self {
-            context: ctx,
+            context,
             platform_event_loop,
         })
     }

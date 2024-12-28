@@ -38,12 +38,12 @@ pub struct EventLoop;
 
 impl EventLoop {
     pub fn new(
-        ctx: Rc<dyn PlatformContext>,
+        context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::EventLoop::new()
         } else {
-            x11::EventLoop::new(ctx)
+            x11::EventLoop::new(context)
         }
     }
 }
@@ -52,12 +52,12 @@ pub struct Window;
 
 impl Window {
     pub fn new(
-        ctx: Rc<dyn PlatformContext>,
+        context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::Window::new()
         } else {
-            x11::Window::new(ctx)
+            x11::Window::new(context)
         }
     }
 }

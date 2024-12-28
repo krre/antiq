@@ -36,9 +36,9 @@ x11rb::atom_manager! {
 
 impl Window {
     pub fn new(
-        ctx: Rc<dyn PlatformContext>,
+        context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
-        let x11_context = ctx.as_any().downcast_ref::<Context>().unwrap();
+        let x11_context = context.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
         let screen = &conn.setup().roots[x11_context.screen_num];
         let win_id = conn.generate_id()?;
@@ -72,7 +72,7 @@ impl Window {
         conn.flush()?;
 
         Ok(Box::new(Self {
-            context: ctx,
+            context,
             id: win_id,
         }))
     }
