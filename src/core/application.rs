@@ -110,16 +110,18 @@ impl Event for EventHandler {
     fn window_event(&self, id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::Redraw => {
-                self.context.render_window(id);
+                self.context.window_manager().render_window(id);
             }
             WindowEvent::Close => {
-                self.context.remove_window(id);
+                self.context.window_manager().remove_window(id);
             }
             WindowEvent::Resize(size) => {
-                self.context.update_window_size(id, size);
+                self.context.window_manager().update_window_size(id, size);
             }
             WindowEvent::Move(pos) => {
-                self.context.update_window_position(id, pos);
+                self.context
+                    .window_manager()
+                    .update_window_position(id, pos);
             }
         }
     }

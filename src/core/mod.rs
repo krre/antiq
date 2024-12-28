@@ -9,6 +9,7 @@ mod id;
 mod layout;
 mod node;
 mod window;
+mod window_manager;
 
 pub use application::{Application, ApplicationBuilder};
 pub use color::Color;
