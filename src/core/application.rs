@@ -114,6 +114,10 @@ impl Event for EventHandler {
             }
             WindowEvent::Close => {
                 self.context.window_manager().remove_window(id);
+
+                if self.context.window_manager().window_count() == 0 {
+                    println!("quit");
+                }
             }
             WindowEvent::Resize(size) => {
                 self.context.window_manager().update_window_size(id, size);

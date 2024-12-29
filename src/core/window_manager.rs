@@ -33,4 +33,8 @@ impl WindowManager {
     pub(crate) fn update_window_position(&self, id: WindowId, pos: Pos2D) {
         self.windows.borrow().get(&id).unwrap().update_position(pos);
     }
+
+    pub(crate) fn window_count(&self) -> usize {
+        self.windows.borrow().len()
+    }
 }
