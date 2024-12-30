@@ -3,7 +3,11 @@ use super::{
     event::{EventHandler, WindowAction, WindowEvent},
     Context, EventLoop,
 };
-use crate::{platform, renderer::Renderer};
+use crate::{
+    core::event::{ApplicationAction, ApplicationEvent},
+    platform,
+    renderer::Renderer,
+};
 use std::{rc::Rc, sync::OnceLock};
 
 static APP_LOCK: OnceLock<()> = OnceLock::new();
@@ -11,7 +15,7 @@ static APP_LOCK: OnceLock<()> = OnceLock::new();
 pub struct Application {
     name: String,
     organization: String,
-    event_loop: EventLoop,
+    event_loop: Rc<EventLoop>,
     renderer: Rc<Renderer>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
@@ -24,6 +28,7 @@ pub struct ApplicationBuilder {
 
 struct ApplicationEventHandler {
     context: Rc<Context>,
+    event_loop: Rc<EventLoop>,
 }
 
 impl Application {
@@ -60,6 +65,7 @@ impl Application {
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let event_handler = ApplicationEventHandler {
             context: self.context.clone(),
+            event_loop: self.event_loop.clone(),
         };
         self.event_loop.run(&event_handler)
     }
@@ -98,7 +104,7 @@ impl ApplicationBuilder {
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            event_loop: EventLoop::new(context.clone())?,
+            event_loop: Rc::new(EventLoop::new(context.clone())?),
             renderer,
             context,
             platform_application,
@@ -116,7 +122,9 @@ impl EventHandler for ApplicationEventHandler {
                 self.context.window_manager().remove_window(event.id);
 
                 if self.context.window_manager().window_count() == 0 {
-                    println!("quit");
+                    self.event_loop.send_event(Box::new(ApplicationEvent {
+                        action: ApplicationAction::Quit,
+                    }));
                 }
             }
             WindowAction::Resize(size) => {
