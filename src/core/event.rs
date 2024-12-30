@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use super::{Pos2D, Size2D, WindowId};
 pub enum ApplicationAction {
     Quit,
@@ -19,7 +21,9 @@ pub struct WindowEvent {
     pub action: WindowAction,
 }
 
-pub trait Event {}
+pub trait Event: Any {
+    fn as_any(&self) -> &dyn Any;
+}
 
 pub trait EventHandler {
     fn window_event(&self, event: WindowEvent) {
@@ -27,6 +31,14 @@ pub trait EventHandler {
     }
 }
 
-impl Event for WindowEvent {}
+impl Event for WindowEvent {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}
 
-impl Event for ApplicationEvent {}
+impl Event for ApplicationEvent {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}
