@@ -12,8 +12,12 @@ pub struct WindowEvent {
     pub action: WindowAction,
 }
 
+pub trait Event {}
+
 pub trait EventHandler {
     fn window_event(&self, event: WindowEvent) {
         let _ = event;
     }
 }
+
+impl Event for WindowEvent {}
