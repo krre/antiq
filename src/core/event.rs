@@ -1,12 +1,19 @@
 use super::{Pos2D, Size2D, WindowId};
 
-pub enum WindowEvent {
+pub enum WindowAction {
     Redraw,
     Close,
     Resize(Size2D),
     Move(Pos2D),
 }
 
+pub struct WindowEvent {
+    pub id: WindowId,
+    pub action: WindowAction,
+}
+
 pub trait EventHandler {
-    fn window_event(&self, id: WindowId, event: WindowEvent) {}
+    fn window_event(&self, event: WindowEvent) {
+        let _ = event;
+    }
 }

@@ -1,6 +1,6 @@
 use super::{
     error::ApplicationError,
-    event::{EventHandler, WindowEvent},
+    event::{EventHandler, WindowAction, WindowEvent},
     Context, EventLoop, WindowId,
 };
 use crate::{platform, renderer::Renderer};
@@ -107,25 +107,27 @@ impl ApplicationBuilder {
 }
 
 impl EventHandler for ApplicationEventHandler {
-    fn window_event(&self, id: WindowId, event: WindowEvent) {
-        match event {
-            WindowEvent::Redraw => {
-                self.context.window_manager().render_window(id);
+    fn window_event(&self, event: WindowEvent) {
+        match event.action {
+            WindowAction::Redraw => {
+                self.context.window_manager().render_window(event.id);
             }
-            WindowEvent::Close => {
-                self.context.window_manager().remove_window(id);
+            WindowAction::Close => {
+                self.context.window_manager().remove_window(event.id);
 
                 if self.context.window_manager().window_count() == 0 {
                     println!("quit");
                 }
             }
-            WindowEvent::Resize(size) => {
-                self.context.window_manager().update_window_size(id, size);
-            }
-            WindowEvent::Move(pos) => {
+            WindowAction::Resize(size) => {
                 self.context
                     .window_manager()
-                    .update_window_position(id, pos);
+                    .update_window_size(event.id, size);
+            }
+            WindowAction::Move(pos) => {
+                self.context
+                    .window_manager()
+                    .update_window_position(event.id, pos);
             }
         }
     }

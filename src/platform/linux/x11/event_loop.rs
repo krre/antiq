@@ -4,7 +4,7 @@ use x11rb::{connection::Connection, protocol};
 
 use crate::{
     core::{
-        event::{EventHandler, WindowEvent},
+        event::{EventHandler, WindowAction, WindowEvent},
         Pos2D, Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
@@ -45,30 +45,30 @@ impl PlatformEventLoop for EventLoop {
             match event {
                 protocol::Event::Expose(event) => {
                     if event.count == 0 {
-                        event_handler.window_event(
-                            WindowId::new(event.window as usize),
-                            WindowEvent::Redraw,
-                        );
+                        event_handler.window_event(WindowEvent {
+                            id: WindowId::new(event.window as usize),
+                            action: WindowAction::Redraw,
+                        });
                     }
                 }
                 protocol::Event::ConfigureNotify(event) => {
                     let window_size = Size2D::new(event.width as u32, event.height as u32);
 
                     if window_size != prev_window_size {
-                        event_handler.window_event(
-                            WindowId::new(event.window as usize),
-                            WindowEvent::Resize(window_size),
-                        );
+                        event_handler.window_event(WindowEvent {
+                            id: WindowId::new(event.window as usize),
+                            action: WindowAction::Resize(window_size),
+                        });
                         prev_window_size = window_size;
                     }
 
                     let window_pos = Pos2D::new(event.x as i32, event.y as i32);
 
                     if window_pos != prev_window_pos {
-                        event_handler.window_event(
-                            WindowId::new(event.window as usize),
-                            WindowEvent::Move(window_pos),
-                        );
+                        event_handler.window_event(WindowEvent {
+                            id: WindowId::new(event.window as usize),
+                            action: WindowAction::Move(window_pos),
+                        });
 
                         prev_window_pos = window_pos;
                     }
@@ -79,8 +79,10 @@ impl PlatformEventLoop for EventLoop {
                         && data[0] == atoms.WM_DELETE_WINDOW
                         && event.type_ == atoms.WM_PROTOCOLS
                     {
-                        event_handler
-                            .window_event(WindowId::new(event.window as usize), WindowEvent::Close);
+                        event_handler.window_event(WindowEvent {
+                            id: WindowId::new(event.window as usize),
+                            action: WindowAction::Close,
+                        });
                     }
                 }
                 protocol::Event::Error(err) => {
