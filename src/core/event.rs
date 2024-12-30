@@ -1,10 +1,17 @@
 use super::{Pos2D, Size2D, WindowId};
+pub enum ApplicationAction {
+    Quit,
+}
 
 pub enum WindowAction {
     Redraw,
     Close,
     Resize(Size2D),
     Move(Pos2D),
+}
+
+pub struct ApplicationEvent {
+    pub action: ApplicationAction,
 }
 
 pub struct WindowEvent {
@@ -21,3 +28,5 @@ pub trait EventHandler {
 }
 
 impl Event for WindowEvent {}
+
+impl Event for ApplicationEvent {}
