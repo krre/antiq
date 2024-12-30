@@ -1,6 +1,9 @@
 use std::any::Any;
 
-use crate::{core::event::EventHandler, platform::PlatformEventLoop};
+use crate::{
+    core::event::{Event, EventHandler},
+    platform::PlatformEventLoop,
+};
 
 pub struct EventLoop {}
 
@@ -19,4 +22,6 @@ impl PlatformEventLoop for EventLoop {
         println!("Linux Wayland event loop runned");
         Ok(())
     }
+
+    fn send_event(&self, event: Box<dyn Event>) {}
 }

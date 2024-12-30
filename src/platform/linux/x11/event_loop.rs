@@ -4,7 +4,7 @@ use x11rb::{connection::Connection, protocol};
 
 use crate::{
     core::{
-        event::{EventHandler, WindowAction, WindowEvent},
+        event::{Event, EventHandler, WindowAction, WindowEvent},
         Pos2D, Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
@@ -94,4 +94,6 @@ impl PlatformEventLoop for EventLoop {
 
         Ok(())
     }
+
+    fn send_event(&self, event: Box<dyn Event>) {}
 }

@@ -2,7 +2,10 @@ use std::rc::Rc;
 
 use crate::platform;
 
-use super::{event::EventHandler, Context};
+use super::{
+    event::{Event, EventHandler},
+    Context,
+};
 
 pub struct EventLoop {
     context: Rc<Context>,
@@ -24,5 +27,7 @@ impl EventLoop {
         Ok(())
     }
 
-    pub fn send_event(&self) {}
+    pub fn send_event(&self, event: Box<dyn Event>) {
+        self.platform_event_loop.send_event(event);
+    }
 }
