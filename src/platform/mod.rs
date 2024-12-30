@@ -2,7 +2,7 @@ use std::any::Any;
 
 use wgpu::SurfaceTargetUnsafe;
 
-use crate::core::{event::Event, Pos2D, Size2D, WindowId};
+use crate::core::{event::EventHandler, Pos2D, Size2D, WindowId};
 
 cfg_if::cfg_if! {
     if #[cfg(linux)] {
@@ -45,7 +45,7 @@ pub trait PlatformWindow: Any {
 pub trait PlatformEventLoop: Any {
     fn as_any(&self) -> &dyn Any;
 
-    fn run(&self, event_handler: &dyn Event) -> Result<(), Box<dyn std::error::Error>>;
+    fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>>;
 }
 
 pub trait PlatformContext: Any {

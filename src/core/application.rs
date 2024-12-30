@@ -1,6 +1,6 @@
 use super::{
     error::ApplicationError,
-    event::{Event, WindowEvent},
+    event::{EventHandler, WindowEvent},
     Context, EventLoop, WindowId,
 };
 use crate::{platform, renderer::Renderer};
@@ -22,7 +22,7 @@ pub struct ApplicationBuilder {
     organization: String,
 }
 
-struct EventHandler {
+struct ApplicationEventHandler {
     context: Rc<Context>,
 }
 
@@ -58,7 +58,7 @@ impl Application {
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let event_handler = EventHandler {
+        let event_handler = ApplicationEventHandler {
             context: self.context.clone(),
         };
         self.event_loop.run(&event_handler)
@@ -106,7 +106,7 @@ impl ApplicationBuilder {
     }
 }
 
-impl Event for EventHandler {
+impl EventHandler for ApplicationEventHandler {
     fn window_event(&self, id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::Redraw => {

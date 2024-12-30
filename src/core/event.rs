@@ -7,6 +7,6 @@ pub enum WindowEvent {
     Move(Pos2D),
 }
 
-pub trait Event {
+pub trait EventHandler {
     fn window_event(&self, id: WindowId, event: WindowEvent) {}
 }

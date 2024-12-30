@@ -4,7 +4,7 @@ use x11rb::{connection::Connection, protocol};
 
 use crate::{
     core::{
-        event::{Event, WindowEvent},
+        event::{EventHandler, WindowEvent},
         Pos2D, Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
@@ -29,7 +29,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self, event_handler: &dyn Event) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
         let x11_context = self.context.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
         let atoms = Atoms::new(conn)?.reply()?;

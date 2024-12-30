@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::{core::event::Event, platform::PlatformEventLoop};
+use crate::{core::event::EventHandler, platform::PlatformEventLoop};
 
 pub struct EventLoop {}
 
@@ -15,7 +15,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self, event_handler: &dyn Event) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
         println!("Linux Wayland event loop runned");
         Ok(())
     }
