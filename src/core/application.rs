@@ -100,13 +100,14 @@ impl ApplicationBuilder {
             platform_application.as_ref(),
             renderer.clone(),
         )?);
+        let event_loop = Rc::new(EventLoop::new(context.clone())?);
 
         Ok(Application {
             name: self.name,
             organization: self.organization,
-            event_loop: Rc::new(EventLoop::new(context.clone())?),
-            renderer,
             context,
+            event_loop,
+            renderer,
             platform_application,
         })
     }
