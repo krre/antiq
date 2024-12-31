@@ -57,7 +57,7 @@ impl Window {
             WindowClass::INPUT_OUTPUT,
             0,
             &CreateWindowAux::new()
-                .event_mask(EventMask::EXPOSURE | EventMask::STRUCTURE_NOTIFY | EventMask::NO_EVENT)
+                .event_mask(EventMask::EXPOSURE | EventMask::STRUCTURE_NOTIFY)
                 .background_pixel(screen.black_pixel),
         )?;
 
