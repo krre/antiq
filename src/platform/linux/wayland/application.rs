@@ -4,7 +4,7 @@ use wayland_client::Connection;
 use crate::platform::PlatformApplication;
 
 pub struct Application {
-    connection: Rc<Connection>,
+    pub(crate) connection: Rc<Connection>,
 }
 
 impl Application {
