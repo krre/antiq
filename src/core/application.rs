@@ -3,11 +3,7 @@ use super::{
     event::{EventHandler, WindowAction, WindowEvent},
     Context, EventLoop,
 };
-use crate::{
-    core::event::{ApplicationAction, ApplicationEvent},
-    platform,
-    renderer::Renderer,
-};
+use crate::{platform, renderer::Renderer};
 use std::{rc::Rc, sync::OnceLock};
 
 static APP_LOCK: OnceLock<()> = OnceLock::new();
