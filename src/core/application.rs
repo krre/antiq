@@ -136,9 +136,7 @@ impl EventHandler for ApplicationEventHandler {
                 if self.context.window_manager().window_count() == 0
                     && self.quit_on_close_last_window
                 {
-                    self.event_loop.send_event(Box::new(ApplicationEvent {
-                        action: ApplicationAction::Quit,
-                    }));
+                    self.event_loop.quit();
                 }
             }
             WindowAction::Resize(size) => {

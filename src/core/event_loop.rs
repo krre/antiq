@@ -30,4 +30,8 @@ impl EventLoop {
     pub fn send_event(&self, event: Box<dyn Event>) {
         self.platform_event_loop.send_event(event);
     }
+
+    pub fn quit(&self) {
+        self.platform_event_loop.quit();
+    }
 }

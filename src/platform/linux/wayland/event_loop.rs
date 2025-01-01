@@ -23,4 +23,6 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn send_event(&self, event: Box<dyn Event>) {}
+
+    fn quit(&self) {}
 }

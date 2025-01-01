@@ -4,16 +4,17 @@ use x11rb::{
     connection::Connection,
     protocol::{
         self,
-        xproto::{ChangeWindowAttributesAux, ClientMessageEvent, ConnectionExt, EventMask},
+        xproto::{
+            Atom, ChangeWindowAttributesAux, ClientMessageData, ClientMessageEvent, ConnectionExt,
+            EventMask,
+        },
     },
     xcb_ffi::XCBConnection,
 };
 
 use crate::{
     core::{
-        event::{
-            ApplicationAction, ApplicationEvent, Event, EventHandler, WindowAction, WindowEvent,
-        },
+        event::{Event, EventHandler, WindowAction, WindowEvent},
         Pos2D, Size2D, WindowId,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
@@ -24,6 +25,7 @@ use super::Context;
 pub struct EventLoop {
     context: Rc<dyn PlatformContext>,
     quit_atom: u32,
+    client_atom: u32,
 }
 
 impl EventLoop {
@@ -33,6 +35,7 @@ impl EventLoop {
         let x11_context = context.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
         let quit_atom = conn.intern_atom(false, b"QUIT_EVENT")?.reply()?.atom;
+        let client_atom = conn.intern_atom(false, b"CLIENT_EVENT")?.reply()?.atom;
 
         let screen = conn.setup().roots[x11_context.screen_num].clone();
         conn.change_window_attributes(
@@ -41,7 +44,11 @@ impl EventLoop {
         )?;
         conn.flush()?;
 
-        Ok(Box::new(Self { context, quit_atom }))
+        Ok(Box::new(Self {
+            context,
+            quit_atom,
+            client_atom,
+        }))
     }
 
     fn context(&self) -> &Context {
@@ -50,6 +57,22 @@ impl EventLoop {
 
     fn conn(&self) -> &XCBConnection {
         self.context().connection.as_ref()
+    }
+}
+
+impl EventLoop {
+    fn send_client_message_event(
+        &self,
+        type_: impl Into<Atom>,
+        data: impl Into<ClientMessageData>,
+    ) {
+        let screen = &self.conn().setup().roots[self.context().screen_num];
+        let quit_event = ClientMessageEvent::new(32, screen.root, type_, data);
+
+        self.conn()
+            .send_event(false, screen.root, EventMask::PROPERTY_CHANGE, quit_event)
+            .unwrap();
+        self.conn().flush().unwrap();
     }
 }
 
@@ -125,20 +148,10 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn send_event(&self, event: Box<dyn Event>) {
-        let app_event = event.as_any().downcast_ref::<ApplicationEvent>().unwrap();
+        self.send_client_message_event(self.client_atom, [0, 0, 0, 0, 0]);
+    }
 
-        match app_event.action {
-            ApplicationAction::Quit => {
-                let screen = &self.conn().setup().roots[self.context().screen_num];
-
-                let quit_event =
-                    ClientMessageEvent::new(32, screen.root, self.quit_atom, [0, 0, 0, 0, 0]);
-
-                self.conn()
-                    .send_event(false, screen.root, EventMask::PROPERTY_CHANGE, quit_event)
-                    .unwrap();
-                self.conn().flush().unwrap();
-            }
-        }
+    fn quit(&self) {
+        self.send_client_message_event(self.quit_atom, [0, 0, 0, 0, 0]);
     }
 }

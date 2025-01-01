@@ -51,6 +51,8 @@ pub trait PlatformEventLoop: Any {
     fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>>;
 
     fn send_event(&self, event: Box<dyn Event>);
+
+    fn quit(&self);
 }
 
 pub trait PlatformContext: Any {
