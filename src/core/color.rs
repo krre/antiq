@@ -1,14 +1,13 @@
 #[derive(Debug, Clone, Copy)]
-pub struct Color(wgpu::Color);
+pub struct Color {
+    pub r: f64,
+    pub g: f64,
+    pub b: f64,
+    pub a: f64,
+}
 
 impl Color {
     pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
-        Self {
-            0: wgpu::Color { r, g, b, a },
-        }
-    }
-
-    pub(crate) fn inner(&self) -> wgpu::Color {
-        self.0
+        Self { r, g, b, a }
     }
 }

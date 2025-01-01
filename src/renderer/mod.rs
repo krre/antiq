@@ -7,6 +7,8 @@ pub use shader::ShaderStorage;
 pub use surface::Surface;
 use wgpu::{Adapter, Device, Instance, Queue};
 
+use crate::core::Color;
+
 pub struct Renderer {
     instance: Instance,
     adapter: Adapter,
@@ -61,7 +63,7 @@ impl Renderer {
         return pollster::block_on(instance.request_adapter(&adapter_options));
     }
 
-    pub fn clear_view(&self, view: &wgpu::TextureView, color: &wgpu::Color) {
+    pub fn clear_view(&self, view: &wgpu::TextureView, color: Color) {
         let mut encoder = self
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
@@ -72,7 +74,12 @@ impl Renderer {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(*color),
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: color.r,
+                            g: color.g,
+                            b: color.b,
+                            a: color.a,
+                        }),
                         store: wgpu::StoreOp::Store,
                     },
                 })],

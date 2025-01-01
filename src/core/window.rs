@@ -156,7 +156,7 @@ impl Window {
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        self.renderer.clear_view(&view, &self.color.get().inner());
+        self.renderer.clear_view(&view, self.color.get());
         frame.present();
     }
 }
