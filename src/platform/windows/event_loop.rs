@@ -14,7 +14,6 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        println!("Windows event loop runned");
         Ok(())
     }
 }

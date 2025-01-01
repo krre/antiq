@@ -62,8 +62,6 @@ impl PlatformEventLoop for EventLoop {
         let conn = self.conn();
         let atoms = Atoms::new(conn)?.reply()?;
 
-        println!("Linux X11 event loop runned");
-
         let mut prev_window_size = Size2D::new(0, 0);
         let mut prev_window_pos = Pos2D::new(0, 0);
 

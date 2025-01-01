@@ -152,8 +152,6 @@ impl Window {
     }
 
     pub fn render(&self) {
-        println!("Render window: {}", self.title());
-
         let frame = self.surface.borrow().current_frame();
         let view = frame
             .texture

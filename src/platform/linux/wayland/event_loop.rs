@@ -19,7 +19,6 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
-        println!("Linux Wayland event loop runned");
         Ok(())
     }
 
