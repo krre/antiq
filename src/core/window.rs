@@ -57,7 +57,7 @@ impl Window {
         let window = Rc::new(Self {
             id,
             title: RefCell::new(String::new()),
-            color: Cell::new(Color::new(0.05, 0.027, 0.15, 1.0)),
+            color: Cell::new(Color::new(0.05, 0.027, 0.15)),
             position: Cell::new(Pos2D::new(0, 0)),
             size: Cell::new(Size2D::new(0, 0)),
             widgets: Vec::new(),

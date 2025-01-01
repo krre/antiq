@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         w.set_visible(true);
         w.set_position(Pos2D::new(500, 200));
         w.set_size(Size2D::new(300, 300));
-        w.set_color(Color::new(1.0, 0.0, 0.0, 1.0));
+        w.set_color(Color::new(1.0, 0.0, 0.0));
     }
 
     app.run()?;
