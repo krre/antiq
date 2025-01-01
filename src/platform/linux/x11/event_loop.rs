@@ -138,9 +138,9 @@ impl PlatformEventLoop for EventLoop {
                     }
                 }
                 protocol::Event::Error(err) => {
-                    println!("Got an unexpected error: {err:?}")
+                    println!("Unexpected error: {err:?}")
                 }
-                _ => {} // event => println!("Got an unhandled event: {event:?}"),
+                _ => {} // event => println!("Unhandled event: {event:?}"),
             }
         }
 
