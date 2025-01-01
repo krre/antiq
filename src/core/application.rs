@@ -19,16 +19,19 @@ pub struct Application {
     renderer: Rc<Renderer>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
+    quit_on_close_last_window: bool,
 }
 
 pub struct ApplicationBuilder {
     name: String,
     organization: String,
+    quit_on_close_last_window: bool,
 }
 
 struct ApplicationEventHandler {
     context: Rc<Context>,
     event_loop: Rc<EventLoop>,
+    quit_on_close_last_window: bool,
 }
 
 impl Application {
@@ -66,6 +69,7 @@ impl Application {
         let event_handler = ApplicationEventHandler {
             context: self.context.clone(),
             event_loop: self.event_loop.clone(),
+            quit_on_close_last_window: self.quit_on_close_last_window,
         };
         self.event_loop.run(&event_handler)
     }
@@ -76,6 +80,7 @@ impl ApplicationBuilder {
         Self {
             name: Application::file_name().unwrap_or("Application".to_string()),
             organization: Application::file_name().unwrap_or("Antiq".to_string()),
+            quit_on_close_last_window: true,
         }
     }
 
@@ -86,6 +91,11 @@ impl ApplicationBuilder {
 
     pub fn organization(mut self, organization: &str) -> Self {
         self.organization = organization.to_owned();
+        self
+    }
+
+    pub fn quit_on_close_last_window(mut self, quit: bool) -> Self {
+        self.quit_on_close_last_window = quit;
         self
     }
 
@@ -109,6 +119,7 @@ impl ApplicationBuilder {
             event_loop,
             renderer,
             platform_application,
+            quit_on_close_last_window: self.quit_on_close_last_window,
         })
     }
 }
@@ -122,7 +133,9 @@ impl EventHandler for ApplicationEventHandler {
             WindowAction::Close => {
                 self.context.window_manager().remove_window(event.id);
 
-                if self.context.window_manager().window_count() == 0 {
+                if self.context.window_manager().window_count() == 0
+                    && self.quit_on_close_last_window
+                {
                     self.event_loop.send_event(Box::new(ApplicationEvent {
                         action: ApplicationAction::Quit,
                     }));
