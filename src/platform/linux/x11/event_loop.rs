@@ -58,9 +58,7 @@ impl EventLoop {
     fn conn(&self) -> &XCBConnection {
         self.context().connection.as_ref()
     }
-}
 
-impl EventLoop {
     fn send_client_message_event(
         &self,
         type_: impl Into<Atom>,
