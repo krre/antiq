@@ -7,7 +7,7 @@ use crate::platform::{PlatformApplication, PlatformContext};
 use super::Application;
 
 pub struct Context {
-    connection: Rc<Connection>,
+    pub(crate) connection: Rc<Connection>,
 }
 
 impl Context {

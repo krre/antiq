@@ -41,7 +41,7 @@ impl EventLoop {
         context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::EventLoop::new()
+            wayland::EventLoop::new(context)
         } else {
             x11::EventLoop::new(context)
         }
