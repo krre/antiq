@@ -13,10 +13,14 @@ enum Backend {
 }
 
 fn backend() -> Backend {
-    if let Ok(_) = env::var("WAYLAND_DISPLAY") {
-        Backend::Wayland
-    } else if let Ok(_) = env::var("DISPLAY") {
-        Backend::X11
+    if let Ok(session) = env::var("XDG_SESSION_TYPE") {
+        if session == "wayland" && env::var("WAYLAND_DISPLAY").is_ok() {
+            Backend::Wayland
+        } else if session == "x11" && env::var("DISPLAY").is_ok() {
+            Backend::X11
+        } else {
+            Backend::Unknown
+        }
     } else {
         Backend::Unknown
     }
