@@ -1,17 +1,23 @@
+use std::rc::Rc;
+
 use serde::{Deserialize, Serialize};
+
+use super::Context;
 
 pub trait SD: Default + Serialize + for<'a> Deserialize<'a> {}
 
 pub struct Preferences<T: SD> {
     data: T,
     is_loaded: bool,
+    context: Rc<Context>,
 }
 
 impl<T: SD> Preferences<T> {
-    pub fn new() -> Self {
+    pub fn new(context: Rc<Context>) -> Self {
         Self {
             data: T::default(),
             is_loaded: false,
+            context,
         }
     }
 
