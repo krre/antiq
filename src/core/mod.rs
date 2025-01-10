@@ -8,6 +8,7 @@ mod event_loop;
 mod id;
 mod layout;
 mod node;
+mod preferences;
 mod window;
 mod window_manager;
 
@@ -16,6 +17,7 @@ pub use color::Color;
 pub use context::Context;
 pub use event_loop::EventLoop;
 pub use id::Id;
+pub use preferences::Preferences;
 pub use window::Window;
 pub use window::WindowId;
 
