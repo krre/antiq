@@ -9,15 +9,13 @@ use serde::{Deserialize, Serialize};
 
 use super::Context;
 
-pub trait SD: Default + Serialize + for<'a> Deserialize<'a> {}
-
-pub struct Preferences<T: SD> {
+pub struct Preferences<T: Default + Serialize + for<'a> Deserialize<'a>> {
     data: T,
     is_loaded: bool,
     context: Rc<Context>,
 }
 
-impl<T: SD> Preferences<T> {
+impl<T: Default + Serialize + for<'a> Deserialize<'a>> Preferences<T> {
     pub fn new(context: Rc<Context>) -> Self {
         Self {
             data: T::default(),
