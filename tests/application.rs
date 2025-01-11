@@ -1,4 +1,4 @@
-use antiq::core::Application;
+use antiq::application::Application;
 
 #[test]
 fn create_multiple_apps() {

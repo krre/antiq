@@ -1,6 +1,7 @@
 use std::any::Any;
 
-use super::{Pos2D, Size2D, WindowId};
+use super::window::WindowId;
+use super::{Pos2D, Size2D};
 pub enum ApplicationAction {
     Quit,
 }

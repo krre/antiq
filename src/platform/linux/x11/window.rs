@@ -8,8 +8,9 @@ use x11rb::xcb_ffi::XCBConnection;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
-    core::{Pos2D, Size2D, WindowId},
+    core::{Pos2D, Size2D},
     platform::{PlatformContext, PlatformWindow},
+    window::WindowId,
 };
 
 use super::Context;

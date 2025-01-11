@@ -2,9 +2,12 @@ use std::any::Any;
 
 use wgpu::SurfaceTargetUnsafe;
 
-use crate::core::{
-    event::{Event, EventHandler},
-    Pos2D, Size2D, WindowId,
+use crate::{
+    core::{
+        event::{Event, EventHandler},
+        Pos2D, Size2D,
+    },
+    window::WindowId,
 };
 
 cfg_if::cfg_if! {

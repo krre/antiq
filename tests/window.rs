@@ -1,5 +1,5 @@
-use antiq::core::Application;
-use antiq::core::Window;
+use antiq::application::Application;
+use antiq::window::Window;
 
 #[test]
 fn create_window() {

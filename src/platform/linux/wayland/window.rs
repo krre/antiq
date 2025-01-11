@@ -4,8 +4,9 @@ use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
-    core::{Pos2D, Size2D, WindowId},
+    core::{Pos2D, Size2D},
     platform::PlatformWindow,
+    window::WindowId,
 };
 
 pub struct Window {}

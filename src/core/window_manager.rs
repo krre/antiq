@@ -1,6 +1,9 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use super::{Pos2D, Size2D, Window, WindowId};
+use super::{
+    window::{Window, WindowId},
+    Pos2D, Size2D,
+};
 
 pub(crate) struct WindowManager {
     windows: RefCell<HashMap<WindowId, Rc<Window>>>,

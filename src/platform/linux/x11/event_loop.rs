@@ -15,9 +15,10 @@ use x11rb::{
 use crate::{
     core::{
         event::{Event, EventHandler, WindowAction, WindowEvent},
-        Pos2D, Size2D, WindowId,
+        Pos2D, Size2D,
     },
     platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
+    window::WindowId,
 };
 
 use super::Context;
