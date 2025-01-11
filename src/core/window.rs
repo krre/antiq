@@ -68,7 +68,7 @@ impl Window {
             visible: Cell::new(false),
         });
 
-        tmp_context.window_manager().add_window(id, window.clone());
+        tmp_context.window_manager().append(id, window.clone());
 
         window.set_title("Untitled");
         window.set_size(Size2D::new(800, 600));
@@ -163,6 +163,6 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.context.window_manager().remove_window(self.id);
+        self.context.window_manager().remove(self.id);
     }
 }

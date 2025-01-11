@@ -16,28 +16,28 @@ impl WindowManager {
         }
     }
 
-    pub(crate) fn add_window(&self, id: WindowId, window: Rc<Window>) {
+    pub(crate) fn append(&self, id: WindowId, window: Rc<Window>) {
         self.windows.borrow_mut().insert(id, window);
     }
 
-    pub(crate) fn remove_window(&self, id: WindowId) {
+    pub(crate) fn remove(&self, id: WindowId) {
         #[allow(unused_variables)]
         let window = self.windows.borrow_mut().remove(&id);
     }
 
-    pub(crate) fn render_window(&self, id: WindowId) {
+    pub(crate) fn render(&self, id: WindowId) {
         self.windows.borrow().get(&id).unwrap().render();
     }
 
-    pub(crate) fn update_window_size(&self, id: WindowId, size: Size2D) {
+    pub(crate) fn resize(&self, id: WindowId, size: Size2D) {
         self.windows.borrow().get(&id).unwrap().update_size(size);
     }
 
-    pub(crate) fn update_window_position(&self, id: WindowId, pos: Pos2D) {
+    pub(crate) fn move_to(&self, id: WindowId, pos: Pos2D) {
         self.windows.borrow().get(&id).unwrap().update_position(pos);
     }
 
-    pub(crate) fn window_count(&self) -> usize {
+    pub(crate) fn count(&self) -> usize {
         self.windows.borrow().len()
     }
 }
