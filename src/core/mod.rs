@@ -17,7 +17,9 @@ pub use color::Color;
 pub use context::Context;
 pub use event_loop::EventLoop;
 pub use id::Id;
+pub use preferences::Format;
 pub use preferences::Preferences;
+pub use preferences::PreferencesBuilder;
 pub use window::Window;
 pub use window::WindowId;
 
