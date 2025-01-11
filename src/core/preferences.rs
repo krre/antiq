@@ -42,9 +42,9 @@ impl<T: Default + Serialize + for<'a> Deserialize<'a>> Preferences<T> {
             file.read_to_string(&mut contents).unwrap();
             self.data = serde_json::from_slice::<T>(contents.as_bytes()).unwrap();
             self.is_loaded = true;
+        } else {
+            self.is_loaded = false;
         }
-
-        self.is_loaded = false;
     }
 
     pub fn save(&self) {
