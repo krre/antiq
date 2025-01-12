@@ -19,7 +19,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let instance = wgpu::Instance::default();
         // FIXME: Founded adapter may not match the window surface. Better use instance.request_adapter() with appropriate surface.
         let adapter = if let Some(adapter) = Self::find_adapter(&instance) {
