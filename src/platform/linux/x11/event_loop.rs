@@ -99,7 +99,7 @@ impl PlatformEventLoop for EventLoop {
                     }
                 }
                 protocol::Event::ConfigureNotify(event) => {
-                    let window_size = Size2D::new(event.width as u32, event.height as u32);
+                    let window_size = Size2D::new(event.width.into(), event.height.into());
 
                     if window_size != prev_window_size {
                         event_handler.window_event(WindowEvent {
@@ -109,7 +109,7 @@ impl PlatformEventLoop for EventLoop {
                         prev_window_size = window_size;
                     }
 
-                    let window_pos = Pos2D::new(event.x as i32, event.y as i32);
+                    let window_pos = Pos2D::new(event.x.into(), event.y.into());
 
                     if window_pos != prev_window_pos {
                         event_handler.window_event(WindowEvent {
