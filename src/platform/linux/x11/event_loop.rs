@@ -107,17 +107,17 @@ impl PlatformEventLoop for EventLoop {
                             action: WindowAction::Resize(window_size),
                         });
                         prev_window_size = window_size;
-                    }
+                    } else {
+                        let window_pos = Pos2D::new(event.x.into(), event.y.into());
 
-                    let window_pos = Pos2D::new(event.x.into(), event.y.into());
+                        if window_pos != prev_window_pos {
+                            event_handler.window_event(WindowEvent {
+                                id: WindowId::new(event.window as usize),
+                                action: WindowAction::Move(window_pos),
+                            });
 
-                    if window_pos != prev_window_pos {
-                        event_handler.window_event(WindowEvent {
-                            id: WindowId::new(event.window as usize),
-                            action: WindowAction::Move(window_pos),
-                        });
-
-                        prev_window_pos = window_pos;
+                            prev_window_pos = window_pos;
+                        }
                     }
                 }
                 protocol::Event::ClientMessage(event) => {
