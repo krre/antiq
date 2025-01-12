@@ -10,25 +10,27 @@ use serde::{Deserialize, Serialize};
 
 use super::Context;
 
+pub trait DSD: Default + Serialize + for<'a> Deserialize<'a> {}
+
 pub enum Format {
     Compact,
     Pretty,
 }
 
-pub struct Preferences<T: Default + Serialize + for<'a> Deserialize<'a>> {
+pub struct Preferences<T: DSD> {
     format: Format,
     data: T,
     is_loaded: bool,
     context: Rc<Context>,
 }
 
-pub struct PreferencesBuilder<T: Default + Serialize + for<'a> Deserialize<'a>> {
+pub struct PreferencesBuilder<T: DSD> {
     format: Format,
     context: Rc<Context>,
     data: PhantomData<T>,
 }
 
-impl<T: Default + Serialize + for<'a> Deserialize<'a>> Preferences<T> {
+impl<T: DSD> Preferences<T> {
     pub fn new(context: Rc<Context>) -> Self {
         let builder = PreferencesBuilder::<T>::new(context);
         builder.build()
@@ -88,7 +90,7 @@ impl<T: Default + Serialize + for<'a> Deserialize<'a>> Preferences<T> {
     }
 }
 
-impl<T: Default + Serialize + for<'a> Deserialize<'a>> PreferencesBuilder<T> {
+impl<T: DSD> PreferencesBuilder<T> {
     pub fn new(context: Rc<Context>) -> Self {
         Self {
             format: Format::Compact,
@@ -111,3 +113,5 @@ impl<T: Default + Serialize + for<'a> Deserialize<'a>> PreferencesBuilder<T> {
         }
     }
 }
+
+impl<T> DSD for T where T: Default + Serialize + for<'a> Deserialize<'a> {}
