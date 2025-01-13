@@ -9,7 +9,7 @@ use crate::{
     widget::Widget,
 };
 
-use super::{Color, Context, Pos2D, Size2D};
+use super::{Border2D, Color, Context, Pos2D, Size2D};
 
 #[derive(Copy, Clone, Hash, Debug)]
 pub struct WindowId(usize);
@@ -26,6 +26,7 @@ pub struct Window {
     renderer: Rc<Renderer>,
     surface: RefCell<Surface>,
     visible: Cell<bool>,
+    border: Border2D,
 }
 
 impl WindowId {
@@ -49,6 +50,7 @@ impl Eq for WindowId {}
 impl Window {
     pub fn new(context: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(context.platform_context.clone())?;
+        let border = platform_window.border();
         let renderer = context.renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();
@@ -66,6 +68,7 @@ impl Window {
             renderer,
             surface,
             visible: Cell::new(false),
+            border,
         });
 
         tmp_context.window_manager().append(id, window.clone());

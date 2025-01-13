@@ -5,7 +5,7 @@ use wgpu::SurfaceTargetUnsafe;
 use crate::{
     core::{
         event::{Event, EventHandler},
-        Pos2D, Size2D,
+        Border2D, Pos2D, Size2D,
     },
     window::WindowId,
 };
@@ -46,6 +46,10 @@ pub trait PlatformWindow: Any {
     fn set_position(&self, pos: Pos2D);
 
     fn set_size(&self, size: Size2D);
+
+    fn border(&self) -> Border2D {
+        Border2D::default()
+    }
 }
 
 pub trait PlatformEventLoop: Any {
