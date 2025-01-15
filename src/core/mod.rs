@@ -33,10 +33,10 @@ pub struct Pos2D {
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Border2D {
-    top: u16,
-    bottom: u16,
     left: u16,
     right: u16,
+    top: u16,
+    bottom: u16,
 }
 
 impl Size2D {
@@ -76,12 +76,12 @@ impl Pos2D {
 }
 
 impl Border2D {
-    pub fn new(top: u16, bottom: u16, left: u16, right: u16) -> Self {
+    pub fn new(left: u16, right: u16, top: u16, bottom: u16) -> Self {
         Self {
-            top,
-            bottom,
             left,
             right,
+            top,
+            bottom,
         }
     }
 
@@ -102,6 +102,6 @@ impl Border2D {
     }
 
     pub fn border(&self) -> (u16, u16, u16, u16) {
-        (self.top, self.bottom, self.left, self.right)
+        (self.left, self.right, self.top, self.bottom)
     }
 }
