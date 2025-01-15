@@ -8,7 +8,7 @@ use x11rb::xcb_ffi::XCBConnection;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
-    core::{Pos2D, Size2D},
+    core::{Border2D, Pos2D, Size2D},
     platform::{PlatformContext, PlatformWindow},
     window::WindowId,
 };
@@ -154,6 +154,38 @@ impl PlatformWindow for Window {
             )
             .unwrap();
         self.conn().flush().unwrap();
+    }
+
+    fn border(&self) -> Border2D {
+        let extents_atom = self
+            .conn()
+            .intern_atom(false, b"_NET_FRAME_EXTENTS")
+            .unwrap()
+            .reply()
+            .unwrap()
+            .atom;
+
+        let prop = self
+            .conn()
+            .get_property(false, self.id, extents_atom, AtomEnum::CARDINAL, 0, 4)
+            .unwrap()
+            .reply()
+            .unwrap();
+        self.conn().flush().unwrap();
+
+        if prop.value32().is_none() {
+            return Border2D::default();
+        }
+
+        // left, right, top, bottom
+        let extents: Vec<u32> = prop.value32().unwrap().collect();
+
+        Border2D::new(
+            extents[0] as u16,
+            extents[1] as u16,
+            extents[2] as u16,
+            extents[3] as u16,
+        )
     }
 }
 
