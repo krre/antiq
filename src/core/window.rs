@@ -26,7 +26,6 @@ pub struct Window {
     renderer: Rc<Renderer>,
     surface: RefCell<Surface>,
     visible: Cell<bool>,
-    border: Border2D,
 }
 
 impl WindowId {
@@ -50,7 +49,6 @@ impl Eq for WindowId {}
 impl Window {
     pub fn new(context: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
         let platform_window = platform::Window::new(context.platform_context.clone())?;
-        let border = platform_window.border();
         let renderer = context.renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();
@@ -68,11 +66,11 @@ impl Window {
             renderer,
             surface,
             visible: Cell::new(false),
-            border,
         });
 
         tmp_context.window_manager().append(id, window.clone());
 
+        window.set_visible(true);
         window.set_title("Untitled");
         window.set_size(Size2D::new(800, 600));
 
@@ -102,8 +100,11 @@ impl Window {
     }
 
     pub fn set_position(&self, pos: Pos2D) {
-        self.platform_window.set_position(pos);
-        self.position.set(pos);
+        let border = self.border();
+        let correct_pos = Pos2D::new(pos.x - border.left as i32, pos.y - border.top as i32);
+
+        self.platform_window.set_position(correct_pos);
+        self.position.set(correct_pos);
     }
 
     pub(crate) fn update_position(&self, pos: Pos2D) {
@@ -140,6 +141,10 @@ impl Window {
 
     pub fn color(&self) -> Color {
         self.color.get()
+    }
+
+    pub fn border(&self) -> Border2D {
+        self.platform_window.border()
     }
 
     pub fn set_maximized(&self, maximized: bool) {}
