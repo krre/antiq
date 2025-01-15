@@ -25,8 +25,6 @@ use super::Context;
 
 pub struct EventLoop {
     context: Rc<dyn PlatformContext>,
-    quit_atom: u32,
-    client_atom: u32,
 }
 
 impl EventLoop {
@@ -35,9 +33,6 @@ impl EventLoop {
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         let x11_context = context.as_any().downcast_ref::<Context>().unwrap();
         let conn = x11_context.connection.as_ref();
-        let quit_atom = conn.intern_atom(false, b"QUIT_EVENT")?.reply()?.atom;
-        let client_atom = conn.intern_atom(false, b"CLIENT_EVENT")?.reply()?.atom;
-
         let screen = conn.setup().roots[x11_context.screen_num].clone();
         conn.change_window_attributes(
             screen.root,
@@ -45,11 +40,7 @@ impl EventLoop {
         )?;
         conn.flush()?;
 
-        Ok(Box::new(Self {
-            context,
-            quit_atom,
-            client_atom,
-        }))
+        Ok(Box::new(Self { context }))
     }
 
     fn context(&self) -> &Context {
@@ -132,7 +123,7 @@ impl PlatformEventLoop for EventLoop {
                         });
                     }
 
-                    if event.type_ == self.quit_atom {
+                    if event.type_ == self.context().atoms.QUIT_EVENT {
                         break;
                     }
                 }
@@ -147,10 +138,10 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn send_event(&self, event: Box<dyn Event>) {
-        self.send_client_message_event(self.client_atom, [0, 0, 0, 0, 0]);
+        self.send_client_message_event(self.context().atoms.CLIENT_EVENT, [0, 0, 0, 0, 0]);
     }
 
     fn quit(&self) {
-        self.send_client_message_event(self.quit_atom, [0, 0, 0, 0, 0]);
+        self.send_client_message_event(self.context().atoms.QUIT_EVENT, [0, 0, 0, 0, 0]);
     }
 }

@@ -19,6 +19,9 @@ x11rb::atom_manager! {
         _NET_WM_NAME,
         _NET_FRAME_EXTENTS,
         UTF8_STRING,
+
+        QUIT_EVENT,
+        CLIENT_EVENT,
     }
 }
 
