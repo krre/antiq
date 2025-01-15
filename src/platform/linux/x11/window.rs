@@ -26,15 +26,6 @@ struct X11WindowHandle {
     screen_num: i32,
 }
 
-x11rb::atom_manager! {
-    pub Atoms: AtomsCookie {
-        WM_PROTOCOLS,
-        WM_DELETE_WINDOW,
-        _NET_WM_NAME,
-        UTF8_STRING,
-    }
-}
-
 impl Window {
     pub fn new(
         context: Rc<dyn PlatformContext>,
@@ -43,8 +34,6 @@ impl Window {
         let conn = x11_context.connection.as_ref();
         let screen = &conn.setup().roots[x11_context.screen_num];
         let id = conn.generate_id()?;
-
-        let atoms = Atoms::new(conn)?.reply()?;
 
         conn.create_window(
             COPY_DEPTH_FROM_PARENT,
@@ -65,9 +54,9 @@ impl Window {
         conn.change_property32(
             PropMode::REPLACE,
             id,
-            atoms.WM_PROTOCOLS,
+            x11_context.atoms.WM_PROTOCOLS,
             AtomEnum::ATOM,
-            &[atoms.WM_DELETE_WINDOW],
+            &[x11_context.atoms.WM_DELETE_WINDOW],
         )?;
 
         conn.flush()?;
