@@ -146,17 +146,16 @@ impl PlatformWindow for Window {
     }
 
     fn border(&self) -> Border2D {
-        let extents_atom = self
-            .conn()
-            .intern_atom(false, b"_NET_FRAME_EXTENTS")
-            .unwrap()
-            .reply()
-            .unwrap()
-            .atom;
-
         let prop = self
             .conn()
-            .get_property(false, self.id, extents_atom, AtomEnum::CARDINAL, 0, 4)
+            .get_property(
+                false,
+                self.id,
+                self.context().atoms._NET_FRAME_EXTENTS,
+                AtomEnum::CARDINAL,
+                0,
+                4,
+            )
             .unwrap()
             .reply()
             .unwrap();
