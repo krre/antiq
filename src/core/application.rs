@@ -13,19 +13,19 @@ pub struct Application {
     renderer: Rc<Renderer>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
-    quit_on_close_last_window: bool,
+    quit_on_last_window_closed: bool,
 }
 
 pub struct ApplicationBuilder {
     name: String,
     organization: String,
-    quit_on_close_last_window: bool,
+    quit_on_last_window_closed: bool,
 }
 
 struct ApplicationEventHandler {
     context: Rc<Context>,
     event_loop: Rc<EventLoop>,
-    quit_on_close_last_window: bool,
+    quit_on_last_window_closed: bool,
 }
 
 impl Application {
@@ -63,7 +63,7 @@ impl Application {
         let event_handler = ApplicationEventHandler {
             context: self.context.clone(),
             event_loop: self.event_loop.clone(),
-            quit_on_close_last_window: self.quit_on_close_last_window,
+            quit_on_last_window_closed: self.quit_on_last_window_closed,
         };
         self.event_loop.run(&event_handler)
     }
@@ -74,7 +74,7 @@ impl ApplicationBuilder {
         Self {
             name: Application::file_name().unwrap_or("Application".to_string()),
             organization: Application::file_name().unwrap_or("Antiq".to_string()),
-            quit_on_close_last_window: true,
+            quit_on_last_window_closed: true,
         }
     }
 
@@ -88,8 +88,8 @@ impl ApplicationBuilder {
         self
     }
 
-    pub fn quit_on_close_last_window(mut self, quit: bool) -> Self {
-        self.quit_on_close_last_window = quit;
+    pub fn quit_on_last_window_closed(mut self, quit: bool) -> Self {
+        self.quit_on_last_window_closed = quit;
         self
     }
 
@@ -113,7 +113,7 @@ impl ApplicationBuilder {
             event_loop,
             renderer,
             platform_application,
-            quit_on_close_last_window: self.quit_on_close_last_window,
+            quit_on_last_window_closed: self.quit_on_last_window_closed,
         })
     }
 }
@@ -127,7 +127,7 @@ impl EventHandler for ApplicationEventHandler {
             WindowAction::Close => {
                 self.context.window_manager().remove(event.id);
 
-                if self.context.window_manager().count() == 0 && self.quit_on_close_last_window {
+                if self.context.window_manager().count() == 0 && self.quit_on_last_window_closed {
                     self.event_loop.quit();
                 }
             }
