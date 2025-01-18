@@ -59,7 +59,7 @@ impl Window {
         context: Rc<dyn PlatformContext>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::Window::new()
+            wayland::Window::new(context)
         } else {
             x11::Window::new(context)
         }

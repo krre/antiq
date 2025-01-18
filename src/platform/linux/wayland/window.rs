@@ -1,21 +1,36 @@
-use std::any::Any;
+use std::{any::Any, rc::Rc};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
+use wayland_client::Connection;
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{Pos2D, Size2D},
-    platform::PlatformWindow,
+    platform::{PlatformContext, PlatformWindow},
     window::WindowId,
 };
 
-pub struct Window {}
+use super::Context;
+
+pub struct Window {
+    context: Rc<dyn PlatformContext>,
+}
 
 struct WaylandWindowHandle {}
 
 impl Window {
-    pub fn new() -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
-        Ok(Box::new(Self {}))
+    pub fn new(
+        context: Rc<dyn PlatformContext>,
+    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+        Ok(Box::new(Self { context }))
+    }
+
+    fn context(&self) -> &Context {
+        self.context.as_any().downcast_ref::<Context>().unwrap()
+    }
+
+    fn conn(&self) -> &Connection {
+        self.context().connection.as_ref()
     }
 }
 
