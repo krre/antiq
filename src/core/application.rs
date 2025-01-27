@@ -100,12 +100,14 @@ impl ApplicationBuilder {
 
         let platform_application = platform::Application::new()?;
         let renderer = Rc::new(Renderer::new());
+
         let context = Rc::new(Context::new(
             platform_application.as_ref(),
             renderer.clone(),
             self.name,
             self.organization,
         )?);
+
         let event_loop = Rc::new(EventLoop::new(context.clone())?);
 
         Ok(Application {
