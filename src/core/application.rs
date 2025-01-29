@@ -10,7 +10,6 @@ static APP_LOCK: OnceLock<()> = OnceLock::new();
 
 pub struct Application {
     event_loop: Rc<EventLoop>,
-    renderer: Rc<Renderer>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
@@ -53,10 +52,6 @@ impl Application {
 
     pub fn context(&self) -> Rc<Context> {
         self.context.clone()
-    }
-
-    pub fn renderer(&self) -> Rc<Renderer> {
-        self.renderer.clone()
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -113,7 +108,6 @@ impl ApplicationBuilder {
         Ok(Application {
             context,
             event_loop,
-            renderer,
             platform_application,
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         })
