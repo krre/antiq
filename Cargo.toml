@@ -7,14 +7,14 @@ description = "3DUI toolkit"
 repository = "https://github.com/krre/antiq"
 
 [dependencies]
-log = "0.4.22"
+log = "0.4.25"
 pollster = "0.4.0"
-wgpu = "23.0.1"
+wgpu = "24.0.1"
 serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.135"
+serde_json = "1.0.138"
 cfg-if = "1.0.0"
 raw-window-handle = "0.6.2"
-dirs = "5.0.1"
+dirs = "6.0.0"
 
 [dev-dependencies]
 env_logger = "0.11.6"
