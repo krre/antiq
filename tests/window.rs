@@ -5,7 +5,7 @@ use antiq::window::Window;
 fn create_window() {
     let app = Application::new().unwrap();
 
-    let title = "Window title".to_string();
+    let title = "Test Window".to_string();
 
     let window = Window::new(app.context().clone())
         .unwrap()
