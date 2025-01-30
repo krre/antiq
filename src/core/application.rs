@@ -1,6 +1,7 @@
 use super::{
     error::ApplicationError,
     event::{EventHandler, WindowAction, WindowEvent},
+    window_manager::WindowManager,
     Context, EventLoop,
 };
 use crate::{platform, renderer::Renderer};
@@ -12,6 +13,7 @@ pub struct Application {
     name: String,
     organization: String,
     event_loop: EventLoop,
+    window_manager: Rc<WindowManager>,
     context: Context,
     platform_application: Box<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
@@ -50,6 +52,10 @@ impl Application {
 
     pub fn context(&self) -> &Context {
         &self.context
+    }
+
+    pub(crate) fn window_manager(&self) -> Rc<WindowManager> {
+        self.window_manager.clone()
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -101,6 +107,7 @@ impl ApplicationBuilder {
             organization: self.organization,
             context,
             event_loop,
+            window_manager: Rc::new(WindowManager::new()),
             platform_application,
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         })
@@ -111,21 +118,20 @@ impl<'app> EventHandler for ApplicationEventHandler<'app> {
     fn window_event(&self, event: WindowEvent) {
         match event.action {
             WindowAction::Redraw => {
-                self.0.context().window_manager().render(event.id);
+                self.0.window_manager().render(event.id);
             }
             WindowAction::Close => {
-                self.0.context.window_manager().remove(event.id);
+                self.0.window_manager().remove(event.id);
 
-                if self.0.context.window_manager().count() == 0 && self.0.quit_on_last_window_closed
-                {
+                if self.0.window_manager().count() == 0 && self.0.quit_on_last_window_closed {
                     self.0.event_loop.quit();
                 }
             }
             WindowAction::Resize(size) => {
-                self.0.context.window_manager().resize(event.id, size);
+                self.0.window_manager().resize(event.id, size);
             }
             WindowAction::Move(pos) => {
-                self.0.context.window_manager().move_to(event.id, pos);
+                self.0.window_manager().move_to(event.id, pos);
             }
         }
     }

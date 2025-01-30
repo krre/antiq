@@ -9,7 +9,9 @@ use crate::{
     widget::Widget,
 };
 
-use super::{Border2D, Color, Context, Pos2D, Size2D};
+use super::{
+    application::Application, window_manager::WindowManager, Border2D, Color, Pos2D, Size2D,
+};
 
 #[derive(Copy, Clone, Hash, Debug)]
 pub struct WindowId(usize);
@@ -21,8 +23,8 @@ pub struct Window {
     position: Cell<Pos2D>,
     size: Cell<Size2D>,
     widgets: Vec<RefCell<Box<dyn Widget>>>,
-    context: Rc<Context>,
     platform_window: Box<dyn platform::PlatformWindow>,
+    window_manager: Rc<WindowManager>,
     renderer: Rc<Renderer>,
     surface: RefCell<Surface>,
     visible: Cell<bool>,
@@ -48,12 +50,12 @@ impl PartialEq for WindowId {
 impl Eq for WindowId {}
 
 impl Window {
-    pub fn new(context: Rc<Context>) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
-        let platform_window = platform::Window::new(context.platform_context.clone())?;
-        let renderer = context.renderer().clone();
+    pub fn new(application: &Application) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
+        let platform_window =
+            platform::Window::new(application.context().platform_context.clone())?;
+        let renderer = application.context().renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();
-        let tmp_context = context.clone();
 
         let window = Rc::new(Self {
             id,
@@ -62,15 +64,15 @@ impl Window {
             position: Cell::new(Pos2D::default()),
             size: Cell::new(Size2D::default()),
             widgets: Vec::new(),
-            context,
             platform_window,
+            window_manager: application.window_manager(),
             renderer,
             surface,
             visible: Cell::new(false),
             maximized: Cell::new(false),
         });
 
-        tmp_context.window_manager().append(id, window.clone());
+        application.window_manager().append(id, window.clone());
 
         window.set_visible(true);
         window.set_title("Untitled");
@@ -179,6 +181,6 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.context.window_manager().remove(self.id);
+        self.window_manager.remove(self.id);
     }
 }

@@ -8,15 +8,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
     let app = Application::new()?;
-
-    let window_1 = Window::new(app.context().clone())?;
+    let window_1 = Window::new(&app)?;
 
     {
         let w = window_1.upgrade().unwrap();
         w.set_title("Multi Window 1");
     }
 
-    let window_2 = Window::new(app.context())?;
+    let window_2 = Window::new(&app)?;
 
     {
         let w = window_2.upgrade().unwrap();
