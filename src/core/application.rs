@@ -11,7 +11,7 @@ static APP_LOCK: OnceLock<()> = OnceLock::new();
 pub struct Application {
     name: String,
     organization: String,
-    event_loop: Rc<EventLoop>,
+    event_loop: EventLoop,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
@@ -96,8 +96,7 @@ impl ApplicationBuilder {
                 .map_err(|e| ApplicationError::Other(e))?,
         );
 
-        let event_loop =
-            Rc::new(EventLoop::new(context.clone()).map_err(|e| ApplicationError::Other(e))?);
+        let event_loop = EventLoop::new(context.clone()).map_err(|e| ApplicationError::Other(e))?;
 
         Ok(Application {
             name: self.name,
