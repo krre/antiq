@@ -8,7 +8,6 @@ use super::{
 };
 
 pub struct EventLoop {
-    context: Rc<Context>,
     platform_event_loop: Box<dyn platform::PlatformEventLoop>,
 }
 
@@ -17,7 +16,6 @@ impl EventLoop {
         let platform_event_loop = platform::EventLoop::new(context.platform_context.clone())?;
 
         Ok(Self {
-            context,
             platform_event_loop,
         })
     }
