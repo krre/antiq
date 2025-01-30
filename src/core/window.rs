@@ -26,6 +26,7 @@ pub struct Window {
     renderer: Rc<Renderer>,
     surface: RefCell<Surface>,
     visible: Cell<bool>,
+    maximized: Cell<bool>,
 }
 
 impl WindowId {
@@ -66,6 +67,7 @@ impl Window {
             renderer,
             surface,
             visible: Cell::new(false),
+            maximized: Cell::new(false),
         });
 
         tmp_context.window_manager().append(id, window.clone());
@@ -147,7 +149,13 @@ impl Window {
         self.platform_window.border()
     }
 
-    pub fn set_maximized(&self, maximized: bool) {}
+    pub fn set_maximized(&self, maximized: bool) {
+        self.maximized.set(maximized);
+    }
+
+    pub fn maximized(&self) -> bool {
+        self.maximized.get()
+    }
 
     pub fn build(&self) {
         for widget in &self.widgets {
