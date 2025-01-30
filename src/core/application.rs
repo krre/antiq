@@ -25,7 +25,6 @@ pub struct ApplicationBuilder {
 
 struct ApplicationEventHandler<'app> {
     application: &'app Application,
-    event_loop: Rc<EventLoop>,
 }
 
 impl Application {
@@ -56,10 +55,7 @@ impl Application {
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let event_handler = ApplicationEventHandler {
-            application: self,
-            event_loop: self.event_loop.clone(),
-        };
+        let event_handler = ApplicationEventHandler { application: self };
         self.event_loop.run(&event_handler)
     }
 }
@@ -128,7 +124,7 @@ impl<'app> EventHandler for ApplicationEventHandler<'app> {
                 if self.application.context.window_manager().count() == 0
                     && self.application.quit_on_last_window_closed
                 {
-                    self.event_loop.quit();
+                    self.application.event_loop.quit();
                 }
             }
             WindowAction::Resize(size) => {
