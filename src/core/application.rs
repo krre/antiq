@@ -23,9 +23,7 @@ pub struct ApplicationBuilder {
     quit_on_last_window_closed: bool,
 }
 
-struct ApplicationEventHandler<'app> {
-    application: &'app Application,
-}
+struct ApplicationEventHandler<'app>(&'app Application);
 
 impl Application {
     pub fn new() -> Result<Self, ApplicationError> {
@@ -55,7 +53,7 @@ impl Application {
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let event_handler = ApplicationEventHandler { application: self };
+        let event_handler = ApplicationEventHandler { 0: self };
         self.event_loop.run(&event_handler)
     }
 }
@@ -116,28 +114,21 @@ impl<'app> EventHandler for ApplicationEventHandler<'app> {
     fn window_event(&self, event: WindowEvent) {
         match event.action {
             WindowAction::Redraw => {
-                self.application.context().window_manager().render(event.id);
+                self.0.context().window_manager().render(event.id);
             }
             WindowAction::Close => {
-                self.application.context.window_manager().remove(event.id);
+                self.0.context.window_manager().remove(event.id);
 
-                if self.application.context.window_manager().count() == 0
-                    && self.application.quit_on_last_window_closed
+                if self.0.context.window_manager().count() == 0 && self.0.quit_on_last_window_closed
                 {
-                    self.application.event_loop.quit();
+                    self.0.event_loop.quit();
                 }
             }
             WindowAction::Resize(size) => {
-                self.application
-                    .context
-                    .window_manager()
-                    .resize(event.id, size);
+                self.0.context.window_manager().resize(event.id, size);
             }
             WindowAction::Move(pos) => {
-                self.application
-                    .context
-                    .window_manager()
-                    .move_to(event.id, pos);
+                self.0.context.window_manager().move_to(event.id, pos);
             }
         }
     }
