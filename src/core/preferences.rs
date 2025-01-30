@@ -3,12 +3,11 @@ use std::{
     io::{Read, Write},
     marker::PhantomData,
     path::PathBuf,
-    rc::Rc,
 };
 
 use serde::{Deserialize, Serialize};
 
-use super::Context;
+use super::application::Application;
 
 pub trait DSD: Default + Serialize + for<'a> Deserialize<'a> {}
 
@@ -18,21 +17,23 @@ pub enum Format {
 }
 
 pub struct Preferences<T: DSD> {
+    dir: PathBuf,
+    path: PathBuf,
     format: Format,
     data: T,
     is_loaded: bool,
-    context: Rc<Context>,
 }
 
 pub struct PreferencesBuilder<T: DSD> {
+    dir: PathBuf,
+    path: PathBuf,
     format: Format,
-    context: Rc<Context>,
     data: PhantomData<T>,
 }
 
 impl<T: DSD> Preferences<T> {
-    pub fn new(context: Rc<Context>) -> Self {
-        let builder = PreferencesBuilder::<T>::new(context);
+    pub fn new(application: &Application) -> Self {
+        let builder = PreferencesBuilder::<T>::new(application);
         builder.build()
     }
 
@@ -73,28 +74,30 @@ impl<T: DSD> Preferences<T> {
     }
 
     pub fn dir(&self) -> PathBuf {
-        [
-            dirs::config_dir().unwrap(),
-            self.context.organization.clone().into(),
-        ]
-        .iter()
-        .collect()
+        self.dir.clone()
     }
 
     pub fn path(&self) -> PathBuf {
-        let mut result: PathBuf = [self.dir(), self.context.name.clone().into()]
-            .iter()
-            .collect();
-        result.set_extension("prefs");
-        result
+        self.path.clone()
     }
 }
 
 impl<T: DSD> PreferencesBuilder<T> {
-    pub fn new(context: Rc<Context>) -> Self {
+    pub fn new(application: &Application) -> Self {
+        let dir: PathBuf = [
+            dirs::config_dir().unwrap(),
+            application.organization().into(),
+        ]
+        .iter()
+        .collect();
+
+        let mut path: PathBuf = [dir.clone(), application.name().into()].iter().collect();
+        path.set_extension("prefs");
+
         Self {
+            dir,
+            path,
             format: Format::Compact,
-            context,
             data: PhantomData,
         }
     }
@@ -106,8 +109,9 @@ impl<T: DSD> PreferencesBuilder<T> {
 
     pub fn build(self) -> Preferences<T> {
         Preferences {
+            dir: self.dir,
+            path: self.path,
             format: self.format,
-            context: self.context.clone(),
             is_loaded: false,
             data: T::default(),
         }

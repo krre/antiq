@@ -9,6 +9,8 @@ use std::{rc::Rc, sync::OnceLock};
 static APP_LOCK: OnceLock<()> = OnceLock::new();
 
 pub struct Application {
+    name: String,
+    organization: String,
     event_loop: Rc<EventLoop>,
     context: Rc<Context>,
     platform_application: Box<dyn platform::PlatformApplication>,
@@ -34,11 +36,11 @@ impl Application {
     }
 
     pub fn organization(&self) -> &str {
-        &self.context.organization
+        &self.organization
     }
 
     pub fn name(&self) -> &str {
-        &self.context.name
+        &self.name
     }
 
     pub fn file_name() -> Option<String> {
@@ -99,13 +101,13 @@ impl ApplicationBuilder {
         let context = Rc::new(Context::new(
             platform_application.as_ref(),
             renderer.clone(),
-            self.name,
-            self.organization,
         )?);
 
         let event_loop = Rc::new(EventLoop::new(context.clone())?);
 
         Ok(Application {
+            name: self.name,
+            organization: self.organization,
             context,
             event_loop,
             platform_application,
