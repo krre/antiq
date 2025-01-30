@@ -26,8 +26,9 @@ pub struct Preferences<T: DSD> {
 
 pub struct PreferencesBuilder<T: DSD> {
     dir: PathBuf,
-    path: PathBuf,
+    application_name: String,
     format: Format,
+    extension: String,
     data: PhantomData<T>,
 }
 
@@ -91,13 +92,11 @@ impl<T: DSD> PreferencesBuilder<T> {
         .iter()
         .collect();
 
-        let mut path: PathBuf = [dir.clone(), application.name().into()].iter().collect();
-        path.set_extension("prefs");
-
         Self {
             dir,
-            path,
+            application_name: application.name().into(),
             format: Format::Compact,
+            extension: "prefs".to_string(),
             data: PhantomData,
         }
     }
@@ -107,10 +106,20 @@ impl<T: DSD> PreferencesBuilder<T> {
         self
     }
 
+    pub fn extension(mut self, extension: &str) -> Self {
+        self.extension = extension.into();
+        self
+    }
+
     pub fn build(self) -> Preferences<T> {
+        let mut path: PathBuf = [self.dir.clone(), self.application_name.into()]
+            .iter()
+            .collect();
+        path.set_extension(self.extension);
+
         Preferences {
             dir: self.dir,
-            path: self.path,
+            path,
             format: self.format,
             is_loaded: false,
             data: T::default(),
