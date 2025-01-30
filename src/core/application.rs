@@ -30,7 +30,7 @@ struct ApplicationEventHandler {
 }
 
 impl Application {
-    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Self, ApplicationError> {
         let builder = ApplicationBuilder::new();
         builder.build()
     }
@@ -90,20 +90,22 @@ impl ApplicationBuilder {
         self
     }
 
-    pub fn build(self) -> Result<Application, Box<dyn std::error::Error>> {
+    pub fn build(self) -> Result<Application, ApplicationError> {
         if let Err(_) = APP_LOCK.set(()) {
-            return Err(Box::new(ApplicationError::AlreadyExists));
+            return Err(ApplicationError::AlreadyExists);
         }
 
-        let platform_application = platform::Application::new()?;
+        let platform_application =
+            platform::Application::new().map_err(|e| ApplicationError::Other(e))?;
         let renderer = Rc::new(Renderer::new());
 
-        let context = Rc::new(Context::new(
-            platform_application.as_ref(),
-            renderer.clone(),
-        )?);
+        let context = Rc::new(
+            Context::new(platform_application.as_ref(), renderer.clone())
+                .map_err(|e| ApplicationError::Other(e))?,
+        );
 
-        let event_loop = Rc::new(EventLoop::new(context.clone())?);
+        let event_loop =
+            Rc::new(EventLoop::new(context.clone()).map_err(|e| ApplicationError::Other(e))?);
 
         Ok(Application {
             name: self.name,
