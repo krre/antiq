@@ -14,6 +14,7 @@ pub struct Application {
     organization: String,
     event_loop: EventLoop,
     window_manager: Rc<WindowManager>,
+    renderer: Rc<Renderer>,
     context: Context,
     platform_application: Box<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
@@ -58,6 +59,10 @@ impl Application {
         self.window_manager.clone()
     }
 
+    pub fn renderer(&self) -> Rc<Renderer> {
+        self.renderer.clone()
+    }
+
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let event_handler = ApplicationEventHandler { 0: self };
         self.event_loop.run(&event_handler)
@@ -95,10 +100,9 @@ impl ApplicationBuilder {
 
         let platform_application =
             platform::Application::new().map_err(|e| ApplicationError::Other(e))?;
-        let renderer = Rc::new(Renderer::new());
 
-        let context = Context::new(platform_application.as_ref(), renderer.clone())
-            .map_err(|e| ApplicationError::Other(e))?;
+        let context =
+            Context::new(platform_application.as_ref()).map_err(|e| ApplicationError::Other(e))?;
 
         let event_loop = EventLoop::new(&context).map_err(|e| ApplicationError::Other(e))?;
 
@@ -108,6 +112,7 @@ impl ApplicationBuilder {
             context,
             event_loop,
             window_manager: Rc::new(WindowManager::new()),
+            renderer: Rc::new(Renderer::new()),
             platform_application,
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         })
