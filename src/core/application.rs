@@ -12,7 +12,7 @@ pub struct Application {
     name: String,
     organization: String,
     event_loop: EventLoop,
-    context: Rc<Context>,
+    context: Context,
     platform_application: Box<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
 }
@@ -48,8 +48,8 @@ impl Application {
             .into()
     }
 
-    pub fn context(&self) -> Rc<Context> {
-        self.context.clone()
+    pub fn context(&self) -> &Context {
+        &self.context
     }
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -91,12 +91,10 @@ impl ApplicationBuilder {
             platform::Application::new().map_err(|e| ApplicationError::Other(e))?;
         let renderer = Rc::new(Renderer::new());
 
-        let context = Rc::new(
-            Context::new(platform_application.as_ref(), renderer.clone())
-                .map_err(|e| ApplicationError::Other(e))?,
-        );
+        let context = Context::new(platform_application.as_ref(), renderer.clone())
+            .map_err(|e| ApplicationError::Other(e))?;
 
-        let event_loop = EventLoop::new(context.clone()).map_err(|e| ApplicationError::Other(e))?;
+        let event_loop = EventLoop::new(&context).map_err(|e| ApplicationError::Other(e))?;
 
         Ok(Application {
             name: self.name,
