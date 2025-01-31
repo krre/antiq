@@ -1,19 +1,21 @@
-use std::{any::Any, rc::Rc};
+use std::{any::Any, cell::RefCell, rc::Rc};
 
 use crate::{
     core::event::{Event, EventHandler},
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
-use wayland_client::{Connection, EventQueue};
+use wayland_client::{Connection, EventQueue, QueueHandle};
 
 use super::Application;
 
 pub struct EventLoop {
     application: Rc<dyn PlatformApplication>,
+    event_queue: RefCell<EventQueue<State>>,
+    pub(crate) queue_handle: QueueHandle<State>
 }
 
-struct State {
+pub(crate) struct State {
     running: bool,
 }
 
@@ -21,7 +23,13 @@ impl EventLoop {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
     ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        Ok(Rc::new(Self { application }))
+        let wayland_conn = application
+            .as_any()
+            .downcast_ref::<Application>()
+            .unwrap().connection.as_ref();
+        let event_queue = RefCell::new(wayland_conn.new_event_queue());
+        let queue_handle = event_queue.borrow().handle();
+        Ok(Rc::new(Self { application, event_queue, queue_handle }))
     }
 
     fn application(&self) -> &Application {
@@ -44,10 +52,8 @@ impl PlatformEventLoop for EventLoop {
     fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
         let mut state = State { running: true };
 
-        let mut event_queue: EventQueue<State> = self.conn().new_event_queue();
-
         while state.running {
-            event_queue.blocking_dispatch(&mut state)?;
+            self.event_queue.borrow_mut().blocking_dispatch(&mut state)?;
         }
 
         Ok(())
