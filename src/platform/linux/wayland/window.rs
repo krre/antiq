@@ -6,11 +6,11 @@ use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{Pos2D, Size2D},
-    platform::{PlatformApplication, PlatformWindow},
+    platform::{PlatformApplication, PlatformEventLoop, PlatformWindow},
     window::WindowId,
 };
 
-use super::Application;
+use super::{Application, EventLoop};
 
 pub struct Window {
     application: Rc<dyn PlatformApplication>,
@@ -21,7 +21,9 @@ struct WaylandWindowHandle {}
 impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
+        event_loop: Rc<dyn PlatformEventLoop>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+        let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         Ok(Box::new(Self { application }))
     }
 

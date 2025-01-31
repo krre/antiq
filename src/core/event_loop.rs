@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::platform;
 
 use super::{
@@ -6,7 +8,7 @@ use super::{
 };
 
 pub struct EventLoop {
-    platform_event_loop: Box<dyn platform::PlatformEventLoop>,
+    pub(crate) platform_event_loop: Rc<dyn platform::PlatformEventLoop>,
 }
 
 struct Dummy;
@@ -23,7 +25,7 @@ impl EventLoop {
 
     pub fn new_uninit() -> Self {
         Self {
-            platform_event_loop: Box::new(Dummy {}),
+            platform_event_loop: Rc::new(Dummy {}),
         }
     }
 

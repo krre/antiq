@@ -20,8 +20,8 @@ struct State {
 impl EventLoop {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
-    ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        Ok(Box::new(Self { application }))
+    ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+        Ok(Rc::new(Self { application }))
     }
 
     fn application(&self) -> &Application {

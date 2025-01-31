@@ -43,7 +43,7 @@ pub struct EventLoop;
 impl EventLoop {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
-    ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
             wayland::EventLoop::new(application)
         } else {
@@ -57,9 +57,10 @@ pub struct Window;
 impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
+        event_loop: Rc<dyn PlatformEventLoop>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::Window::new(application)
+            wayland::Window::new(application, event_loop)
         } else {
             x11::Window::new(application)
         }

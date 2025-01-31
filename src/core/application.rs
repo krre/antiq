@@ -58,6 +58,10 @@ impl Application {
         self.renderer.clone()
     }
 
+    pub fn event_loop(&self) -> &EventLoop {
+        &self.event_loop
+    }
+
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let event_handler = ApplicationEventHandler { 0: self };
         self.event_loop.run(&event_handler)
