@@ -6,31 +6,34 @@ use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{Pos2D, Size2D},
-    platform::{PlatformContext, PlatformWindow},
+    platform::{PlatformApplication, PlatformWindow},
     window::WindowId,
 };
 
-use super::Context;
+use super::Application;
 
 pub struct Window {
-    context: Rc<dyn PlatformContext>,
+    application: Rc<dyn PlatformApplication>,
 }
 
 struct WaylandWindowHandle {}
 
 impl Window {
     pub fn new(
-        context: Rc<dyn PlatformContext>,
+        application: Rc<dyn PlatformApplication>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
-        Ok(Box::new(Self { context }))
+        Ok(Box::new(Self { application }))
     }
 
-    fn context(&self) -> &Context {
-        self.context.as_any().downcast_ref::<Context>().unwrap()
+    fn application(&self) -> &Application {
+        self.application
+            .as_any()
+            .downcast_ref::<Application>()
+            .unwrap()
     }
 
     fn conn(&self) -> &Connection {
-        self.context().connection.as_ref()
+        self.application().connection.as_ref()
     }
 }
 

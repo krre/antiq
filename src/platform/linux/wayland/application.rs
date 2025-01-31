@@ -8,9 +8,9 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Result<Box<dyn PlatformApplication>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
         let connection = Rc::new(Connection::connect_to_env()?);
-        Ok(Box::new(Self { connection }))
+        Ok(Rc::new(Self { connection }))
     }
 
     pub fn connection(&self) -> Rc<Connection> {

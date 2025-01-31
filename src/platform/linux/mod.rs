@@ -1,6 +1,6 @@
 use std::{env, rc::Rc};
 
-use super::{PlatformApplication, PlatformContext, PlatformEventLoop, PlatformWindow};
+use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 
 pub mod wayland;
 pub mod x11;
@@ -29,7 +29,7 @@ fn backend() -> Backend {
 pub struct Application;
 
 impl Application {
-    pub fn new() -> Result<Box<dyn PlatformApplication>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
         match backend() {
             Backend::Wayland => wayland::Application::new(),
             Backend::X11 => x11::Application::new(),
@@ -42,12 +42,12 @@ pub struct EventLoop;
 
 impl EventLoop {
     pub fn new(
-        context: Rc<dyn PlatformContext>,
+        application: Rc<dyn PlatformApplication>,
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::EventLoop::new(context)
+            wayland::EventLoop::new(application)
         } else {
-            x11::EventLoop::new(context)
+            x11::EventLoop::new(application)
         }
     }
 }
@@ -56,26 +56,12 @@ pub struct Window;
 
 impl Window {
     pub fn new(
-        context: Rc<dyn PlatformContext>,
+        application: Rc<dyn PlatformApplication>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::Window::new(context)
+            wayland::Window::new(application)
         } else {
-            x11::Window::new(context)
-        }
-    }
-}
-
-pub struct Context;
-
-impl Context {
-    pub fn new(
-        app: &dyn PlatformApplication,
-    ) -> Result<Box<dyn PlatformContext>, Box<dyn std::error::Error>> {
-        if backend() == Backend::Wayland {
-            wayland::Context::new(app)
-        } else {
-            x11::Context::new(app)
+            x11::Window::new(application)
         }
     }
 }

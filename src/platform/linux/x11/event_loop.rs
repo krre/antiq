@@ -17,38 +17,46 @@ use crate::{
         event::{Event, EventHandler, WindowAction, WindowEvent},
         Pos2D, Size2D,
     },
-    platform::{x11::Atoms, PlatformContext, PlatformEventLoop},
+    platform::{x11::Atoms, PlatformApplication, PlatformEventLoop},
     window::WindowId,
 };
 
-use super::Context;
+use super::Application;
 
 pub struct EventLoop {
-    context: Rc<dyn PlatformContext>,
+    application: Rc<dyn PlatformApplication>,
 }
 
 impl EventLoop {
     pub fn new(
-        context: Rc<dyn PlatformContext>,
+        application: Rc<dyn PlatformApplication>,
     ) -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        let x11_context = context.as_any().downcast_ref::<Context>().unwrap();
-        let conn = x11_context.connection.as_ref();
-        let screen = conn.setup().roots[x11_context.screen_num].clone();
+        let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
+        let conn = x11_app.connection.as_ref();
+        let screen = conn.setup().roots[x11_app.screen_num].clone();
         conn.change_window_attributes(
             screen.root,
             &ChangeWindowAttributesAux::new().event_mask(EventMask::PROPERTY_CHANGE),
         )?;
         conn.flush()?;
 
-        Ok(Box::new(Self { context }))
+        Ok(Box::new(Self { application }))
     }
 
-    fn context(&self) -> &Context {
-        self.context.as_any().downcast_ref::<Context>().unwrap()
+    fn application(&self) -> &Application {
+        self.application
+            .as_any()
+            .downcast_ref::<Application>()
+            .unwrap()
     }
 
     fn conn(&self) -> &XCBConnection {
-        self.context().connection.as_ref()
+        self.application
+            .as_any()
+            .downcast_ref::<Application>()
+            .unwrap()
+            .connection
+            .as_ref()
     }
 
     fn send_client_message_event(
@@ -56,7 +64,7 @@ impl EventLoop {
         type_: impl Into<Atom>,
         data: impl Into<ClientMessageData>,
     ) {
-        let screen = &self.conn().setup().roots[self.context().screen_num];
+        let screen = &self.conn().setup().roots[self.application().screen_num];
         let quit_event = ClientMessageEvent::new(32, screen.root, type_, data);
 
         self.conn()
@@ -123,7 +131,7 @@ impl PlatformEventLoop for EventLoop {
                         });
                     }
 
-                    if event.type_ == self.context().atoms.QUIT_EVENT {
+                    if event.type_ == self.application().atoms.QUIT_EVENT {
                         break;
                     }
                 }
@@ -138,10 +146,10 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn send_event(&self, event: Box<dyn Event>) {
-        self.send_client_message_event(self.context().atoms.CLIENT_EVENT, [0, 0, 0, 0, 0]);
+        self.send_client_message_event(self.application().atoms.CLIENT_EVENT, [0, 0, 0, 0, 0]);
     }
 
     fn quit(&self) {
-        self.send_client_message_event(self.context().atoms.QUIT_EVENT, [0, 0, 0, 0, 0]);
+        self.send_client_message_event(self.application().atoms.QUIT_EVENT, [0, 0, 0, 0, 0]);
     }
 }

@@ -51,8 +51,7 @@ impl Eq for WindowId {}
 
 impl Window {
     pub fn new(application: &Application) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
-        let platform_window =
-            platform::Window::new(application.context().platform_context.clone())?;
+        let platform_window = platform::Window::new(application.platform_application.clone())?;
         let renderer = application.renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
         let id = platform_window.id();

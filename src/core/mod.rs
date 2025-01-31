@@ -4,7 +4,6 @@ pub mod preferences;
 pub mod window;
 
 mod color;
-mod context;
 mod error;
 mod event_loop;
 mod id;
@@ -13,7 +12,6 @@ mod node;
 mod window_manager;
 
 pub use color::Color;
-pub use context::Context;
 pub use event_loop::EventLoop;
 pub use id::Id;
 

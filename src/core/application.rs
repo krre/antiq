@@ -2,7 +2,7 @@ use super::{
     error::ApplicationError,
     event::{EventHandler, WindowAction, WindowEvent},
     window_manager::WindowManager,
-    Context, EventLoop,
+    EventLoop,
 };
 use crate::{platform, renderer::Renderer};
 use std::{rc::Rc, sync::OnceLock};
@@ -15,8 +15,7 @@ pub struct Application {
     event_loop: EventLoop,
     window_manager: Rc<WindowManager>,
     renderer: Rc<Renderer>,
-    context: Context,
-    platform_application: Box<dyn platform::PlatformApplication>,
+    pub(crate) platform_application: Rc<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
 }
 
@@ -49,10 +48,6 @@ impl Application {
             .to_str()?
             .to_owned()
             .into()
-    }
-
-    pub fn context(&self) -> &Context {
-        &self.context
     }
 
     pub(crate) fn window_manager(&self) -> Rc<WindowManager> {
@@ -101,21 +96,20 @@ impl ApplicationBuilder {
         let platform_application =
             platform::Application::new().map_err(|e| ApplicationError::Other(e))?;
 
-        let context =
-            Context::new(platform_application.as_ref()).map_err(|e| ApplicationError::Other(e))?;
-
-        let event_loop = EventLoop::new(&context).map_err(|e| ApplicationError::Other(e))?;
-
-        Ok(Application {
+        let mut application = Application {
             name: self.name,
             organization: self.organization,
-            context,
-            event_loop,
+            event_loop: EventLoop::new_uninit(),
             window_manager: Rc::new(WindowManager::new()),
             renderer: Rc::new(Renderer::new()),
             platform_application,
             quit_on_last_window_closed: self.quit_on_last_window_closed,
-        })
+        };
+
+        application.event_loop =
+            EventLoop::new(&application).map_err(|e| ApplicationError::Other(e))?;
+
+        Ok(application)
     }
 }
 

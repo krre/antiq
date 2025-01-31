@@ -61,7 +61,3 @@ pub trait PlatformEventLoop: Any {
 
     fn quit(&self);
 }
-
-pub trait PlatformContext: Any {
-    fn as_any(&self) -> &dyn Any;
-}

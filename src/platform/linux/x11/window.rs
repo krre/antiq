@@ -9,14 +9,14 @@ use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
     core::{Border2D, Pos2D, Size2D},
-    platform::{PlatformContext, PlatformWindow},
+    platform::{PlatformApplication, PlatformWindow},
     window::WindowId,
 };
 
-use super::Context;
+use super::Application;
 
 pub struct Window {
-    context: Rc<dyn PlatformContext>,
+    application: Rc<dyn PlatformApplication>,
     id: u32,
 }
 
@@ -28,11 +28,11 @@ struct X11WindowHandle {
 
 impl Window {
     pub fn new(
-        context: Rc<dyn PlatformContext>,
+        application: Rc<dyn PlatformApplication>,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
-        let x11_context = context.as_any().downcast_ref::<Context>().unwrap();
-        let conn = x11_context.connection.as_ref();
-        let screen = &conn.setup().roots[x11_context.screen_num];
+        let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
+        let conn = x11_app.connection.as_ref();
+        let screen = &conn.setup().roots[x11_app.screen_num];
         let id = conn.generate_id()?;
 
         conn.create_window(
@@ -54,22 +54,25 @@ impl Window {
         conn.change_property32(
             PropMode::REPLACE,
             id,
-            x11_context.atoms.WM_PROTOCOLS,
+            x11_app.atoms.WM_PROTOCOLS,
             AtomEnum::ATOM,
-            &[x11_context.atoms.WM_DELETE_WINDOW],
+            &[x11_app.atoms.WM_DELETE_WINDOW],
         )?;
 
         conn.flush()?;
 
-        Ok(Box::new(Self { context, id }))
+        Ok(Box::new(Self { application, id }))
     }
 
-    fn context(&self) -> &Context {
-        self.context.as_any().downcast_ref::<Context>().unwrap()
+    fn application(&self) -> &Application {
+        self.application
+            .as_any()
+            .downcast_ref::<Application>()
+            .unwrap()
     }
 
     fn conn(&self) -> &XCBConnection {
-        self.context().connection.as_ref()
+        self.application().connection.as_ref()
     }
 }
 
@@ -96,7 +99,7 @@ impl PlatformWindow for Window {
         let window = X11WindowHandle {
             connection,
             window_id: self.id,
-            screen_num: self.context().screen_num as i32,
+            screen_num: self.application().screen_num as i32,
         };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
@@ -151,7 +154,7 @@ impl PlatformWindow for Window {
             .get_property(
                 false,
                 self.id,
-                self.context().atoms._NET_FRAME_EXTENTS,
+                self.application().atoms._NET_FRAME_EXTENTS,
                 AtomEnum::CARDINAL,
                 0,
                 4,
