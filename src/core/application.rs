@@ -106,12 +106,15 @@ impl ApplicationBuilder {
             event_loop: EventLoop::new_uninit(),
             window_manager: Rc::new(WindowManager::new()),
             renderer: Rc::new(Renderer::new()),
-            platform_application,
+            platform_application: platform_application.clone(),
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         };
 
-        application.event_loop =
-            EventLoop::new(&application).map_err(|e| ApplicationError::Other(e))?;
+        let event_loop = EventLoop::new(&application).map_err(|e| ApplicationError::Other(e))?;
+        let platform_event_loop = event_loop.platform_event_loop.clone();
+        platform_application.init(platform_event_loop);
+
+        application.event_loop = event_loop;
 
         Ok(application)
     }

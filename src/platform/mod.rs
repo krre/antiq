@@ -1,4 +1,4 @@
-use std::any::Any;
+use std::{any::Any, rc::Rc};
 
 use wgpu::SurfaceTargetUnsafe;
 
@@ -30,6 +30,8 @@ cfg_if::cfg_if! {
 
 pub trait PlatformApplication: Any {
     fn as_any(&self) -> &dyn Any;
+
+    fn init(&self, event_loop: Rc<dyn PlatformEventLoop>);
 }
 
 pub trait PlatformWindow: Any {

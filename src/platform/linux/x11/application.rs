@@ -1,6 +1,6 @@
 use std::{any::Any, rc::Rc};
 
-use crate::platform::PlatformApplication;
+use crate::platform::{PlatformApplication, PlatformEventLoop};
 use x11rb::xcb_ffi::XCBConnection;
 
 x11rb::atom_manager! {
@@ -39,4 +39,6 @@ impl PlatformApplication for Application {
     fn as_any(&self) -> &dyn Any {
         self
     }
+
+    fn init(&self, _event_loop: Rc<dyn PlatformEventLoop>) {}
 }
