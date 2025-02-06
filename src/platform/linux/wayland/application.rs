@@ -10,6 +10,7 @@ use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct Application {
     pub(crate) connection: Arc<Connection>,
+    pub(crate) registry: wl_registry::WlRegistry
 }
 
 struct RegistryData(Arc<Connection>);
@@ -17,25 +18,16 @@ struct RegistryData(Arc<Connection>);
 impl Application {
     pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
         let connection = Arc::new(Connection::connect_to_env()?);
-
         let display = connection.display();
-
         let registry_data = Arc::new(RegistryData(connection.clone()));
 
-        // Send the `wl_display.get_registry` request, which returns a `wl_registry` to us.
-        // Since this request creates a new object, we will use the `Proxy::send_constructor` method
-        // to send it. If it didn't, we would use `Proxy::send_request`.
-        let _registry: wl_registry::WlRegistry = display
+        let registry: wl_registry::WlRegistry = display
             .send_constructor(wl_display::Request::GetRegistry {}, registry_data.clone())
             .unwrap();
 
-        println!("Advertised globals:");
-
-        // Invoke our roundtrip to receive the events. This essentially is the same as the
-        // `EventQueue::roundtrip` method, except it does not have a state to dispatch methods on.
         connection.roundtrip().unwrap();
 
-        Ok(Rc::new(Self { connection }))
+        Ok(Rc::new(Self { connection, registry }))
     }
 
     pub fn connection(&self) -> Arc<Connection> {
