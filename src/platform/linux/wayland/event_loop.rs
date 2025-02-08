@@ -6,6 +6,7 @@ use crate::{
 };
 
 use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, EventQueue, QueueHandle};
+use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel};
 
 use super::Application;
 
@@ -22,6 +23,8 @@ pub(crate) struct State {
 delegate_noop!(State: ignore WlSurface);
 delegate_noop!(State: ignore WlShmPool);
 delegate_noop!(State: ignore WlBuffer);
+delegate_noop!(State: ignore XdgSurface);
+delegate_noop!(State: ignore XdgToplevel);
 
 impl EventLoop {
     pub fn new(

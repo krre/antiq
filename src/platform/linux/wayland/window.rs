@@ -2,6 +2,7 @@ use std::{any::Any, os::fd::AsFd, rc::Rc};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm, wl_surface::WlSurface}, Connection};
+use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -15,7 +16,9 @@ use super::{Application, EventLoop};
 pub struct Window {
     application: Rc<dyn PlatformApplication>,
     buffer: WlBuffer,
-    surface: WlSurface
+    surface: WlSurface,
+    xdg_surface: XdgSurface,
+    xdg_toplevel: XdgToplevel
 }
 
 struct WaylandWindowHandle {}
@@ -49,7 +52,13 @@ impl Window {
         surface.attach(Some(&buffer), 0, 0);
         surface.commit();
 
-        Ok(Box::new(Self { application, buffer, surface }))
+        let xdg_surface = wayland_application.xdg_wm_base.get_xdg_surface(&surface, qh, ());
+        let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
+        xdg_toplevel.set_title("Wayland window".into());
+
+        surface.commit();
+
+        Ok(Box::new(Self { application, buffer, surface, xdg_surface, xdg_toplevel }))
     }
 
     fn application(&self) -> &Application {
