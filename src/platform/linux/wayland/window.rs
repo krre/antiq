@@ -22,6 +22,7 @@ impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
+        size: Size2D,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         Ok(Box::new(Self { application }))

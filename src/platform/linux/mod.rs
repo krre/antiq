@@ -1,5 +1,7 @@
 use std::{env, rc::Rc};
 
+use crate::core::Size2D;
+
 use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 
 pub mod wayland;
@@ -58,11 +60,12 @@ impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
+        size: Size2D,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         if backend() == Backend::Wayland {
-            wayland::Window::new(application, event_loop)
+            wayland::Window::new(application, event_loop, size)
         } else {
-            x11::Window::new(application)
+            x11::Window::new(application, size)
         }
     }
 }

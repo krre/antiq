@@ -29,6 +29,7 @@ struct X11WindowHandle {
 impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
+        size: Size2D,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
         let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
         let conn = x11_app.connection.as_ref();
@@ -41,8 +42,8 @@ impl Window {
             screen.root,
             0,
             0,
-            800,
-            600,
+            size.width() as u16,
+            size.height() as u16,
             0,
             WindowClass::INPUT_OUTPUT,
             0,
