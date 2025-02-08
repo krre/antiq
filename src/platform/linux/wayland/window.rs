@@ -1,7 +1,7 @@
-use std::{any::Any, rc::Rc};
+use std::{any::Any, os::fd::AsFd, rc::Rc};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use wayland_client::Connection;
+use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm}, Connection};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -14,6 +14,7 @@ use super::{Application, EventLoop};
 
 pub struct Window {
     application: Rc<dyn PlatformApplication>,
+    buffer: WlBuffer
 }
 
 struct WaylandWindowHandle {}
@@ -24,8 +25,26 @@ impl Window {
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+        let wayland_application = application
+        .as_any()
+        .downcast_ref::<Application>()
+        .unwrap();
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
-        Ok(Box::new(Self { application }))
+        let qh = &wayland_event_loop.queue_handle;
+
+        let file = tempfile::tempfile().unwrap();
+        let pool = wayland_application.shm.create_pool(file.as_fd(), (size.width() * size.height() * 4) as i32, qh, ());
+        let buffer = pool.create_buffer(
+            0,
+            size.width() as i32,
+            size.height() as i32,
+            (size.width() * 4) as i32,
+            wl_shm::Format::Argb8888,
+            qh,
+            (),
+        );
+
+        Ok(Box::new(Self { application, buffer }))
     }
 
     fn application(&self) -> &Application {

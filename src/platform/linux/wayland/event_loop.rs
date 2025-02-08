@@ -5,7 +5,7 @@ use crate::{
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
-use wayland_client::{Connection, EventQueue, QueueHandle};
+use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, EventQueue, QueueHandle};
 
 use super::Application;
 
@@ -18,6 +18,10 @@ pub struct EventLoop {
 pub(crate) struct State {
     running: bool,
 }
+
+delegate_noop!(State: ignore WlSurface);
+delegate_noop!(State: ignore WlShmPool);
+delegate_noop!(State: ignore WlBuffer);
 
 impl EventLoop {
     pub fn new(
