@@ -53,13 +53,11 @@ impl Window {
         );
 
         let surface = wayland_application.compositor.create_surface(qh, ());
-        surface.attach(Some(&buffer), 0, 0);
-        surface.commit();
-
         let xdg_surface = wayland_application.xdg_wm_base.get_xdg_surface(&surface, qh, ());
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
         xdg_toplevel.set_title("Wayland window".into());
 
+        surface.attach(Some(&buffer), 0, 0);
         surface.commit();
 
         Ok(Box::new(Self { application, buffer, surface, xdg_surface, xdg_toplevel }))
