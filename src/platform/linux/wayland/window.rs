@@ -1,7 +1,7 @@
 use std::{any::Any, os::fd::AsFd, rc::Rc};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm}, Connection};
+use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm, wl_surface::WlSurface}, Connection};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -14,7 +14,8 @@ use super::{Application, EventLoop};
 
 pub struct Window {
     application: Rc<dyn PlatformApplication>,
-    buffer: WlBuffer
+    buffer: WlBuffer,
+    surface: WlSurface
 }
 
 struct WaylandWindowHandle {}
@@ -44,7 +45,11 @@ impl Window {
             (),
         );
 
-        Ok(Box::new(Self { application, buffer }))
+        let surface = wayland_application.compositor.create_surface(qh, ());
+        surface.attach(Some(&buffer), 0, 0);
+        surface.commit();
+
+        Ok(Box::new(Self { application, buffer, surface }))
     }
 
     fn application(&self) -> &Application {
