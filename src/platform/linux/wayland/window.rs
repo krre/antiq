@@ -1,7 +1,7 @@
-use std::{any::Any, os::fd::AsFd, rc::Rc};
+use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc};
 
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm, wl_surface::WlSurface}, Connection};
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle, WaylandWindowHandle};
+use wayland_client::{protocol::{wl_buffer::WlBuffer, wl_shm, wl_surface::WlSurface}, Connection, Proxy};
 use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel};
 use wgpu::SurfaceTargetUnsafe;
 
@@ -21,7 +21,11 @@ pub struct Window {
     xdg_toplevel: XdgToplevel
 }
 
-struct WaylandWindowHandle {}
+struct WindowHandle {
+    surface: *mut c_void,
+    display: *mut c_void,
+
+}
 
 impl Window {
     pub fn new(
@@ -83,7 +87,10 @@ impl PlatformWindow for Window {
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {
-        let window = WaylandWindowHandle {};
+        let window = WindowHandle {
+            surface: self.surface.id().as_ptr() as *mut c_void,
+            display: self.conn().backend().display_ptr() as *mut c_void
+        };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
     }
@@ -97,18 +104,26 @@ impl PlatformWindow for Window {
     fn set_size(&self, size: Size2D) {}
 }
 
-impl HasWindowHandle for WaylandWindowHandle {
+impl HasWindowHandle for WindowHandle {
     fn window_handle(
         &self,
     ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
+        let raw_handle = RawWindowHandle::Wayland(WaylandWindowHandle::new(
+            NonNull::new(self.surface).unwrap(),
+        ));
+
+        unsafe { Ok(raw_window_handle::WindowHandle::borrow_raw(raw_handle)) }
     }
 }
 
-impl HasDisplayHandle for WaylandWindowHandle {
+impl HasDisplayHandle for WindowHandle {
     fn display_handle(
         &self,
     ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
-        todo!()
+        let raw_handle = RawDisplayHandle::Wayland(WaylandDisplayHandle::new(
+            NonNull::new(self.display).unwrap(),
+        ));
+
+        unsafe { Ok(raw_window_handle::DisplayHandle::borrow_raw(raw_handle)) }
     }
 }
