@@ -20,7 +20,7 @@ pub struct Window {
     id: u32,
 }
 
-struct X11WindowHandle {
+struct WindowHandle {
     connection: *mut c_void,
     window_id: u32,
     screen_num: i32,
@@ -97,7 +97,7 @@ impl PlatformWindow for Window {
         let connection =
             as_raw_xcb_connection::AsRawXcbConnection::as_raw_xcb_connection(self.conn()) as *mut _;
 
-        let window = X11WindowHandle {
+        let window = WindowHandle {
             connection,
             window_id: self.id,
             screen_num: self.application().screen_num as i32,
@@ -181,7 +181,7 @@ impl PlatformWindow for Window {
     }
 }
 
-impl HasWindowHandle for X11WindowHandle {
+impl HasWindowHandle for WindowHandle {
     fn window_handle(
         &self,
     ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
@@ -191,7 +191,7 @@ impl HasWindowHandle for X11WindowHandle {
     }
 }
 
-impl HasDisplayHandle for X11WindowHandle {
+impl HasDisplayHandle for WindowHandle {
     fn display_handle(
         &self,
     ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
