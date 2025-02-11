@@ -53,7 +53,8 @@ impl Window {
         );
 
         let surface = wayland_application.compositor.create_surface(qh, ());
-        let xdg_surface = wayland_application.xdg_wm_base.get_xdg_surface(&surface, qh, ());
+        let xdg_surface = wayland_event_loop.xdg_wm_base.get_xdg_surface(&surface, qh, ());
+
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
         xdg_toplevel.set_title("Wayland window".into());
 
