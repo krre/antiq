@@ -5,8 +5,8 @@ use crate::{
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
-use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, EventQueue, QueueHandle};
-use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel, xdg_wm_base::XdgWmBase};
+use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, Dispatch, EventQueue, QueueHandle};
+use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel, xdg_wm_base::{self, XdgWmBase}};
 
 use super::Application;
 
@@ -24,7 +24,6 @@ pub(crate) struct State {
 delegate_noop!(State: ignore WlSurface);
 delegate_noop!(State: ignore WlShmPool);
 delegate_noop!(State: ignore WlBuffer);
-delegate_noop!(State: ignore XdgWmBase);
 delegate_noop!(State: ignore XdgSurface);
 delegate_noop!(State: ignore XdgToplevel);
 
@@ -74,4 +73,19 @@ impl PlatformEventLoop for EventLoop {
     fn send_event(&self, event: Box<dyn Event>) {}
 
     fn quit(&self) {}
+}
+
+impl Dispatch<XdgWmBase, ()> for State {
+    fn event(
+        _: &mut Self,
+        wm_base: &XdgWmBase,
+        event: xdg_wm_base::Event,
+        _: &(),
+        _: &Connection,
+        _: &QueueHandle<Self>,
+    ) {
+        if let xdg_wm_base::Event::Ping { serial } = event {
+            wm_base.pong(serial);
+        }
+    }
 }
