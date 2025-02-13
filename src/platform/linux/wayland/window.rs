@@ -1,8 +1,8 @@
 use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle, WaylandWindowHandle};
-use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, Proxy};
-use wayland_protocols::xdg::shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel};
+use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, Dispatch, Proxy, QueueHandle};
+use wayland_protocols::xdg::shell::client::{xdg_surface::{self, XdgSurface}, xdg_toplevel::XdgToplevel};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -79,6 +79,23 @@ impl Window {
 
     fn conn(&self) -> &Connection {
         self.application().connection.as_ref()
+    }
+}
+
+impl Dispatch<XdgSurface, ()> for Window {
+    fn event(
+        state: &mut Self,
+        xdg_surface: &XdgSurface,
+        event: xdg_surface::Event,
+        _: &(),
+        _: &Connection,
+        _: &QueueHandle<Self>,
+    ) {
+        if let xdg_surface::Event::Configure { serial, .. } = event {
+            xdg_surface.ack_configure(serial);
+            state.surface.attach(Some(&state.buffer), 0, 0);
+            state.surface.commit();
+        }
     }
 }
 
