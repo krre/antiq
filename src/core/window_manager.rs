@@ -17,7 +17,8 @@ impl WindowManager {
     }
 
     pub(crate) fn append(&self, id: WindowId, window: Rc<Window>) {
-        self.windows.borrow_mut().insert(id, window);
+        #[allow(unused_variables)]
+        let window = self.windows.borrow_mut().insert(id, window);
     }
 
     pub(crate) fn remove(&self, id: WindowId) {
