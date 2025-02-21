@@ -1,11 +1,11 @@
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle, XcbDisplayHandle, XcbWindowHandle};
 use std::{any::Any, ffi::c_void, num::NonZeroU32, ptr::NonNull, rc::Rc};
 use wgpu::SurfaceTargetUnsafe;
+use x11rb::COPY_DEPTH_FROM_PARENT;
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
 use x11rb::wrapper::ConnectionExt as _;
 use x11rb::xcb_ffi::XCBConnection;
-use x11rb::COPY_DEPTH_FROM_PARENT;
 
 use crate::{
     core::{Border2D, Pos2D, Size2D},

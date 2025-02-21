@@ -10,7 +10,7 @@ use crate::{
 };
 
 use super::{
-    application::Application, window_manager::WindowManager, Border2D, Color, Pos2D, Size2D,
+    Border2D, Color, Pos2D, Size2D, application::Application, window_manager::WindowManager,
 };
 
 #[derive(Copy, Clone, Hash, Debug)]

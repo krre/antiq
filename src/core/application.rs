@@ -1,8 +1,8 @@
 use super::{
+    EventLoop,
     error::ApplicationError,
     event::{EventHandler, WindowAction, WindowEvent},
     window_manager::WindowManager,
-    EventLoop,
 };
 use crate::{platform, renderer::Renderer};
 use std::{rc::Rc, sync::OnceLock};

@@ -14,7 +14,7 @@ pub struct EventLoop {
     application: Rc<dyn PlatformApplication>,
     event_queue: RefCell<EventQueue<State>>,
     pub(crate) queue_handle: QueueHandle<State>,
-    pub(crate) xdg_wm_base: XdgWmBase
+    pub(crate) xdg_wm_base: XdgWmBase,
 }
 
 pub(crate) struct State {
@@ -25,16 +25,18 @@ impl EventLoop {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
     ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
-        let wayland_app = application
-        .as_any()
-        .downcast_ref::<Application>()
-        .unwrap();
+        let wayland_app = application.as_any().downcast_ref::<Application>().unwrap();
         let wayland_conn = wayland_app.connection.as_ref();
         let event_queue = RefCell::new(wayland_conn.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
         let xdg_wm_base: XdgWmBase = wayland_app.globals.bind(&queue_handle, 5..=6, ()).unwrap();
 
-        Ok(Rc::new(Self { application, event_queue, queue_handle, xdg_wm_base }))
+        Ok(Rc::new(Self {
+            application,
+            event_queue,
+            queue_handle,
+            xdg_wm_base,
+        }))
     }
 
     fn application(&self) -> &Application {
@@ -58,7 +60,9 @@ impl PlatformEventLoop for EventLoop {
         let mut state = State { running: true };
 
         while state.running {
-            self.event_queue.borrow_mut().blocking_dispatch(&mut state)?;
+            self.event_queue
+                .borrow_mut()
+                .blocking_dispatch(&mut state)?;
         }
 
         Ok(())

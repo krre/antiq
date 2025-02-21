@@ -14,10 +14,10 @@ use x11rb::{
 
 use crate::{
     core::{
-        event::{Event, EventHandler, WindowAction, WindowEvent},
         Pos2D, Size2D,
+        event::{Event, EventHandler, WindowAction, WindowEvent},
     },
-    platform::{x11::Atoms, PlatformApplication, PlatformEventLoop},
+    platform::{PlatformApplication, PlatformEventLoop, x11::Atoms},
     window::WindowId,
 };
 

@@ -1,8 +1,17 @@
 use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc};
 
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle, WaylandWindowHandle};
-use wayland_client::{delegate_noop, protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface}, Connection, Dispatch, Proxy, QueueHandle};
-use wayland_protocols::xdg::shell::client::{xdg_surface::{self, XdgSurface}, xdg_toplevel::XdgToplevel};
+use raw_window_handle::{
+    HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle,
+    WaylandWindowHandle,
+};
+use wayland_client::{
+    Connection, Dispatch, Proxy, QueueHandle, delegate_noop,
+    protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface},
+};
+use wayland_protocols::xdg::shell::client::{
+    xdg_surface::{self, XdgSurface},
+    xdg_toplevel::XdgToplevel,
+};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -18,13 +27,12 @@ pub struct Window {
     buffer: WlBuffer,
     surface: WlSurface,
     xdg_surface: XdgSurface,
-    xdg_toplevel: XdgToplevel
+    xdg_toplevel: XdgToplevel,
 }
 
 struct WindowHandle {
     surface: *mut c_void,
     display: *mut c_void,
-
 }
 
 delegate_noop!(State: ignore WlSurface);
@@ -39,15 +47,17 @@ impl Window {
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
     ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
-        let wayland_application = application
-        .as_any()
-        .downcast_ref::<Application>()
-        .unwrap();
+        let wayland_application = application.as_any().downcast_ref::<Application>().unwrap();
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         let qh = &wayland_event_loop.queue_handle;
 
         let file = tempfile::tempfile().unwrap();
-        let pool = wayland_application.shm.create_pool(file.as_fd(), (size.width() * size.height() * 4) as i32, qh, ());
+        let pool = wayland_application.shm.create_pool(
+            file.as_fd(),
+            (size.width() * size.height() * 4) as i32,
+            qh,
+            (),
+        );
         let buffer = pool.create_buffer(
             0,
             size.width() as i32,
@@ -59,7 +69,9 @@ impl Window {
         );
 
         let surface = wayland_application.compositor.create_surface(qh, ());
-        let xdg_surface = wayland_event_loop.xdg_wm_base.get_xdg_surface(&surface, qh, ());
+        let xdg_surface = wayland_event_loop
+            .xdg_wm_base
+            .get_xdg_surface(&surface, qh, ());
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
         xdg_toplevel.set_title("Wayland window".into());
@@ -67,7 +79,13 @@ impl Window {
         surface.attach(Some(&buffer), 0, 0);
         surface.commit();
 
-        Ok(Box::new(Self { application, buffer, surface, xdg_surface, xdg_toplevel }))
+        Ok(Box::new(Self {
+            application,
+            buffer,
+            surface,
+            xdg_surface,
+            xdg_toplevel,
+        }))
     }
 
     fn application(&self) -> &Application {
@@ -111,7 +129,7 @@ impl PlatformWindow for Window {
     fn surface_target(&self) -> SurfaceTargetUnsafe {
         let window = WindowHandle {
             surface: self.surface.id().as_ptr() as *mut c_void,
-            display: self.conn().backend().display_ptr() as *mut c_void
+            display: self.conn().backend().display_ptr() as *mut c_void,
         };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }

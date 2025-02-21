@@ -1,6 +1,6 @@
 use std::{collections::HashMap, rc::Rc};
 
-use super::{shader::ShaderName, ShaderStorage};
+use super::{ShaderStorage, shader::ShaderName};
 
 type Pipelines = HashMap<PipelineName, Rc<wgpu::RenderPipeline>>;
 

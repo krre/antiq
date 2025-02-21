@@ -4,8 +4,8 @@ use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{
-        event::{Event, EventHandler},
         Border2D, Pos2D, Size2D,
+        event::{Event, EventHandler},
     },
     window::WindowId,
 };
@@ -24,7 +24,7 @@ cfg_if::cfg_if! {
         #[allow(unused_imports)]
         pub use windows::*;
     } else {
-        compile_error!("Platform not supported")
+        compile_error!("Platform not supported");
     }
 }
 

@@ -1,8 +1,8 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 use super::{
-    window::{Window, WindowId},
     Pos2D, Size2D,
+    window::{Window, WindowId},
 };
 
 pub(crate) struct WindowManager {
