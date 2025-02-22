@@ -1,4 +1,4 @@
-use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc};
+use std::{any::Any, ffi::c_void, fs::File, os::fd::AsFd, ptr::NonNull, rc::Rc};
 
 use raw_window_handle::{
     HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle,
@@ -51,13 +51,16 @@ impl Window {
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         let qh = &wayland_event_loop.queue_handle;
 
-        let file = tempfile::tempfile().unwrap();
+        let mut file = tempfile::tempfile().unwrap();
+        draw(&mut file, (size.width(), size.height()));
+
         let pool = wayland_application.shm.create_pool(
             file.as_fd(),
             (size.width() * size.height() * 4) as i32,
             qh,
             (),
         );
+
         let buffer = pool.create_buffer(
             0,
             size.width() as i32,
@@ -98,6 +101,24 @@ impl Window {
     fn conn(&self) -> &Connection {
         self.application().connection.as_ref()
     }
+}
+
+// Temporaty drawing from wayland-rs example
+// https://github.com/Smithay/wayland-rs/blob/master/wayland-client/examples/simple_window.rs
+fn draw(tmp: &mut File, (buf_x, buf_y): (u32, u32)) {
+    use std::{cmp::min, io::Write};
+    let mut buf = std::io::BufWriter::new(tmp);
+    for y in 0..buf_y {
+        for x in 0..buf_x {
+            let a = 0xFF;
+            let r = min(((buf_x - x) * 0xFF) / buf_x, ((buf_y - y) * 0xFF) / buf_y);
+            let g = min((x * 0xFF) / buf_x, ((buf_y - y) * 0xFF) / buf_y);
+            let b = min(((buf_x - x) * 0xFF) / buf_x, (y * 0xFF) / buf_y);
+            buf.write_all(&[b as u8, g as u8, r as u8, a as u8])
+                .unwrap();
+        }
+    }
+    buf.flush().unwrap();
 }
 
 impl Dispatch<XdgSurface, ()> for Window {
