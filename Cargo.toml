@@ -22,7 +22,7 @@ env_logger = "0.11.6"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 wayland-client = "0.31.8"
-wayland-protocols = { version = "0.32.6", features = ["client"] }
+wayland-protocols = { version = "0.32.6", features = ["client", "unstable"] }
 wayland-backend = { version = "0.3.8", features = ["client_system"] }
 x11rb = { version = "0.13.1", features = [
     "all-extensions",
