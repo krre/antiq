@@ -8,10 +8,10 @@ use wayland_client::{
     Connection, Dispatch, Proxy, QueueHandle, delegate_noop,
     protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface},
 };
-use wayland_protocols::xdg::shell::client::{
+use wayland_protocols::xdg::{decoration::zv1::client::zxdg_toplevel_decoration_v1::{self, ZxdgToplevelDecorationV1}, shell::client::{
     xdg_surface::{self, XdgSurface},
     xdg_toplevel::XdgToplevel,
-};
+}};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -28,6 +28,7 @@ pub struct Window {
     surface: WlSurface,
     xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
+    xdg_toplevel_decoration: ZxdgToplevelDecorationV1
 }
 
 struct WindowHandle {
@@ -40,6 +41,7 @@ delegate_noop!(State: ignore WlShmPool);
 delegate_noop!(State: ignore WlBuffer);
 delegate_noop!(State: ignore XdgSurface);
 delegate_noop!(State: ignore XdgToplevel);
+delegate_noop!(State: ignore ZxdgToplevelDecorationV1);
 
 impl Window {
     pub fn new(
@@ -50,6 +52,17 @@ impl Window {
         let wayland_application = application.as_any().downcast_ref::<Application>().unwrap();
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         let qh = &wayland_event_loop.queue_handle;
+
+        let surface = wayland_application.compositor.create_surface(qh, ());
+        let xdg_surface = wayland_event_loop
+            .xdg_wm_base
+            .get_xdg_surface(&surface, qh, ());
+
+        let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
+        xdg_toplevel.set_title("Wayland window".into());
+
+        let xdg_toplevel_decoration = wayland_application.xdg_decoration_manager.get_toplevel_decoration(&xdg_toplevel, qh, ());
+        xdg_toplevel_decoration.set_mode(zxdg_toplevel_decoration_v1::Mode::ServerSide);
 
         let mut file = tempfile::tempfile().unwrap();
         draw(&mut file, (size.width(), size.height()));
@@ -71,14 +84,6 @@ impl Window {
             (),
         );
 
-        let surface = wayland_application.compositor.create_surface(qh, ());
-        let xdg_surface = wayland_event_loop
-            .xdg_wm_base
-            .get_xdg_surface(&surface, qh, ());
-
-        let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
-        xdg_toplevel.set_title("Wayland window".into());
-
         surface.attach(Some(&buffer), 0, 0);
         surface.commit();
 
@@ -88,6 +93,7 @@ impl Window {
             surface,
             xdg_surface,
             xdg_toplevel,
+            xdg_toplevel_decoration
         }))
     }
 
