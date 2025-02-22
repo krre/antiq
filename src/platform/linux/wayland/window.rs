@@ -156,7 +156,9 @@ impl PlatformWindow for Window {
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
     }
 
-    fn set_title(&self, title: &str) {}
+    fn set_title(&self, title: &str) {
+        self.xdg_toplevel.set_title(String::from(title));
+    }
 
     fn set_visible(&self, visible: bool) {}
 
