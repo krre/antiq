@@ -6,11 +6,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Application::new()?;
     let window = Window::new(&app)?;
 
-    {
-        let w = window.upgrade().unwrap();
-        w.set_title("Simple Window");
-        w.set_visible(true);
-    }
+    let w = window.upgrade().unwrap();
+    w.set_title("Simple Window");
+    w.set_visible(true);
+    drop(w);
 
     app.run()?;
 
