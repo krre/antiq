@@ -14,7 +14,6 @@ pub struct EventLoop {
     application: Rc<dyn PlatformApplication>,
     event_queue: RefCell<EventQueue<State>>,
     pub(crate) queue_handle: QueueHandle<State>,
-    pub(crate) xdg_wm_base: XdgWmBase,
 }
 
 pub(crate) struct State {
@@ -29,13 +28,11 @@ impl EventLoop {
         let wayland_conn = wayland_app.connection.as_ref();
         let event_queue = RefCell::new(wayland_conn.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
-        let xdg_wm_base: XdgWmBase = wayland_app.globals.bind(&queue_handle, 5..=6, ()).unwrap();
 
         Ok(Rc::new(Self {
             application,
             event_queue,
             queue_handle,
-            xdg_wm_base,
         }))
     }
 
@@ -71,19 +68,4 @@ impl PlatformEventLoop for EventLoop {
     fn send_event(&self, event: Box<dyn Event>) {}
 
     fn quit(&self) {}
-}
-
-impl Dispatch<XdgWmBase, ()> for State {
-    fn event(
-        _: &mut Self,
-        wm_base: &XdgWmBase,
-        event: xdg_wm_base::Event,
-        _: &(),
-        _: &Connection,
-        _: &QueueHandle<Self>,
-    ) {
-        if let xdg_wm_base::Event::Ping { serial } = event {
-            wm_base.pong(serial);
-        }
-    }
 }

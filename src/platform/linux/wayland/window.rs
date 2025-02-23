@@ -54,7 +54,7 @@ impl Window {
         let qh = &wayland_event_loop.queue_handle;
 
         let surface = wayland_application.compositor.create_surface(qh, ());
-        let xdg_surface = wayland_event_loop
+        let xdg_surface = wayland_application
             .xdg_wm_base
             .get_xdg_surface(&surface, qh, ());
 
