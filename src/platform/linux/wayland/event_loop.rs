@@ -5,8 +5,7 @@ use crate::{
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
-use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
-use wayland_protocols::xdg::shell::client::xdg_wm_base::{self, XdgWmBase};
+use wayland_client::{Connection, EventQueue, QueueHandle};
 
 use super::Application;
 
