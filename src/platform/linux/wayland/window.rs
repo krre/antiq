@@ -8,10 +8,13 @@ use wayland_client::{
     Connection, Dispatch, Proxy, QueueHandle, delegate_noop,
     protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface},
 };
-use wayland_protocols::xdg::{decoration::zv1::client::zxdg_toplevel_decoration_v1::{self, ZxdgToplevelDecorationV1}, shell::client::{
-    xdg_surface::{self, XdgSurface},
-    xdg_toplevel::XdgToplevel,
-}};
+use wayland_protocols::xdg::{
+    decoration::zv1::client::zxdg_toplevel_decoration_v1::{self, ZxdgToplevelDecorationV1},
+    shell::client::{
+        xdg_surface::{self, XdgSurface},
+        xdg_toplevel::XdgToplevel,
+    },
+};
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
@@ -28,9 +31,8 @@ pub struct Window {
     surface: WlSurface,
     xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
-    xdg_toplevel_decoration: ZxdgToplevelDecorationV1
+    xdg_toplevel_decoration: ZxdgToplevelDecorationV1,
 }
-
 struct WindowHandle {
     surface: *mut c_void,
     display: *mut c_void,
@@ -60,7 +62,9 @@ impl Window {
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
 
-        let xdg_toplevel_decoration = wayland_application.xdg_decoration_manager.get_toplevel_decoration(&xdg_toplevel, qh, ());
+        let xdg_toplevel_decoration = wayland_application
+            .xdg_decoration_manager
+            .get_toplevel_decoration(&xdg_toplevel, qh, ());
         xdg_toplevel_decoration.set_mode(zxdg_toplevel_decoration_v1::Mode::ServerSide);
 
         let mut file = tempfile::tempfile().unwrap();
@@ -92,7 +96,7 @@ impl Window {
             surface,
             xdg_surface,
             xdg_toplevel,
-            xdg_toplevel_decoration
+            xdg_toplevel_decoration,
         }))
     }
 
