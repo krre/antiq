@@ -59,7 +59,6 @@ impl Window {
             .get_xdg_surface(&surface, qh, ());
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
-        xdg_toplevel.set_title("Wayland window".into());
 
         let xdg_toplevel_decoration = wayland_application.xdg_decoration_manager.get_toplevel_decoration(&xdg_toplevel, qh, ());
         xdg_toplevel_decoration.set_mode(zxdg_toplevel_decoration_v1::Mode::ServerSide);
