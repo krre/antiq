@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::platform;
+use crate::{core::Result, platform};
 
 use super::{
     application::Application,
@@ -14,7 +14,7 @@ pub struct EventLoop {
 struct Dummy;
 
 impl EventLoop {
-    pub fn new(application: &Application) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(application: &Application) -> Result<Self> {
         let platform_event_loop =
             platform::EventLoop::new(application.platform_application.clone())?;
 
@@ -29,7 +29,7 @@ impl EventLoop {
         }
     }
 
-    pub fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn run(&self, event_handler: &dyn EventHandler) -> Result<()> {
         self.platform_event_loop.run(event_handler)?;
         Ok(())
     }
@@ -48,7 +48,7 @@ impl platform::PlatformEventLoop for Dummy {
         unimplemented!()
     }
 
-    fn run(&self, _event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self, _event_handler: &dyn EventHandler) -> Result<()> {
         unimplemented!()
     }
 

@@ -30,7 +30,7 @@ impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
         size: Size2D,
-    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+    ) -> crate::core::Result<Box<dyn PlatformWindow>> {
         let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
         let conn = x11_app.connection.as_ref();
         let screen = &conn.setup().roots[x11_app.screen_num];

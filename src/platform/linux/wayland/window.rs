@@ -50,7 +50,7 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
-    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+    ) -> crate::core::Result<Box<dyn PlatformWindow>> {
         let wayland_application = application.as_any().downcast_ref::<Application>().unwrap();
         let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
         let qh = &wayland_event_loop.queue_handle;

@@ -4,7 +4,7 @@ use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{
-        Border2D, Pos2D, Size2D,
+        Border2D, Pos2D, Result, Size2D,
         event::{Event, EventHandler},
     },
     window::WindowId,
@@ -57,7 +57,7 @@ pub trait PlatformWindow: Any {
 pub trait PlatformEventLoop: Any {
     fn as_any(&self) -> &dyn Any;
 
-    fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>>;
+    fn run(&self, event_handler: &dyn EventHandler) -> Result<()>;
 
     fn send_event(&self, event: Box<dyn Event>);
 

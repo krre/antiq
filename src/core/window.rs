@@ -10,7 +10,7 @@ use crate::{
 };
 
 use super::{
-    Border2D, Color, Pos2D, Size2D, application::Application, window_manager::WindowManager,
+    Border2D, Color, Pos2D, Result, Size2D, application::Application, window_manager::WindowManager,
 };
 
 #[derive(Copy, Clone, Hash, Debug)]
@@ -50,7 +50,7 @@ impl PartialEq for WindowId {
 impl Eq for WindowId {}
 
 impl Window {
-    pub fn new(application: &Application) -> Result<Weak<Self>, Box<dyn std::error::Error>> {
+    pub fn new(application: &Application) -> Result<Weak<Self>> {
         let size = Size2D::new(800, 600);
         let platform_window = platform::Window::new(
             application.platform_application.clone(),

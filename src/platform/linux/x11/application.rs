@@ -1,5 +1,6 @@
 use std::{any::Any, rc::Rc};
 
+use crate::core::Result;
 use crate::platform::{PlatformApplication, PlatformEventLoop};
 use x11rb::xcb_ffi::XCBConnection;
 
@@ -23,7 +24,7 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Rc<dyn PlatformApplication>> {
         let (conn, screen_num) = XCBConnection::connect(None)?;
         let atoms = Atoms::new(&conn)?.reply()?;
 

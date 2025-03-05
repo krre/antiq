@@ -1,9 +1,10 @@
+use crate::core::Result;
 use crate::platform::PlatformEventLoop;
 
 pub struct EventLoop {}
 
 impl EventLoop {
-    pub fn new() -> Result<Box<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Box<dyn PlatformEventLoop>> {
         Ok(Box::new(Self {}))
     }
 }
@@ -13,7 +14,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self) -> Result<()> {
         Ok(())
     }
 }

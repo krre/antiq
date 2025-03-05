@@ -17,6 +17,8 @@ pub use id::Id;
 
 use serde::{Deserialize, Serialize};
 
+pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Size2D {
     width: u32,

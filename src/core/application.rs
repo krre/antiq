@@ -62,7 +62,7 @@ impl Application {
         &self.event_loop
     }
 
-    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn run(&self) -> crate::core::Result<()> {
         let event_handler = ApplicationEventHandler { 0: self };
         self.event_loop.run(&event_handler)
     }

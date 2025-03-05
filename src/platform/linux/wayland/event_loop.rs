@@ -1,6 +1,7 @@
 use std::{any::Any, cell::RefCell, rc::Rc};
 
 use crate::{
+    core::Result,
     core::event::{Event, EventHandler},
     platform::{PlatformApplication, PlatformEventLoop},
 };
@@ -20,9 +21,7 @@ pub(crate) struct State {
 }
 
 impl EventLoop {
-    pub fn new(
-        application: Rc<dyn PlatformApplication>,
-    ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
         let wayland_app = application.as_any().downcast_ref::<Application>().unwrap();
         let wayland_conn = wayland_app.connection.as_ref();
         let event_queue = RefCell::new(wayland_conn.new_event_queue());
@@ -52,7 +51,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self, event_handler: &dyn EventHandler) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self, event_handler: &dyn EventHandler) -> Result<()> {
         let mut state = State { running: true };
 
         while state.running {

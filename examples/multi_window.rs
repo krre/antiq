@@ -1,10 +1,10 @@
 use antiq::{
     application::Application,
-    core::{Color, Pos2D, Size2D},
+    core::{Color, Pos2D, Result, Size2D},
     window::Window,
 };
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<()> {
     env_logger::init();
 
     let app = Application::new()?;

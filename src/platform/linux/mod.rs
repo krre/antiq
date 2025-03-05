@@ -1,6 +1,6 @@
 use std::{env, rc::Rc};
 
-use crate::core::Size2D;
+use crate::core::{Result, Size2D};
 
 use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 
@@ -31,7 +31,7 @@ fn backend() -> Backend {
 pub struct Application;
 
 impl Application {
-    pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Rc<dyn PlatformApplication>> {
         match backend() {
             Backend::Wayland => wayland::Application::new(),
             Backend::X11 => x11::Application::new(),
@@ -43,9 +43,7 @@ impl Application {
 pub struct EventLoop;
 
 impl EventLoop {
-    pub fn new(
-        application: Rc<dyn PlatformApplication>,
-    ) -> Result<Rc<dyn PlatformEventLoop>, Box<dyn std::error::Error>> {
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
         if backend() == Backend::Wayland {
             wayland::EventLoop::new(application)
         } else {
@@ -61,7 +59,7 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
-    ) -> Result<Box<dyn PlatformWindow>, Box<dyn std::error::Error>> {
+    ) -> Result<Box<dyn PlatformWindow>> {
         if backend() == Backend::Wayland {
             wayland::Window::new(application, event_loop, size)
         } else {

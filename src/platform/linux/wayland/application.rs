@@ -1,13 +1,19 @@
 use std::{any::Any, rc::Rc, sync::Arc};
 use wayland_client::{
-    delegate_noop, globals::{registry_queue_init, GlobalList, GlobalListContents}, protocol::{
+    Connection, Dispatch, QueueHandle, delegate_noop,
+    globals::{GlobalList, GlobalListContents, registry_queue_init},
+    protocol::{
         wl_compositor::WlCompositor,
         wl_registry::{self, WlRegistry},
         wl_shm::WlShm,
-    }, Connection, Dispatch, QueueHandle
+    },
 };
-use wayland_protocols::xdg::{decoration::zv1::client::zxdg_decoration_manager_v1::ZxdgDecorationManagerV1, shell::client::xdg_wm_base::{self, XdgWmBase}};
+use wayland_protocols::xdg::{
+    decoration::zv1::client::zxdg_decoration_manager_v1::ZxdgDecorationManagerV1,
+    shell::client::xdg_wm_base::{self, XdgWmBase},
+};
 
+use crate::core::Result;
 use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct Application {
@@ -16,7 +22,7 @@ pub struct Application {
     pub(crate) compositor: WlCompositor,
     pub(crate) shm: WlShm,
     pub(crate) xdg_wm_base: XdgWmBase,
-    pub(crate) xdg_decoration_manager: ZxdgDecorationManagerV1
+    pub(crate) xdg_decoration_manager: ZxdgDecorationManagerV1,
 }
 
 struct State {}
@@ -26,7 +32,7 @@ delegate_noop!(State: ignore WlShm);
 delegate_noop!(State: ignore ZxdgDecorationManagerV1);
 
 impl Application {
-    pub fn new() -> Result<Rc<dyn PlatformApplication>, Box<dyn std::error::Error>> {
+    pub fn new() -> Result<Rc<dyn PlatformApplication>> {
         let connection = Arc::new(Connection::connect_to_env()?);
         let (globals, queue) = registry_queue_init::<State>(&connection).unwrap();
         let qh = queue.handle();
@@ -41,7 +47,7 @@ impl Application {
             compositor,
             shm,
             xdg_wm_base,
-            xdg_decoration_manager
+            xdg_decoration_manager,
         }))
     }
 
