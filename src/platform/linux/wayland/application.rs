@@ -64,12 +64,12 @@ impl PlatformApplication for Application {
 
 impl Dispatch<WlRegistry, GlobalListContents> for State {
     fn event(
-        state: &mut State,
-        proxy: &WlRegistry,
-        event: wl_registry::Event,
-        data: &GlobalListContents,
-        conn: &Connection,
-        qhandle: &QueueHandle<State>,
+        _: &mut State,
+        _: &WlRegistry,
+        _: wl_registry::Event,
+        _: &GlobalListContents,
+        _: &Connection,
+        _: &QueueHandle<State>,
     ) {
     }
 }
