@@ -1,7 +1,7 @@
 use std::{any::Any, rc::Rc, sync::Arc};
 use wayland_client::{
     Connection, Dispatch, QueueHandle, delegate_noop,
-    globals::{GlobalList, GlobalListContents, registry_queue_init},
+    globals::{GlobalListContents, registry_queue_init},
     protocol::{
         wl_compositor::WlCompositor,
         wl_registry::{self, WlRegistry},
@@ -18,7 +18,6 @@ use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct Application {
     pub(crate) connection: Arc<Connection>,
-    pub(crate) globals: GlobalList,
     pub(crate) compositor: WlCompositor,
     pub(crate) shm: WlShm,
     pub(crate) xdg_wm_base: XdgWmBase,
@@ -43,7 +42,6 @@ impl Application {
 
         Ok(Rc::new(Self {
             connection,
-            globals,
             compositor,
             shm,
             xdg_wm_base,
