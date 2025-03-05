@@ -35,7 +35,7 @@ impl Application {
         match backend() {
             Backend::Wayland => wayland::Application::new(),
             Backend::X11 => x11::Application::new(),
-            Backend::Unknown => panic!("Display server is not supported!"),
+            Backend::Unknown => panic!("Unknown display server!"),
         }
     }
 }
