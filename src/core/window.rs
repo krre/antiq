@@ -1,6 +1,7 @@
 use std::{
     cell::{Cell, RefCell},
     rc::{Rc, Weak},
+    sync::atomic::{AtomicUsize, Ordering},
 };
 
 use crate::{
@@ -12,6 +13,8 @@ use crate::{
 use super::{
     Border2D, Color, Pos2D, Result, Size2D, application::Application, window_manager::WindowManager,
 };
+
+static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[derive(Copy, Clone, Hash, Debug)]
 pub struct WindowId(usize);
@@ -34,6 +37,10 @@ pub struct Window {
 impl WindowId {
     pub fn new(id: usize) -> Self {
         Self(id)
+    }
+
+    pub fn generate_new() -> Self {
+        Self(ID_COUNT.fetch_add(1, Ordering::Relaxed))
     }
 
     pub fn inner(&self) -> usize {
