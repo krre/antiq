@@ -26,6 +26,7 @@ use crate::{
 use super::{Application, EventLoop, State};
 
 pub struct Window {
+    id: WindowId,
     application: Rc<dyn PlatformApplication>,
     buffer: WlBuffer,
     surface: WlSurface,
@@ -91,6 +92,7 @@ impl Window {
         surface.commit();
 
         Ok(Box::new(Self {
+            id: WindowId::generate_new(),
             application,
             buffer,
             surface,
@@ -153,7 +155,7 @@ impl PlatformWindow for Window {
     }
 
     fn id(&self) -> WindowId {
-        WindowId::new(0)
+        self.id
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {
