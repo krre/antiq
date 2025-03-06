@@ -16,8 +16,8 @@ use crate::{
 use super::Application;
 
 pub struct Window {
+    id: WindowId,
     application: Rc<dyn PlatformApplication>,
-    id: u32,
 }
 
 struct WindowHandle {
@@ -62,7 +62,10 @@ impl Window {
 
         conn.flush()?;
 
-        Ok(Box::new(Self { application, id }))
+        Ok(Box::new(Self {
+            application,
+            id: WindowId::new(id as usize),
+        }))
     }
 
     fn application(&self) -> &Application {
@@ -75,11 +78,15 @@ impl Window {
     fn conn(&self) -> &XCBConnection {
         self.application().connection.as_ref()
     }
+
+    fn inner_id(&self) -> u32 {
+        self.id.inner() as u32
+    }
 }
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.conn().destroy_window(self.id).unwrap();
+        self.conn().destroy_window(self.inner_id()).unwrap();
         self.conn().flush().unwrap();
     }
 }
@@ -90,7 +97,7 @@ impl PlatformWindow for Window {
     }
 
     fn id(&self) -> WindowId {
-        WindowId::new(self.id as usize)
+        self.id
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {
@@ -99,7 +106,7 @@ impl PlatformWindow for Window {
 
         let window = WindowHandle {
             connection,
-            window_id: self.id,
+            window_id: self.inner_id(),
             screen_num: self.application().screen_num as i32,
         };
 
@@ -110,7 +117,7 @@ impl PlatformWindow for Window {
         self.conn()
             .change_property8(
                 PropMode::REPLACE,
-                self.id,
+                self.inner_id(),
                 AtomEnum::WM_NAME,
                 AtomEnum::STRING,
                 title.as_bytes(),
@@ -122,9 +129,9 @@ impl PlatformWindow for Window {
 
     fn set_visible(&self, visible: bool) {
         if visible {
-            self.conn().map_window(self.id).unwrap();
+            self.conn().map_window(self.inner_id()).unwrap();
         } else {
-            self.conn().unmap_window(self.id).unwrap();
+            self.conn().unmap_window(self.inner_id()).unwrap();
         }
 
         self.conn().flush().unwrap();
@@ -132,7 +139,10 @@ impl PlatformWindow for Window {
 
     fn set_position(&self, pos: Pos2D) {
         self.conn()
-            .configure_window(self.id, &ConfigureWindowAux::new().x(pos.x()).y(pos.y()))
+            .configure_window(
+                self.inner_id(),
+                &ConfigureWindowAux::new().x(pos.x()).y(pos.y()),
+            )
             .unwrap();
         self.conn().flush().unwrap();
     }
@@ -140,7 +150,7 @@ impl PlatformWindow for Window {
     fn set_size(&self, size: Size2D) {
         self.conn()
             .configure_window(
-                self.id,
+                self.inner_id(),
                 &ConfigureWindowAux::new()
                     .width(size.width())
                     .height(size.height()),
@@ -154,7 +164,7 @@ impl PlatformWindow for Window {
             .conn()
             .get_property(
                 false,
-                self.id,
+                self.inner_id(),
                 self.application().atoms._NET_FRAME_EXTENTS,
                 AtomEnum::CARDINAL,
                 0,
