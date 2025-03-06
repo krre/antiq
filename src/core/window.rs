@@ -20,7 +20,6 @@ static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 pub struct WindowId(usize);
 
 pub struct Window {
-    id: WindowId,
     title: RefCell<String>,
     color: Cell<Color>,
     position: Cell<Pos2D>,
@@ -66,10 +65,8 @@ impl Window {
         )?;
         let renderer = application.renderer().clone();
         let surface = RefCell::new(Surface::new(platform_window.as_ref(), &renderer));
-        let id = platform_window.id();
 
         let window = Rc::new(Self {
-            id,
             title: RefCell::new(String::new()),
             color: Cell::new(Color::new(0.05, 0.027, 0.15)),
             position: Cell::new(Pos2D::default()),
@@ -83,7 +80,9 @@ impl Window {
             maximized: Cell::new(false),
         });
 
-        application.window_manager().append(id, window.clone());
+        application
+            .window_manager()
+            .append(window.id(), window.clone());
 
         window.set_visible(true);
         window.set_title("Untitled");
@@ -93,7 +92,7 @@ impl Window {
     }
 
     pub fn id(&self) -> WindowId {
-        self.id
+        self.platform_window.id()
     }
 
     pub fn set_title(&self, title: &str) {
@@ -192,6 +191,6 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.window_manager.remove(self.id);
+        self.window_manager.remove(self.id());
     }
 }
