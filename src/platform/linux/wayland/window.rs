@@ -27,7 +27,6 @@ use super::{Application, EventLoop, State};
 pub struct Window {
     id: WindowId,
     application: Rc<dyn PlatformApplication>,
-    buffer: WlBuffer,
     surface: WlSurface,
     xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
@@ -92,7 +91,6 @@ impl Window {
         Ok(Box::new(Self {
             id: WindowId::generate_new(),
             application,
-            buffer,
             surface,
             xdg_surface,
             xdg_toplevel,
