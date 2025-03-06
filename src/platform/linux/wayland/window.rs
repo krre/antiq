@@ -5,14 +5,13 @@ use raw_window_handle::{
     WaylandWindowHandle,
 };
 use wayland_client::{
-    Connection, Dispatch, Proxy, QueueHandle, delegate_noop,
+    Connection, Proxy, delegate_noop,
     protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface},
 };
 use wayland_protocols::xdg::{
     decoration::zv1::client::zxdg_toplevel_decoration_v1::{self, ZxdgToplevelDecorationV1},
     shell::client::{
-        xdg_surface::{self, XdgSurface},
-        xdg_toplevel::XdgToplevel,
+        xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel
     },
 };
 use wgpu::SurfaceTargetUnsafe;
@@ -42,7 +41,6 @@ struct WindowHandle {
 delegate_noop!(State: ignore WlSurface);
 delegate_noop!(State: ignore WlShmPool);
 delegate_noop!(State: ignore WlBuffer);
-delegate_noop!(State: ignore XdgSurface);
 delegate_noop!(State: ignore XdgToplevel);
 delegate_noop!(State: ignore ZxdgToplevelDecorationV1);
 
@@ -130,23 +128,6 @@ fn draw(tmp: &mut File, (buf_x, buf_y): (u32, u32)) {
         }
     }
     buf.flush().unwrap();
-}
-
-impl Dispatch<XdgSurface, ()> for Window {
-    fn event(
-        state: &mut Self,
-        xdg_surface: &XdgSurface,
-        event: xdg_surface::Event,
-        _: &(),
-        _: &Connection,
-        _: &QueueHandle<Self>,
-    ) {
-        if let xdg_surface::Event::Configure { serial, .. } = event {
-            xdg_surface.ack_configure(serial);
-            state.surface.attach(Some(&state.buffer), 0, 0);
-            state.surface.commit();
-        }
-    }
 }
 
 impl PlatformWindow for Window {

@@ -6,7 +6,8 @@ use crate::{
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
-use wayland_client::{Connection, EventQueue, QueueHandle};
+use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
+use wayland_protocols::xdg::shell::client::xdg_surface::{self, XdgSurface};
 
 use super::Application;
 
@@ -66,4 +67,23 @@ impl PlatformEventLoop for EventLoop {
     fn send_event(&self, event: Box<dyn Event>) {}
 
     fn quit(&self) {}
+}
+
+impl Dispatch<XdgSurface, ()> for State {
+    fn event(
+        state: &mut Self,
+        xdg_surface: &XdgSurface,
+        event: xdg_surface::Event,
+        _: &(),
+        _: &Connection,
+        _: &QueueHandle<Self>,
+    ) {
+        println!("{event:?}");
+
+        if let xdg_surface::Event::Configure { serial, .. } = event {
+            xdg_surface.ack_configure(serial);
+            // state.surface.attach(Some(&state.buffer), 0, 0);
+            // state.surface.commit();
+        }
+    }
 }
