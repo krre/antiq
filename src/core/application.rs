@@ -12,7 +12,7 @@ static APP_LOCK: OnceLock<()> = OnceLock::new();
 pub struct Application {
     name: String,
     organization: String,
-    event_loop: EventLoop,
+    event_loop: Rc<EventLoop>,
     window_manager: Rc<WindowManager>,
     renderer: Rc<Renderer>,
     pub(crate) platform_application: Rc<dyn platform::PlatformApplication>,
@@ -103,7 +103,7 @@ impl ApplicationBuilder {
         let mut application = Application {
             name: self.name,
             organization: self.organization,
-            event_loop: EventLoop::new_uninit(),
+            event_loop: Rc::new(EventLoop::new_uninit()),
             window_manager: Rc::new(WindowManager::new()),
             renderer: Rc::new(Renderer::new()),
             platform_application: platform_application.clone(),
@@ -114,7 +114,7 @@ impl ApplicationBuilder {
         let platform_event_loop = event_loop.platform_event_loop.clone();
         platform_application.init(platform_event_loop);
 
-        application.event_loop = event_loop;
+        application.event_loop = Rc::new(event_loop);
 
         Ok(application)
     }
