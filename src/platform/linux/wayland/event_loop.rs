@@ -6,7 +6,6 @@ use crate::{
         event::{Event, EventHandler, WindowAction, WindowEvent},
     },
     platform::{PlatformApplication, PlatformEventLoop},
-    window::WindowId,
 };
 
 use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
