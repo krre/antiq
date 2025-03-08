@@ -93,9 +93,6 @@ impl Dispatch<XdgSurface, XdgSurfaceData> for State {
                 id: data.window_id,
                 action: WindowAction::Redraw,
             });
-
-            // state.surface.attach(Some(&state.buffer), 0, 0);
-            // state.surface.commit();
         }
     }
 }
