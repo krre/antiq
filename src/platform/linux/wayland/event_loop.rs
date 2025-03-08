@@ -52,7 +52,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn process_events(&self, event_handler: &dyn EventHandler) -> Result<()> {
+    fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         let mut state = State { running: true };
 
         while state.running {

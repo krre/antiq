@@ -77,7 +77,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn process_events(&self, event_handler: &dyn EventHandler) -> Result<()> {
+    fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         let conn = self.conn();
         let atoms = Atoms::new(conn)?.reply()?;
 

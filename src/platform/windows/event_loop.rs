@@ -14,7 +14,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn process_events(&self) -> Result<()> {
+    fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         Ok(())
     }
 }

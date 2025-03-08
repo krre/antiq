@@ -29,7 +29,7 @@ impl EventLoop {
         }
     }
 
-    pub fn run(&self, event_handler: &dyn EventHandler) -> Result<()> {
+    pub fn run(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         self.platform_event_loop.process_events(event_handler)?;
         Ok(())
     }
@@ -48,7 +48,7 @@ impl platform::PlatformEventLoop for Dummy {
         unimplemented!()
     }
 
-    fn process_events(&self, _event_handler: &dyn EventHandler) -> Result<()> {
+    fn process_events(&self, _event_handler: Box<dyn EventHandler>) -> Result<()> {
         unimplemented!()
     }
 
