@@ -25,6 +25,7 @@ use super::{Application, EventLoop, State};
 pub struct Window {
     id: WindowId,
     application: Rc<dyn PlatformApplication>,
+    event_loop: Rc<dyn PlatformEventLoop>,
     surface: WlSurface,
     xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
@@ -73,31 +74,12 @@ impl Window {
             .get_toplevel_decoration(&xdg_toplevel, qh, ());
         xdg_toplevel_decoration.set_mode(zxdg_toplevel_decoration_v1::Mode::ServerSide);
 
-        let file = tempfile::tempfile().unwrap();
-
-        let pool = wayland_application.shm.create_pool(
-            file.as_fd(),
-            (size.width() * size.height() * 4) as i32,
-            qh,
-            (),
-        );
-
-        let buffer = pool.create_buffer(
-            0,
-            size.width() as i32,
-            size.height() as i32,
-            (size.width() * 4) as i32,
-            wl_shm::Format::Argb8888,
-            qh,
-            (),
-        );
-
-        surface.attach(Some(&buffer), 0, 0);
         surface.commit();
 
         Ok(Box::new(Self {
             id,
             application,
+            event_loop,
             surface,
             xdg_surface,
             xdg_toplevel,
@@ -114,6 +96,10 @@ impl Window {
 
     fn conn(&self) -> &Connection {
         self.application().connection.as_ref()
+    }
+
+    fn event_loop(&self) -> &EventLoop {
+        self.event_loop.as_any().downcast_ref::<EventLoop>().unwrap()
     }
 }
 
@@ -143,7 +129,30 @@ impl PlatformWindow for Window {
 
     fn set_position(&self, pos: Pos2D) {}
 
-    fn set_size(&self, size: Size2D) {}
+    fn set_size(&self, size: Size2D) {
+        let qh = &self.event_loop().queue_handle;
+        let file = tempfile::tempfile().unwrap();
+
+        let pool = self.application().shm.create_pool(
+            file.as_fd(),
+            (size.width() * size.height() * 4) as i32,
+            qh,
+            (),
+        );
+
+        let buffer = pool.create_buffer(
+            0,
+            size.width() as i32,
+            size.height() as i32,
+            (size.width() * 4) as i32,
+            wl_shm::Format::Argb8888,
+            qh,
+            (),
+        );
+
+        self.surface.attach(Some(&buffer), 0, 0);
+        self.surface.commit();
+    }
 }
 
 impl HasWindowHandle for WindowHandle {
