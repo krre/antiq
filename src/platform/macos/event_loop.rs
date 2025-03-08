@@ -14,7 +14,7 @@ impl PlatformEventLoop for EventLoop {
         self
     }
 
-    fn run(&self) -> Result<()> {
+    fn process_events(&self) -> Result<()> {
         Ok(())
     }
 }

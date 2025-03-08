@@ -57,7 +57,7 @@ pub trait PlatformWindow: Any {
 pub trait PlatformEventLoop: Any {
     fn as_any(&self) -> &dyn Any;
 
-    fn run(&self, event_handler: &dyn EventHandler) -> Result<()>;
+    fn process_events(&self, event_handler: &dyn EventHandler) -> Result<()>;
 
     fn send_event(&self, event: Box<dyn Event>);
 
