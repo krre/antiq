@@ -1,9 +1,12 @@
 use std::{any::Any, cell::RefCell, rc::Rc};
 
 use crate::{
-    core::Result,
-    core::event::{Event, EventHandler},
+    core::{
+        Result,
+        event::{Event, EventHandler, WindowAction, WindowEvent},
+    },
     platform::{PlatformApplication, PlatformEventLoop},
+    window::WindowId,
 };
 
 use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
@@ -19,6 +22,7 @@ pub struct EventLoop {
 
 pub(crate) struct State {
     running: bool,
+    event_handler: Box<dyn EventHandler>,
 }
 
 impl EventLoop {
@@ -53,7 +57,10 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
-        let mut state = State { running: true };
+        let mut state = State {
+            running: true,
+            event_handler,
+        };
 
         while state.running {
             self.event_queue
@@ -82,6 +89,12 @@ impl Dispatch<XdgSurface, XdgSurfaceData> for State {
 
         if let xdg_surface::Event::Configure { serial, .. } = event {
             xdg_surface.ack_configure(serial);
+
+            state.event_handler.window_event(WindowEvent {
+                id: data.window_id,
+                action: WindowAction::Redraw,
+            });
+
             // state.surface.attach(Some(&state.buffer), 0, 0);
             // state.surface.commit();
         }

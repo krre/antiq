@@ -10,9 +10,7 @@ use wayland_client::{
 };
 use wayland_protocols::xdg::{
     decoration::zv1::client::zxdg_toplevel_decoration_v1::{self, ZxdgToplevelDecorationV1},
-    shell::client::{
-        xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel
-    },
+    shell::client::{xdg_surface::XdgSurface, xdg_toplevel::XdgToplevel},
 };
 use wgpu::SurfaceTargetUnsafe;
 
@@ -39,7 +37,7 @@ struct WindowHandle {
 
 #[derive(Debug)]
 pub(crate) struct XdgSurfaceData {
-    window_id: WindowId
+    pub window_id: WindowId,
 }
 
 delegate_noop!(State: ignore WlSurface);
@@ -63,9 +61,10 @@ impl Window {
         let id = WindowId::generate_new();
         let xdg_surface_data = XdgSurfaceData { window_id: id };
 
-        let xdg_surface = wayland_application
-            .xdg_wm_base
-            .get_xdg_surface(&surface, qh, xdg_surface_data);
+        let xdg_surface =
+            wayland_application
+                .xdg_wm_base
+                .get_xdg_surface(&surface, qh, xdg_surface_data);
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, ());
 
