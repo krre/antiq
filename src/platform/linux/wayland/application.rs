@@ -58,8 +58,6 @@ impl PlatformApplication for Application {
     fn as_any(&self) -> &dyn Any {
         self
     }
-
-    fn init(&self, event_loop: Rc<dyn PlatformEventLoop>) {}
 }
 
 impl Dispatch<WlRegistry, GlobalListContents> for State {

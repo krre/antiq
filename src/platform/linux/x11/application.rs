@@ -40,6 +40,4 @@ impl PlatformApplication for Application {
     fn as_any(&self) -> &dyn Any {
         self
     }
-
-    fn init(&self, _event_loop: Rc<dyn PlatformEventLoop>) {}
 }
