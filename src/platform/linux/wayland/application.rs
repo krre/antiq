@@ -14,7 +14,7 @@ use wayland_protocols::xdg::{
 };
 
 use crate::core::Result;
-use crate::platform::{PlatformApplication, PlatformEventLoop};
+use crate::platform::PlatformApplication;
 
 pub struct Application {
     pub(crate) connection: Arc<Connection>,
