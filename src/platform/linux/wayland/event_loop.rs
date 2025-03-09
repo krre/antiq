@@ -91,8 +91,6 @@ impl Dispatch<XdgSurface, XdgSurfaceData> for State {
         _: &Connection,
         _: &QueueHandle<Self>,
     ) {
-        println!("{event:?} {data:?}");
-
         if let xdg_surface::Event::Configure { serial, .. } = event {
             xdg_surface.ack_configure(serial);
 
