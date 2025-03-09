@@ -1,4 +1,4 @@
-use std::{any::Any, cell::RefCell, rc::Rc};
+use std::{any::Any, cell::{Cell, RefCell}, rc::Rc};
 
 use crate::{
     core::{
@@ -18,10 +18,10 @@ pub struct EventLoop {
     event_queue: RefCell<EventQueue<State>>,
     pub(crate) xdg_wm_base: XdgWmBase,
     pub(crate) queue_handle: QueueHandle<State>,
+    running: Cell<bool>
 }
 
 pub(crate) struct State {
-    running: bool,
     event_handler: Box<dyn EventHandler>,
 }
 
@@ -38,6 +38,7 @@ impl EventLoop {
             event_queue,
             queue_handle,
             xdg_wm_base,
+            running: Cell::new(false),
         }))
     }
 
@@ -59,12 +60,13 @@ impl PlatformEventLoop for EventLoop {
     }
 
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
+        self.running.set(true);
+
         let mut state = State {
-            running: true,
             event_handler,
         };
 
-        while state.running {
+        while self.running.get() {
             self.event_queue
                 .borrow_mut()
                 .blocking_dispatch(&mut state)?;
@@ -75,7 +77,9 @@ impl PlatformEventLoop for EventLoop {
 
     fn send_event(&self, event: Box<dyn Event>) {}
 
-    fn quit(&self) {}
+    fn quit(&self) {
+        self.running.set(false);
+    }
 }
 
 impl Dispatch<XdgSurface, XdgSurfaceData> for State {
