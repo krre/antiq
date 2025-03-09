@@ -9,9 +9,9 @@ use crate::{
 };
 
 use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
-use wayland_protocols::xdg::shell::client::{xdg_surface::{self, XdgSurface}, xdg_wm_base::{self, XdgWmBase}};
+use wayland_protocols::xdg::shell::client::{xdg_surface::{self, XdgSurface}, xdg_toplevel::{self, XdgToplevel}, xdg_wm_base::{self, XdgWmBase}};
 
-use super::{Application, XdgSurfaceData};
+use super::{Application, XdgSurfaceData, XdgToplevelData};
 
 pub struct EventLoop {
     application: Rc<dyn PlatformApplication>,
@@ -111,6 +111,24 @@ impl Dispatch<XdgWmBase, ()> for State {
     ) {
         if let xdg_wm_base::Event::Ping { serial } = event {
             wm_base.pong(serial);
+        }
+    }
+}
+
+impl Dispatch<XdgToplevel, XdgToplevelData> for State {
+    fn event(
+        state: &mut Self,
+        _: &XdgToplevel,
+        event: xdg_toplevel::Event,
+        data: &XdgToplevelData,
+        _: &Connection,
+        _: &QueueHandle<Self>,
+    ) {
+        if let xdg_toplevel::Event::Close = event {
+            state.event_handler.window_event(WindowEvent {
+                id: data.window_id,
+                action: WindowAction::Close,
+            });
         }
     }
 }
