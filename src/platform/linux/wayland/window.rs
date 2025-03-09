@@ -110,6 +110,12 @@ impl Window {
     }
 }
 
+impl Drop for Window {
+    fn drop(&mut self) {
+        self.surface.destroy();
+    }
+}
+
 impl PlatformWindow for Window {
     fn as_any(&self) -> &dyn Any {
         self
