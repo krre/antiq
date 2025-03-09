@@ -46,11 +46,9 @@ pub(crate) struct XdgToplevelData {
     pub window_id: WindowId,
 }
 
-
 delegate_noop!(State: ignore WlSurface);
 delegate_noop!(State: ignore WlShmPool);
 delegate_noop!(State: ignore WlBuffer);
-// delegate_noop!(State: ignore XdgToplevel);
 delegate_noop!(State: ignore ZxdgToplevelDecorationV1);
 
 impl Window {
@@ -66,15 +64,14 @@ impl Window {
         let surface = wayland_application.compositor.create_surface(qh, ());
 
         let id = WindowId::generate_new();
-        let xdg_surface_data = XdgSurfaceData { window_id: id };
 
-        let xdg_surface =
-        wayland_event_loop
-                .xdg_wm_base
-                .get_xdg_surface(&surface, qh, xdg_surface_data);
+        let xdg_surface = wayland_event_loop.xdg_wm_base.get_xdg_surface(
+            &surface,
+            qh,
+            XdgSurfaceData { window_id: id },
+        );
 
-        let xdg_toplevel_data = XdgToplevelData { window_id: id };
-        let xdg_toplevel = xdg_surface.get_toplevel(qh, xdg_toplevel_data);
+        let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id });
 
         let xdg_toplevel_decoration = wayland_application
             .xdg_decoration_manager
@@ -106,7 +103,10 @@ impl Window {
     }
 
     fn event_loop(&self) -> &EventLoop {
-        self.event_loop.as_any().downcast_ref::<EventLoop>().unwrap()
+        self.event_loop
+            .as_any()
+            .downcast_ref::<EventLoop>()
+            .unwrap()
     }
 }
 
