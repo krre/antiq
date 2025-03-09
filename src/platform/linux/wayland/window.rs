@@ -63,7 +63,7 @@ impl Window {
         let xdg_surface_data = XdgSurfaceData { window_id: id };
 
         let xdg_surface =
-            wayland_application
+        wayland_event_loop
                 .xdg_wm_base
                 .get_xdg_surface(&surface, qh, xdg_surface_data);
 

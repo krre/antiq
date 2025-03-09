@@ -1,7 +1,7 @@
 use std::{any::Any, rc::Rc};
 
 use crate::core::Result;
-use crate::platform::{PlatformApplication, PlatformEventLoop};
+use crate::platform::PlatformApplication;
 use x11rb::xcb_ffi::XCBConnection;
 
 x11rb::atom_manager! {
