@@ -2,8 +2,7 @@ use std::{any::Any, cell::{Cell, RefCell}, rc::Rc};
 
 use crate::{
     core::{
-        Result,
-        event::{Event, EventHandler, WindowAction, WindowEvent},
+        event::{Event, EventHandler, WindowAction, WindowEvent}, Result, Size2D
     },
     platform::{PlatformApplication, PlatformEventLoop},
 };
@@ -126,11 +125,22 @@ impl Dispatch<XdgToplevel, XdgToplevelData> for State {
         _: &Connection,
         _: &QueueHandle<Self>,
     ) {
-        if let xdg_toplevel::Event::Close = event {
-            state.event_handler.window_event(WindowEvent {
-                id: data.window_id,
-                action: WindowAction::Close,
-            });
+        match event {
+            xdg_toplevel::Event::Configure { width, height, states: _ }  => {
+                if width != 0 && height != 0 {
+                    state.event_handler.window_event(WindowEvent {
+                        id: data.window_id,
+                        action: WindowAction::Resize(Size2D::new(width as u32, height as u32)),
+                    });
+                }
+            }
+            xdg_toplevel::Event::Close => {
+                state.event_handler.window_event(WindowEvent {
+                    id: data.window_id,
+                    action: WindowAction::Close,
+                });
+            }
+            _ => {}
         }
     }
 }
