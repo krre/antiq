@@ -138,6 +138,9 @@ impl EventHandler for ApplicationEventHandler {
             WindowAction::Resize(size) => {
                 self.window_manager.resize(event.id, size);
             }
+            WindowAction::AskResize(size) => {
+                self.window_manager.ask_resize(event.id, size);
+            }
             WindowAction::Move(pos) => {
                 self.window_manager.move_to(event.id, pos);
             }

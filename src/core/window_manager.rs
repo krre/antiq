@@ -34,6 +34,10 @@ impl WindowManager {
         self.windows.borrow().get(&id).unwrap().update_size(size);
     }
 
+    pub(crate) fn ask_resize(&self, id: WindowId, size: Size2D) {
+        self.windows.borrow().get(&id).unwrap().set_size(size);
+    }
+
     pub(crate) fn move_to(&self, id: WindowId, pos: Pos2D) {
         self.windows.borrow().get(&id).unwrap().update_position(pos);
     }

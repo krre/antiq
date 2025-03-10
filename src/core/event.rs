@@ -10,6 +10,7 @@ pub enum WindowAction {
     Redraw,
     Close,
     Resize(Size2D),
+    AskResize(Size2D),
     Move(Pos2D),
 }
 

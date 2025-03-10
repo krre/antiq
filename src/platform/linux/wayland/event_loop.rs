@@ -130,7 +130,7 @@ impl Dispatch<XdgToplevel, XdgToplevelData> for State {
                 if width != 0 && height != 0 {
                     state.event_handler.window_event(WindowEvent {
                         id: data.window_id,
-                        action: WindowAction::Resize(Size2D::new(width as u32, height as u32)),
+                        action: WindowAction::AskResize(Size2D::new(width as u32, height as u32)),
                     });
                 }
             }
