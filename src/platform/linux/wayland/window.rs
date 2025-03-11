@@ -144,11 +144,16 @@ impl PlatformWindow for Window {
 
     fn set_size(&self, size: Size2D) {
         let qh = &self.event_loop().queue_handle;
+
+        let stride = size.width() as i32 * 4;
+        let buffer_size = (stride * size.height() as i32) as usize;
+
         let file = tempfile::tempfile().unwrap();
+        file.set_len(buffer_size as u64).unwrap();
 
         let pool = self.application().shm.create_pool(
             file.as_fd(),
-            (size.width() * size.height() * 4) as i32,
+            buffer_size as i32,
             qh,
             (),
         );
@@ -157,7 +162,7 @@ impl PlatformWindow for Window {
             0,
             size.width() as i32,
             size.height() as i32,
-            (size.width() * 4) as i32,
+            stride,
             wl_shm::Format::Argb8888,
             qh,
             (),
