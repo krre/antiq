@@ -1,11 +1,15 @@
+use std::any::Any;
+use std::rc::Rc;
+
+use crate::core::event::EventHandler;
 use crate::core::Result;
-use crate::platform::PlatformEventLoop;
+use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct EventLoop {}
 
 impl EventLoop {
-    pub fn new() -> Result<Box<dyn PlatformEventLoop>> {
-        Ok(Box::new(Self {}))
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
+        Ok(Rc::new(Self {}))
     }
 }
 
@@ -16,5 +20,13 @@ impl PlatformEventLoop for EventLoop {
 
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         Ok(())
+    }
+
+    fn send_event(&self, event: Box<dyn crate::core::event::Event>) {
+        todo!()
+    }
+
+    fn quit(&self) {
+        todo!()
     }
 }

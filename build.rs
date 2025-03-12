@@ -7,6 +7,6 @@ fn main() {
         win64: { target_os = "windows" },
     }
 
-    #[cfg(not(target_os = "linux"))]
-    compile_error!("This program can only be compiled on Linux.");
+    #[cfg(not(any(target_os = "linux", target_os = "windows")))]
+    compile_error!("This program can only be compiled on Linux or Windows.");
 }

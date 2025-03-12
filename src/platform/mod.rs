@@ -24,7 +24,7 @@ cfg_if::cfg_if! {
         #[allow(unused_imports)]
         pub use windows::*;
     } else {
-        compile_error!("Platform not supported");
+        compile_error!("Platform is not supported");
     }
 }
 
