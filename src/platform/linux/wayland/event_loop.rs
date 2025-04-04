@@ -22,7 +22,6 @@ use wayland_protocols::xdg::shell::client::{
 use super::{Application, XdgSurfaceData, XdgToplevelData};
 
 pub struct EventLoop {
-    application: Rc<dyn PlatformApplication>,
     event_queue: RefCell<EventQueue<State>>,
     pub(crate) xdg_wm_base: XdgWmBase,
     pub(crate) queue_handle: QueueHandle<State>,
@@ -35,31 +34,17 @@ pub(crate) struct State {
 
 impl EventLoop {
     pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
-        let wayland_app = (application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap();
-        let wayland_conn = wayland_app.connection.as_ref();
-        let event_queue = RefCell::new(wayland_conn.new_event_queue());
+        let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
+        let event_queue = RefCell::new(application.connection.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
-        let xdg_wm_base: XdgWmBase = wayland_app.globals.bind(&queue_handle, 5..=6, ()).unwrap();
+        let xdg_wm_base: XdgWmBase = application.globals.bind(&queue_handle, 5..=6, ()).unwrap();
 
         Ok(Rc::new(Self {
-            application,
             event_queue,
             queue_handle,
             xdg_wm_base,
             running: Cell::new(false),
         }))
-    }
-
-    fn application(&self) -> &Application {
-        (self.application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap()
-    }
-
-    fn conn(&self) -> &Connection {
-        self.application().connection.as_ref()
     }
 }
 
