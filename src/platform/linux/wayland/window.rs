@@ -5,7 +5,7 @@ use raw_window_handle::{
     WaylandWindowHandle,
 };
 use wayland_client::{
-    Connection, Proxy, delegate_noop,
+    Proxy, delegate_noop,
     protocol::{wl_buffer::WlBuffer, wl_shm, wl_shm_pool::WlShmPool, wl_surface::WlSurface},
 };
 use wayland_protocols::xdg::{
@@ -24,7 +24,7 @@ use super::{Application, EventLoop, State};
 
 pub struct Window {
     id: WindowId,
-    application: Rc<dyn PlatformApplication>,
+    application: Rc<Application>,
     event_loop: Rc<dyn PlatformEventLoop>,
     surface: WlSurface,
     xdg_surface: XdgSurface,
@@ -57,15 +57,13 @@ impl Window {
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
-        let wayland_application = (application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap();
+        let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let wayland_event_loop = (event_loop.as_ref() as &dyn Any)
             .downcast_ref::<EventLoop>()
             .unwrap();
         let qh = &wayland_event_loop.queue_handle;
 
-        let surface = wayland_application.compositor.create_surface(qh, ());
+        let surface = application.compositor.create_surface(qh, ());
 
         let id = WindowId::generate_new();
 
@@ -77,9 +75,10 @@ impl Window {
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id });
 
-        let xdg_toplevel_decoration = wayland_application
-            .xdg_decoration_manager
-            .get_toplevel_decoration(&xdg_toplevel, qh, ());
+        let xdg_toplevel_decoration =
+            application
+                .xdg_decoration_manager
+                .get_toplevel_decoration(&xdg_toplevel, qh, ());
         xdg_toplevel_decoration.set_mode(zxdg_toplevel_decoration_v1::Mode::ServerSide);
 
         surface.commit();
@@ -93,16 +92,6 @@ impl Window {
             xdg_toplevel,
             xdg_toplevel_decoration,
         }))
-    }
-
-    fn application(&self) -> &Application {
-        (self.application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap()
-    }
-
-    fn conn(&self) -> &Connection {
-        self.application().connection.as_ref()
     }
 
     fn event_loop(&self) -> &EventLoop {
@@ -126,7 +115,7 @@ impl PlatformWindow for Window {
     fn surface_target(&self) -> SurfaceTargetUnsafe {
         let window = WindowHandle {
             surface: self.surface.id().as_ptr() as *mut c_void,
-            display: self.conn().backend().display_ptr() as *mut c_void,
+            display: self.application.connection.backend().display_ptr() as *mut c_void,
         };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
@@ -150,7 +139,7 @@ impl PlatformWindow for Window {
         file.set_len(buffer_size as u64).unwrap();
 
         let pool = self
-            .application()
+            .application
             .shm
             .create_pool(file.as_fd(), buffer_size as i32, qh, ());
 
