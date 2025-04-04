@@ -10,10 +10,6 @@ impl EventLoop {
 }
 
 impl PlatformEventLoop for EventLoop {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         Ok(())
     }

@@ -57,8 +57,12 @@ impl Window {
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
-        let wayland_application = application.as_any().downcast_ref::<Application>().unwrap();
-        let wayland_event_loop = event_loop.as_any().downcast_ref::<EventLoop>().unwrap();
+        let wayland_application = (application.as_ref() as &dyn Any)
+            .downcast_ref::<Application>()
+            .unwrap();
+        let wayland_event_loop = (event_loop.as_ref() as &dyn Any)
+            .downcast_ref::<EventLoop>()
+            .unwrap();
         let qh = &wayland_event_loop.queue_handle;
 
         let surface = wayland_application.compositor.create_surface(qh, ());
@@ -92,8 +96,7 @@ impl Window {
     }
 
     fn application(&self) -> &Application {
-        self.application
-            .as_any()
+        (self.application.as_ref() as &dyn Any)
             .downcast_ref::<Application>()
             .unwrap()
     }
@@ -103,8 +106,7 @@ impl Window {
     }
 
     fn event_loop(&self) -> &EventLoop {
-        self.event_loop
-            .as_any()
+        (self.event_loop.as_ref() as &dyn Any)
             .downcast_ref::<EventLoop>()
             .unwrap()
     }
@@ -117,10 +119,6 @@ impl Drop for Window {
 }
 
 impl PlatformWindow for Window {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn id(&self) -> WindowId {
         self.id
     }
@@ -151,12 +149,10 @@ impl PlatformWindow for Window {
         let file = tempfile::tempfile().unwrap();
         file.set_len(buffer_size as u64).unwrap();
 
-        let pool = self.application().shm.create_pool(
-            file.as_fd(),
-            buffer_size as i32,
-            qh,
-            (),
-        );
+        let pool = self
+            .application()
+            .shm
+            .create_pool(file.as_fd(), buffer_size as i32, qh, ());
 
         let buffer = pool.create_buffer(
             0,

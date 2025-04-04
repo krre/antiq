@@ -1,10 +1,12 @@
-use std::{any::Any, rc::Rc, sync::Arc};
+use std::{rc::Rc, sync::Arc};
 use wayland_client::{
-    delegate_noop, globals::{registry_queue_init, GlobalList, GlobalListContents}, protocol::{
+    Connection, Dispatch, QueueHandle, delegate_noop,
+    globals::{GlobalList, GlobalListContents, registry_queue_init},
+    protocol::{
         wl_compositor::WlCompositor,
         wl_registry::{self, WlRegistry},
         wl_shm::WlShm,
-    }, Connection, Dispatch, QueueHandle
+    },
 };
 use wayland_protocols::xdg::decoration::zv1::client::zxdg_decoration_manager_v1::ZxdgDecorationManagerV1;
 
@@ -48,11 +50,7 @@ impl Application {
     }
 }
 
-impl PlatformApplication for Application {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
+impl PlatformApplication for Application {}
 
 impl Dispatch<WlRegistry, GlobalListContents> for State {
     fn event(

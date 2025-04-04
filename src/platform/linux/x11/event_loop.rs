@@ -29,7 +29,9 @@ pub struct EventLoop {
 
 impl EventLoop {
     pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
-        let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
+        let x11_app = (application.as_ref() as &dyn Any)
+            .downcast_ref::<Application>()
+            .unwrap();
         let conn = x11_app.connection.as_ref();
         let screen = conn.setup().roots[x11_app.screen_num].clone();
         conn.change_window_attributes(
@@ -42,15 +44,13 @@ impl EventLoop {
     }
 
     fn application(&self) -> &Application {
-        self.application
-            .as_any()
+        (self.application.as_ref() as &dyn Any)
             .downcast_ref::<Application>()
             .unwrap()
     }
 
     fn conn(&self) -> &XCBConnection {
-        self.application
-            .as_any()
+        (self.application.as_ref() as &dyn Any)
             .downcast_ref::<Application>()
             .unwrap()
             .connection
@@ -73,10 +73,6 @@ impl EventLoop {
 }
 
 impl PlatformEventLoop for EventLoop {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         let conn = self.conn();
         let atoms = Atoms::new(conn)?.reply()?;

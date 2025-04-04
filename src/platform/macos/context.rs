@@ -8,9 +8,3 @@ impl Context {
         Ok(Box::new(Self {}))
     }
 }
-
-impl PlatformContext for Context {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}

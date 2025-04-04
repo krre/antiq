@@ -1,14 +1,23 @@
-use std::{any::Any, cell::{Cell, RefCell}, rc::Rc};
+use std::{
+    any::Any,
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 
 use crate::{
     core::{
-        event::{Event, EventHandler, WindowAction, WindowEvent}, Result, Size2D
+        Result, Size2D,
+        event::{Event, EventHandler, WindowAction, WindowEvent},
     },
     platform::{PlatformApplication, PlatformEventLoop},
 };
 
 use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};
-use wayland_protocols::xdg::shell::client::{xdg_surface::{self, XdgSurface}, xdg_toplevel::{self, XdgToplevel}, xdg_wm_base::{self, XdgWmBase}};
+use wayland_protocols::xdg::shell::client::{
+    xdg_surface::{self, XdgSurface},
+    xdg_toplevel::{self, XdgToplevel},
+    xdg_wm_base::{self, XdgWmBase},
+};
 
 use super::{Application, XdgSurfaceData, XdgToplevelData};
 
@@ -17,7 +26,7 @@ pub struct EventLoop {
     event_queue: RefCell<EventQueue<State>>,
     pub(crate) xdg_wm_base: XdgWmBase,
     pub(crate) queue_handle: QueueHandle<State>,
-    running: Cell<bool>
+    running: Cell<bool>,
 }
 
 pub(crate) struct State {
@@ -26,7 +35,9 @@ pub(crate) struct State {
 
 impl EventLoop {
     pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
-        let wayland_app = application.as_any().downcast_ref::<Application>().unwrap();
+        let wayland_app = (application.as_ref() as &dyn Any)
+            .downcast_ref::<Application>()
+            .unwrap();
         let wayland_conn = wayland_app.connection.as_ref();
         let event_queue = RefCell::new(wayland_conn.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
@@ -42,8 +53,7 @@ impl EventLoop {
     }
 
     fn application(&self) -> &Application {
-        self.application
-            .as_any()
+        (self.application.as_ref() as &dyn Any)
             .downcast_ref::<Application>()
             .unwrap()
     }
@@ -54,16 +64,10 @@ impl EventLoop {
 }
 
 impl PlatformEventLoop for EventLoop {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         self.running.set(true);
 
-        let mut state = State {
-            event_handler,
-        };
+        let mut state = State { event_handler };
 
         while self.running.get() {
             self.event_queue
@@ -126,7 +130,11 @@ impl Dispatch<XdgToplevel, XdgToplevelData> for State {
         _: &QueueHandle<Self>,
     ) {
         match event {
-            xdg_toplevel::Event::Configure { width, height, states: _ }  => {
+            xdg_toplevel::Event::Configure {
+                width,
+                height,
+                states: _,
+            } => {
                 if width != 0 && height != 0 {
                     state.event_handler.window_event(WindowEvent {
                         id: data.window_id,

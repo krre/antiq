@@ -44,10 +44,6 @@ impl EventLoop {
 }
 
 impl platform::PlatformEventLoop for Dummy {
-    fn as_any(&self) -> &dyn std::any::Any {
-        unimplemented!()
-    }
-
     fn process_events(&self, _event_handler: Box<dyn EventHandler>) -> Result<()> {
         unimplemented!()
     }

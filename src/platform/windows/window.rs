@@ -7,18 +7,16 @@ use crate::platform::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 pub struct Window {}
 
 impl Window {
-    pub fn new(application: Rc<dyn PlatformApplication>,
+    pub fn new(
+        application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
-        size: Size2D,) -> Result<Box<dyn PlatformWindow>> {
+        size: Size2D,
+    ) -> Result<Box<dyn PlatformWindow>> {
         Ok(Box::new(Self {}))
     }
 }
 
 impl PlatformWindow for Window {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn id(&self) -> crate::window::WindowId {
         todo!()
     }

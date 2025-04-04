@@ -31,7 +31,9 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
-        let x11_app = application.as_any().downcast_ref::<Application>().unwrap();
+        let x11_app = (application.as_ref() as &dyn Any)
+            .downcast_ref::<Application>()
+            .unwrap();
         let conn = x11_app.connection.as_ref();
         let screen = &conn.setup().roots[x11_app.screen_num];
         let id = conn.generate_id()?;
@@ -69,8 +71,7 @@ impl Window {
     }
 
     fn application(&self) -> &Application {
-        self.application
-            .as_any()
+        (self.application.as_ref() as &dyn Any)
             .downcast_ref::<Application>()
             .unwrap()
     }
@@ -92,10 +93,6 @@ impl Drop for Window {
 }
 
 impl PlatformWindow for Window {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn id(&self) -> WindowId {
         self.id
     }

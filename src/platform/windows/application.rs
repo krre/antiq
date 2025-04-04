@@ -8,19 +8,15 @@ use crate::core::Result;
 use crate::platform::PlatformApplication;
 
 pub struct Application {
-    pub(crate) hinstance: HMODULE
+    pub(crate) hinstance: HMODULE,
 }
 
 impl Application {
     pub fn new() -> Result<Rc<dyn PlatformApplication>> {
         Ok(Rc::new(Self {
-            hinstance: unsafe { GetModuleHandleW(None) }?
+            hinstance: unsafe { GetModuleHandleW(None) }?,
         }))
     }
 }
 
-impl PlatformApplication for Application {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
+impl PlatformApplication for Application {}

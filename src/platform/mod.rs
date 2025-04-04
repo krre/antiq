@@ -28,13 +28,9 @@ cfg_if::cfg_if! {
     }
 }
 
-pub trait PlatformApplication: Any {
-    fn as_any(&self) -> &dyn Any;
-}
+pub trait PlatformApplication: Any {}
 
 pub trait PlatformWindow: Any {
-    fn as_any(&self) -> &dyn Any;
-
     fn id(&self) -> WindowId;
 
     fn surface_target(&self) -> SurfaceTargetUnsafe;
@@ -53,8 +49,6 @@ pub trait PlatformWindow: Any {
 }
 
 pub trait PlatformEventLoop: Any {
-    fn as_any(&self) -> &dyn Any;
-
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()>;
 
     fn send_event(&self, event: Box<dyn Event>);

@@ -23,24 +23,10 @@ pub struct WindowEvent {
     pub action: WindowAction,
 }
 
-pub trait Event: Any {
-    fn as_any(&self) -> &dyn Any;
-}
+pub trait Event: Any {}
 
 pub trait EventHandler {
     fn window_event(&self, event: WindowEvent) {
         let _ = event;
-    }
-}
-
-impl Event for WindowEvent {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
-
-impl Event for ApplicationEvent {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

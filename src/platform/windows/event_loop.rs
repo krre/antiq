@@ -3,8 +3,8 @@ use std::rc::Rc;
 
 use windows::Win32::UI::WindowsAndMessaging::*;
 
-use crate::core::event::EventHandler;
 use crate::core::Result;
+use crate::core::event::EventHandler;
 use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct EventLoop {}
@@ -16,10 +16,6 @@ impl EventLoop {
 }
 
 impl PlatformEventLoop for EventLoop {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
     fn process_events(&self, event_handler: Box<dyn EventHandler>) -> Result<()> {
         let mut message = MSG::default();
 

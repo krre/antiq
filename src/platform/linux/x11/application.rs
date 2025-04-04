@@ -1,4 +1,4 @@
-use std::{any::Any, rc::Rc};
+use std::rc::Rc;
 
 use crate::core::Result;
 use crate::platform::PlatformApplication;
@@ -36,8 +36,4 @@ impl Application {
     }
 }
 
-impl PlatformApplication for Application {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
+impl PlatformApplication for Application {}

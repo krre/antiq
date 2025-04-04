@@ -9,8 +9,4 @@ impl Application {
     }
 }
 
-impl PlatformApplication for Application {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
+impl PlatformApplication for Application {}
