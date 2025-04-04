@@ -25,7 +25,7 @@ use super::{Application, EventLoop, State};
 pub struct Window {
     id: WindowId,
     application: Rc<Application>,
-    event_loop: Rc<dyn PlatformEventLoop>,
+    event_loop: Rc<EventLoop>,
     surface: WlSurface,
     xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
@@ -58,20 +58,17 @@ impl Window {
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
-        let wayland_event_loop = (event_loop.as_ref() as &dyn Any)
-            .downcast_ref::<EventLoop>()
-            .unwrap();
-        let qh = &wayland_event_loop.queue_handle;
+        let event_loop = Rc::downcast::<EventLoop>(event_loop.clone() as Rc<dyn Any>).unwrap();
+        let qh = &event_loop.queue_handle;
 
         let surface = application.compositor.create_surface(qh, ());
 
         let id = WindowId::generate_new();
 
-        let xdg_surface = wayland_event_loop.xdg_wm_base.get_xdg_surface(
-            &surface,
-            qh,
-            XdgSurfaceData { window_id: id },
-        );
+        let xdg_surface =
+            event_loop
+                .xdg_wm_base
+                .get_xdg_surface(&surface, qh, XdgSurfaceData { window_id: id });
 
         let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id });
 
@@ -92,12 +89,6 @@ impl Window {
             xdg_toplevel,
             xdg_toplevel_decoration,
         }))
-    }
-
-    fn event_loop(&self) -> &EventLoop {
-        (self.event_loop.as_ref() as &dyn Any)
-            .downcast_ref::<EventLoop>()
-            .unwrap()
     }
 }
 
@@ -130,7 +121,7 @@ impl PlatformWindow for Window {
     fn set_position(&self, pos: Pos2D) {}
 
     fn set_size(&self, size: Size2D) {
-        let qh = &self.event_loop().queue_handle;
+        let qh = &self.event_loop.queue_handle;
 
         let stride = size.width() as i32 * 4;
         let buffer_size = (stride * size.height() as i32) as usize;
