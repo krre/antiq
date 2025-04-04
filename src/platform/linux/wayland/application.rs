@@ -63,18 +63,3 @@ impl Dispatch<WlRegistry, GlobalListContents> for State {
     ) {
     }
 }
-
-// impl Dispatch<XdgWmBase, ()> for State {
-//     fn event(
-//         _: &mut Self,
-//         wm_base: &XdgWmBase,
-//         event: xdg_wm_base::Event,
-//         _: &(),
-//         _: &Connection,
-//         _: &QueueHandle<Self>,
-//     ) {
-//         if let xdg_wm_base::Event::Ping { serial } = event {
-//             wm_base.pong(serial);
-//         }
-//     }
-// }
