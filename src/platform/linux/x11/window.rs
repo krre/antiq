@@ -5,7 +5,6 @@ use x11rb::COPY_DEPTH_FROM_PARENT;
 use x11rb::connection::Connection;
 use x11rb::protocol::xproto::*;
 use x11rb::wrapper::ConnectionExt as _;
-use x11rb::xcb_ffi::XCBConnection;
 
 use crate::{
     core::{Border2D, Pos2D, Size2D},
@@ -17,7 +16,7 @@ use super::Application;
 
 pub struct Window {
     id: WindowId,
-    application: Rc<dyn PlatformApplication>,
+    application: Rc<Application>,
 }
 
 struct WindowHandle {
@@ -31,11 +30,9 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
-        let x11_app = (application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap();
-        let conn = x11_app.connection.as_ref();
-        let screen = &conn.setup().roots[x11_app.screen_num];
+        let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
+        let conn = application.connection.as_ref();
+        let screen = &conn.setup().roots[application.screen_num];
         let id = conn.generate_id()?;
 
         conn.create_window(
@@ -57,9 +54,9 @@ impl Window {
         conn.change_property32(
             PropMode::REPLACE,
             id,
-            x11_app.atoms.WM_PROTOCOLS,
+            application.atoms.WM_PROTOCOLS,
             AtomEnum::ATOM,
-            &[x11_app.atoms.WM_DELETE_WINDOW],
+            &[application.atoms.WM_DELETE_WINDOW],
         )?;
 
         conn.flush()?;
@@ -70,16 +67,6 @@ impl Window {
         }))
     }
 
-    fn application(&self) -> &Application {
-        (self.application.as_ref() as &dyn Any)
-            .downcast_ref::<Application>()
-            .unwrap()
-    }
-
-    fn conn(&self) -> &XCBConnection {
-        self.application().connection.as_ref()
-    }
-
     fn inner_id(&self) -> u32 {
         self.id.inner() as u32
     }
@@ -87,8 +74,11 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.conn().destroy_window(self.inner_id()).unwrap();
-        self.conn().flush().unwrap();
+        self.application
+            .connection
+            .destroy_window(self.inner_id())
+            .unwrap();
+        self.application.connection.flush().unwrap();
     }
 }
 
@@ -98,20 +88,22 @@ impl PlatformWindow for Window {
     }
 
     fn surface_target(&self) -> SurfaceTargetUnsafe {
-        let connection =
-            as_raw_xcb_connection::AsRawXcbConnection::as_raw_xcb_connection(self.conn()) as *mut _;
+        let connection = as_raw_xcb_connection::AsRawXcbConnection::as_raw_xcb_connection(
+            &self.application.connection,
+        ) as *mut _;
 
         let window = WindowHandle {
             connection,
             window_id: self.inner_id(),
-            screen_num: self.application().screen_num as i32,
+            screen_num: self.application.screen_num as i32,
         };
 
         unsafe { SurfaceTargetUnsafe::from_window(&window).unwrap() }
     }
 
     fn set_title(&self, title: &str) {
-        self.conn()
+        self.application
+            .connection
             .change_property8(
                 PropMode::REPLACE,
                 self.inner_id(),
@@ -121,31 +113,39 @@ impl PlatformWindow for Window {
             )
             .unwrap();
 
-        self.conn().flush().unwrap();
+        self.application.connection.flush().unwrap();
     }
 
     fn set_visible(&self, visible: bool) {
         if visible {
-            self.conn().map_window(self.inner_id()).unwrap();
+            self.application
+                .connection
+                .map_window(self.inner_id())
+                .unwrap();
         } else {
-            self.conn().unmap_window(self.inner_id()).unwrap();
+            self.application
+                .connection
+                .unmap_window(self.inner_id())
+                .unwrap();
         }
 
-        self.conn().flush().unwrap();
+        self.application.connection.flush().unwrap();
     }
 
     fn set_position(&self, pos: Pos2D) {
-        self.conn()
+        self.application
+            .connection
             .configure_window(
                 self.inner_id(),
                 &ConfigureWindowAux::new().x(pos.x()).y(pos.y()),
             )
             .unwrap();
-        self.conn().flush().unwrap();
+        self.application.connection.flush().unwrap();
     }
 
     fn set_size(&self, size: Size2D) {
-        self.conn()
+        self.application
+            .connection
             .configure_window(
                 self.inner_id(),
                 &ConfigureWindowAux::new()
@@ -153,16 +153,17 @@ impl PlatformWindow for Window {
                     .height(size.height()),
             )
             .unwrap();
-        self.conn().flush().unwrap();
+        self.application.connection.flush().unwrap();
     }
 
     fn border(&self) -> Border2D {
         let prop = self
-            .conn()
+            .application
+            .connection
             .get_property(
                 false,
                 self.inner_id(),
-                self.application().atoms._NET_FRAME_EXTENTS,
+                self.application.atoms._NET_FRAME_EXTENTS,
                 AtomEnum::CARDINAL,
                 0,
                 4,
@@ -170,7 +171,7 @@ impl PlatformWindow for Window {
             .unwrap()
             .reply()
             .unwrap();
-        self.conn().flush().unwrap();
+        self.application.connection.flush().unwrap();
 
         if prop.value32().is_none() {
             return Border2D::default();
