@@ -1,4 +1,4 @@
-use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc};
+use std::{any::Any, ffi::c_void, os::fd::AsFd, ptr::NonNull, rc::Rc, sync::atomic::AtomicBool};
 
 use raw_window_handle::{
     HasDisplayHandle, HasWindowHandle, RawDisplayHandle, RawWindowHandle, WaylandDisplayHandle,
@@ -44,6 +44,7 @@ pub(crate) struct XdgSurfaceData {
 #[derive(Debug)]
 pub(crate) struct XdgToplevelData {
     pub window_id: WindowId,
+    pub is_inited: AtomicBool
 }
 
 delegate_noop!(State: ignore WlSurface);
@@ -70,7 +71,7 @@ impl Window {
                 .xdg_wm_base
                 .get_xdg_surface(&surface, qh, XdgSurfaceData { window_id: id });
 
-        let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id });
+        let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id, is_inited: AtomicBool::new(false) });
 
         let xdg_toplevel_decoration =
             application
