@@ -31,7 +31,7 @@ impl Renderer {
         log::info!("Graphics adapter: {}", adapter.get_info().name);
 
         let device_descriptor = wgpu::DeviceDescriptor::default();
-        let device_future = adapter.request_device(&device_descriptor, None);
+        let device_future = adapter.request_device(&device_descriptor);
         let (device, queue) = pollster::block_on(device_future).unwrap();
 
         let shader_storage = ShaderStorage::new(&device);
@@ -60,7 +60,8 @@ impl Renderer {
             ..Default::default()
         };
 
-        return pollster::block_on(instance.request_adapter(&adapter_options));
+        let adapter = instance.request_adapter(&adapter_options);
+        return pollster::block_on(adapter).ok();
     }
 
     pub fn clear_view(&self, view: &wgpu::TextureView, color: Color) {
