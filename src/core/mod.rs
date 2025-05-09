@@ -7,7 +7,6 @@ mod color;
 mod error;
 mod event_loop;
 mod id;
-mod node;
 mod window_manager;
 
 pub use color::Color;
