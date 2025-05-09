@@ -24,7 +24,6 @@ pub struct Window {
     color: Cell<Color>,
     position: Cell<Pos2D>,
     size: Cell<Size2D>,
-    widgets: Vec<RefCell<Box<dyn Widget>>>,
     platform_window: Box<dyn platform::PlatformWindow>,
     window_manager: Rc<WindowManager>,
     renderer: Rc<Renderer>,
@@ -71,7 +70,6 @@ impl Window {
             color: Cell::new(Color::new(0.05, 0.027, 0.15)),
             position: Cell::new(Pos2D::default()),
             size: Cell::new(Size2D::default()),
-            widgets: Vec::new(),
             platform_window,
             window_manager: application.window_manager(),
             renderer,
@@ -169,15 +167,7 @@ impl Window {
         self.maximized.get()
     }
 
-    pub fn build(&self) {
-        for widget in &self.widgets {
-            widget.borrow().build();
-        }
-    }
-
-    pub fn add_widget(&mut self, widget: Box<dyn Widget>) {
-        self.widgets.push(RefCell::new(widget));
-    }
+    pub fn build(&self) {}
 
     pub fn render(&self) {
         let frame = self.surface.borrow().current_frame();
