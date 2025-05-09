@@ -1,8 +1,7 @@
 pub mod core;
 pub mod platform;
 pub mod renderer;
-pub mod scene;
-pub mod widget;
+pub mod ui;
 
 pub use core::application;
 pub use core::preferences;

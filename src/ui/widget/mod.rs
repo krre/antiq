@@ -1,4 +1,4 @@
-mod rectangle;
+pub mod rectangle;
 pub use rectangle::Rectangle;
 
 pub trait Widget {

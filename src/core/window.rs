@@ -7,7 +7,7 @@ use std::{
 use crate::{
     platform,
     renderer::{Renderer, Surface},
-    widget::Widget,
+    ui::widget::Widget,
 };
 
 use super::{
