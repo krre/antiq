@@ -173,8 +173,6 @@ impl Window {
         *self.layout.borrow_mut() = layout;
     }
 
-    pub fn build(&self) {}
-
     pub fn render(&self) {
         let frame = self.surface.borrow().current_frame();
         let view = frame
