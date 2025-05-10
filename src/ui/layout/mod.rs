@@ -1,7 +1,7 @@
-mod column;
-mod grid;
-mod row;
-mod split;
+pub mod column;
+pub mod grid;
+pub mod row;
+pub mod split;
 
 pub trait Layout {
     fn build(&self);
