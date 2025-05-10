@@ -7,6 +7,7 @@ use std::{
 use crate::{
     platform,
     renderer::{Renderer, Surface},
+    ui::layout::{Layout, fill::Fill},
 };
 
 use super::{
@@ -29,6 +30,7 @@ pub struct Window {
     surface: RefCell<Surface>,
     visible: Cell<bool>,
     maximized: Cell<bool>,
+    layout: RefCell<Box<dyn Layout>>,
 }
 
 impl WindowId {
@@ -75,6 +77,7 @@ impl Window {
             surface,
             visible: Cell::new(false),
             maximized: Cell::new(false),
+            layout: RefCell::new(Box::new(Fill::new())),
         });
 
         application
@@ -164,6 +167,10 @@ impl Window {
 
     pub fn maximized(&self) -> bool {
         self.maximized.get()
+    }
+
+    pub fn set_layout(&self, layout: Box<dyn Layout>) {
+        *self.layout.borrow_mut() = layout;
     }
 
     pub fn build(&self) {}
