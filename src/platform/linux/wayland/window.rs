@@ -27,9 +27,9 @@ pub struct Window {
     application: Rc<Application>,
     event_loop: Rc<EventLoop>,
     surface: WlSurface,
-    xdg_surface: XdgSurface,
+    _xdg_surface: XdgSurface,
     xdg_toplevel: XdgToplevel,
-    xdg_toplevel_decoration: ZxdgToplevelDecorationV1,
+    _xdg_toplevel_decoration: ZxdgToplevelDecorationV1,
 }
 struct WindowHandle {
     surface: *mut c_void,
@@ -44,7 +44,7 @@ pub(crate) struct XdgSurfaceData {
 #[derive(Debug)]
 pub(crate) struct XdgToplevelData {
     pub window_id: WindowId,
-    pub is_inited: AtomicBool
+    pub is_inited: AtomicBool,
 }
 
 delegate_noop!(State: ignore WlSurface);
@@ -56,7 +56,7 @@ impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
-        size: Size2D,
+        _size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let event_loop = Rc::downcast::<EventLoop>(event_loop.clone() as Rc<dyn Any>).unwrap();
@@ -71,7 +71,13 @@ impl Window {
                 .xdg_wm_base
                 .get_xdg_surface(&surface, qh, XdgSurfaceData { window_id: id });
 
-        let xdg_toplevel = xdg_surface.get_toplevel(qh, XdgToplevelData { window_id: id, is_inited: AtomicBool::new(false) });
+        let xdg_toplevel = xdg_surface.get_toplevel(
+            qh,
+            XdgToplevelData {
+                window_id: id,
+                is_inited: AtomicBool::new(false),
+            },
+        );
 
         let xdg_toplevel_decoration =
             application
@@ -86,9 +92,9 @@ impl Window {
             application,
             event_loop,
             surface,
-            xdg_surface,
+            _xdg_surface: xdg_surface,
             xdg_toplevel,
-            xdg_toplevel_decoration,
+            _xdg_toplevel_decoration: xdg_toplevel_decoration,
         }))
     }
 }
@@ -117,9 +123,9 @@ impl PlatformWindow for Window {
         self.xdg_toplevel.set_title(String::from(title));
     }
 
-    fn set_visible(&self, visible: bool) {}
+    fn set_visible(&self, _visible: bool) {}
 
-    fn set_position(&self, pos: Pos2D) {}
+    fn set_position(&self, _pos: Pos2D) {}
 
     fn set_size(&self, size: Size2D) {
         let qh = &self.event_loop.queue_handle;

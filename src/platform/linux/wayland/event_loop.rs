@@ -1,7 +1,8 @@
 use std::{
     any::Any,
     cell::{Cell, RefCell},
-    rc::Rc, sync::atomic::Ordering,
+    rc::Rc,
+    sync::atomic::Ordering,
 };
 
 use crate::{
@@ -63,7 +64,7 @@ impl PlatformEventLoop for EventLoop {
         Ok(())
     }
 
-    fn send_event(&self, event: Box<dyn Event>) {}
+    fn send_event(&self, _event: Box<dyn Event>) {}
 
     fn quit(&self) {
         self.running.set(false);
@@ -124,7 +125,10 @@ impl Dispatch<XdgToplevel, XdgToplevelData> for State {
                     if data.is_inited.load(Ordering::Relaxed) == true {
                         state.event_handler.window_event(WindowEvent {
                             id: data.window_id,
-                            action: WindowAction::AskResize(Size2D::new(width as u32, height as u32)),
+                            action: WindowAction::AskResize(Size2D::new(
+                                width as u32,
+                                height as u32,
+                            )),
                         });
                     } else {
                         data.is_inited.store(true, Ordering::Relaxed);

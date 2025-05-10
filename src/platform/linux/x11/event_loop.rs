@@ -123,7 +123,7 @@ impl PlatformEventLoop for EventLoop {
         Ok(())
     }
 
-    fn send_event(&self, event: Box<dyn Event>) {
+    fn send_event(&self, _event: Box<dyn Event>) {
         self.send_client_message_event(self.application.atoms.CLIENT_EVENT, [0, 0, 0, 0, 0]);
     }
 
