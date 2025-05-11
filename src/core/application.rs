@@ -31,7 +31,7 @@ pub struct ApplicationBuilder {
 }
 
 struct ApplicationEventHandler {
-    event_loop: Rc<EventLoop>,
+    event_loop: Weak<EventLoop>,
     window_manager: Weak<RefCell<WindowManager>>,
     quit_on_last_window_closed: bool,
 }
@@ -74,7 +74,7 @@ impl Application {
     pub fn run(&self) -> crate::core::Result<()> {
         self.event_loop.run(Box::new(ApplicationEventHandler {
             window_manager: self.window_manager().clone(),
-            event_loop: self.event_loop.clone(),
+            event_loop: Rc::downgrade(&self.event_loop),
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         }))
     }
@@ -143,7 +143,7 @@ impl EventHandler for ApplicationEventHandler {
                     wm.borrow_mut().remove(event.id);
 
                     if wm.borrow().count() == 0 && self.quit_on_last_window_closed {
-                        self.event_loop.quit();
+                        self.event_loop.upgrade().map(|el| el.quit());
                     }
                 }
                 WindowAction::Resize(size) => {
