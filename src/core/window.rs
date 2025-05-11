@@ -26,7 +26,7 @@ pub struct Window {
     size: Size2D,
     platform_window: Box<dyn platform::PlatformWindow>,
     window_manager: Weak<RefCell<WindowManager>>,
-    renderer: Rc<Renderer>,
+    renderer: Weak<Renderer>,
     surface: Surface,
     visible: bool,
     maximized: bool,
@@ -64,7 +64,7 @@ impl Window {
             size.clone(),
         )?;
         let renderer = application.renderer().clone();
-        let surface = Surface::new(platform_window.as_ref(), &renderer);
+        let surface = Surface::new(platform_window.as_ref(), &renderer.upgrade().unwrap());
 
         let window = Rc::new(RefCell::new(Self {
             title: String::new(),
@@ -135,12 +135,14 @@ impl Window {
 
     pub fn set_size(&mut self, size: Size2D) {
         self.platform_window.set_size(size);
-        self.surface.set_size(self.renderer.device(), size);
+        self.surface
+            .set_size(self.renderer.upgrade().unwrap().device(), size);
         self.size = size;
     }
 
     pub(crate) fn update_size(&mut self, size: Size2D) {
-        self.surface.set_size(self.renderer.device(), size);
+        self.surface
+            .set_size(self.renderer.upgrade().unwrap().device(), size);
         self.size = size;
     }
 
@@ -178,7 +180,10 @@ impl Window {
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        self.renderer.clear_view(&view, self.color);
+        self.renderer
+            .upgrade()
+            .unwrap()
+            .clear_view(&view, self.color);
         frame.present();
     }
 }

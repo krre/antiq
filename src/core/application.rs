@@ -63,8 +63,8 @@ impl Application {
         Rc::downgrade(&self.window_manager)
     }
 
-    pub fn renderer(&self) -> Rc<Renderer> {
-        self.renderer.clone()
+    pub fn renderer(&self) -> Weak<Renderer> {
+        Rc::downgrade(&self.renderer)
     }
 
     pub fn event_loop(&self) -> &EventLoop {
