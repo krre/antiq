@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use std::{collections::HashMap, rc::Rc};
 
 use super::{
     Pos2D, Size2D,
@@ -6,43 +6,43 @@ use super::{
 };
 
 pub(crate) struct WindowManager {
-    windows: RefCell<HashMap<WindowId, Rc<Window>>>,
+    windows: HashMap<WindowId, Rc<Window>>,
 }
 
 impl WindowManager {
     pub(crate) fn new() -> Self {
         Self {
-            windows: RefCell::new(HashMap::new()),
+            windows: HashMap::new(),
         }
     }
 
-    pub(crate) fn append(&self, id: WindowId, window: Rc<Window>) {
+    pub(crate) fn append(&mut self, id: WindowId, window: Rc<Window>) {
         #[allow(unused_variables)]
-        let window = self.windows.borrow_mut().insert(id, window);
+        let window = self.windows.insert(id, window);
     }
 
-    pub(crate) fn remove(&self, id: WindowId) {
+    pub(crate) fn remove(&mut self, id: WindowId) {
         #[allow(unused_variables)]
-        let window = self.windows.borrow_mut().remove(&id);
+        let window = self.windows.remove(&id);
     }
 
     pub(crate) fn render(&self, id: WindowId) {
-        self.windows.borrow().get(&id).unwrap().render();
+        self.windows.get(&id).unwrap().render();
     }
 
     pub(crate) fn resize(&self, id: WindowId, size: Size2D) {
-        self.windows.borrow().get(&id).unwrap().update_size(size);
+        self.windows.get(&id).unwrap().update_size(size);
     }
 
     pub(crate) fn ask_resize(&self, id: WindowId, size: Size2D) {
-        self.windows.borrow().get(&id).unwrap().set_size(size);
+        self.windows.get(&id).unwrap().set_size(size);
     }
 
     pub(crate) fn move_to(&self, id: WindowId, pos: Pos2D) {
-        self.windows.borrow().get(&id).unwrap().update_position(pos);
+        self.windows.get(&id).unwrap().update_position(pos);
     }
 
     pub(crate) fn count(&self) -> usize {
-        self.windows.borrow().len()
+        self.windows.len()
     }
 }

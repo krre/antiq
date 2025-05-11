@@ -25,7 +25,7 @@ pub struct Window {
     position: Cell<Pos2D>,
     size: Cell<Size2D>,
     platform_window: Box<dyn platform::PlatformWindow>,
-    window_manager: Rc<WindowManager>,
+    window_manager: Weak<RefCell<WindowManager>>,
     renderer: Rc<Renderer>,
     surface: RefCell<Surface>,
     visible: Cell<bool>,
@@ -72,7 +72,7 @@ impl Window {
             position: Cell::new(Pos2D::default()),
             size: Cell::new(Size2D::default()),
             platform_window,
-            window_manager: application.window_manager(),
+            window_manager: application.window_manager().clone(),
             renderer,
             surface,
             visible: Cell::new(false),
@@ -82,7 +82,8 @@ impl Window {
 
         application
             .window_manager()
-            .append(window.id(), window.clone());
+            .upgrade()
+            .map(|wm| wm.borrow_mut().append(window.id(), window.clone()));
 
         window.set_visible(true);
         window.set_title("Untitled");
@@ -185,6 +186,8 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
-        self.window_manager.remove(self.id());
+        self.window_manager
+            .upgrade()
+            .map(|wm| wm.try_borrow_mut().map(|mut wm| wm.remove(self.id())));
     }
 }

@@ -6,7 +6,11 @@ use super::{
     window_manager::WindowManager,
 };
 use crate::{platform, renderer::Renderer};
-use std::{rc::Rc, sync::OnceLock};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+    sync::OnceLock,
+};
 
 static APP_LOCK: OnceLock<()> = OnceLock::new();
 
@@ -14,7 +18,7 @@ pub struct Application {
     name: String,
     organization: String,
     event_loop: Rc<EventLoop>,
-    window_manager: Rc<WindowManager>,
+    window_manager: Rc<RefCell<WindowManager>>,
     renderer: Rc<Renderer>,
     pub(crate) platform_application: Rc<dyn platform::PlatformApplication>,
     quit_on_last_window_closed: bool,
@@ -28,7 +32,7 @@ pub struct ApplicationBuilder {
 
 struct ApplicationEventHandler {
     event_loop: Rc<EventLoop>,
-    window_manager: Rc<WindowManager>,
+    window_manager: Weak<RefCell<WindowManager>>,
     quit_on_last_window_closed: bool,
 }
 
@@ -55,8 +59,8 @@ impl Application {
             .into()
     }
 
-    pub(crate) fn window_manager(&self) -> Rc<WindowManager> {
-        self.window_manager.clone()
+    pub(crate) fn window_manager(&self) -> Weak<RefCell<WindowManager>> {
+        Rc::downgrade(&self.window_manager)
     }
 
     pub fn renderer(&self) -> Rc<Renderer> {
@@ -69,7 +73,7 @@ impl Application {
 
     pub fn run(&self) -> crate::core::Result<()> {
         self.event_loop.run(Box::new(ApplicationEventHandler {
-            window_manager: self.window_manager.clone(),
+            window_manager: self.window_manager().clone(),
             event_loop: self.event_loop.clone(),
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         }))
@@ -114,7 +118,7 @@ impl ApplicationBuilder {
             name: self.name,
             organization: self.organization,
             event_loop: Rc::new(EventLoop::new_uninit()),
-            window_manager: Rc::new(WindowManager::new()),
+            window_manager: Rc::new(RefCell::new(WindowManager::new())),
             renderer: Rc::new(Renderer::new()),
             platform_application: platform::Application::new()
                 .map_err(|e| ApplicationError::Other(e))?,
@@ -130,25 +134,27 @@ impl ApplicationBuilder {
 
 impl EventHandler for ApplicationEventHandler {
     fn window_event(&self, event: WindowEvent) {
-        match event.action {
-            WindowAction::Redraw => {
-                self.window_manager.render(event.id);
-            }
-            WindowAction::Close => {
-                self.window_manager.remove(event.id);
-
-                if self.window_manager.count() == 0 && self.quit_on_last_window_closed {
-                    self.event_loop.quit();
+        if let Some(wm) = self.window_manager.upgrade() {
+            match event.action {
+                WindowAction::Redraw => {
+                    wm.borrow().render(event.id);
                 }
-            }
-            WindowAction::Resize(size) => {
-                self.window_manager.resize(event.id, size);
-            }
-            WindowAction::AskResize(size) => {
-                self.window_manager.ask_resize(event.id, size);
-            }
-            WindowAction::Move(pos) => {
-                self.window_manager.move_to(event.id, pos);
+                WindowAction::Close => {
+                    wm.borrow_mut().remove(event.id);
+
+                    if wm.borrow().count() == 0 && self.quit_on_last_window_closed {
+                        self.event_loop.quit();
+                    }
+                }
+                WindowAction::Resize(size) => {
+                    wm.borrow().resize(event.id, size);
+                }
+                WindowAction::AskResize(size) => {
+                    wm.borrow().ask_resize(event.id, size);
+                }
+                WindowAction::Move(pos) => {
+                    wm.borrow().move_to(event.id, pos);
+                }
             }
         }
     }
