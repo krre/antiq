@@ -1,7 +1,8 @@
 use super::{
-    EventLoop,
+    EventLoop, Result,
     error::ApplicationError,
     event::{EventHandler, WindowAction, WindowEvent},
+    window::{Window, WindowId},
     window_manager::WindowManager,
 };
 use crate::{platform, renderer::Renderer};
@@ -32,7 +33,7 @@ struct ApplicationEventHandler {
 }
 
 impl Application {
-    pub fn new() -> Result<Self, ApplicationError> {
+    pub fn new() -> std::result::Result<Self, ApplicationError> {
         let builder = ApplicationBuilder::new();
         builder.build()
     }
@@ -73,6 +74,11 @@ impl Application {
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         }))
     }
+
+    pub fn new_window(&self) -> Result<WindowId> {
+        let window = Window::new(self)?;
+        Ok(window.upgrade().unwrap().id())
+    }
 }
 
 impl ApplicationBuilder {
@@ -99,7 +105,7 @@ impl ApplicationBuilder {
         self
     }
 
-    pub fn build(self) -> Result<Application, ApplicationError> {
+    pub fn build(self) -> std::result::Result<Application, ApplicationError> {
         if let Err(_) = APP_LOCK.set(()) {
             return Err(ApplicationError::AlreadyExists);
         }
