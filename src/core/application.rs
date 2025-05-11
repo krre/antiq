@@ -81,7 +81,7 @@ impl Application {
 
     pub fn new_window(&self) -> Result<WindowId> {
         let window = Window::new(self)?;
-        Ok(window.upgrade().unwrap().id())
+        Ok(window.upgrade().map(|w| w.borrow().id()).unwrap())
     }
 }
 
