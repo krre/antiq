@@ -1,4 +1,4 @@
-use antiq::application::Application;
+use antiq::application::{Application, ApplicationError};
 
 #[test]
 fn create_multiple_apps() {
@@ -6,5 +6,5 @@ fn create_multiple_apps() {
     assert_eq!(app1.is_ok(), true);
 
     let app2 = Application::new();
-    assert_eq!(app2.is_err(), true);
+    assert!(matches!(app2, Err(ApplicationError::AlreadyExists)));
 }
