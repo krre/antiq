@@ -4,7 +4,6 @@ pub mod preferences;
 pub mod window;
 
 mod color;
-mod error;
 mod event_loop;
 mod id;
 mod window_manager;

@@ -1,6 +1,5 @@
 use super::{
     EventLoop, Result,
-    error::ApplicationError,
     event::{EventHandler, WindowAction, WindowEvent},
     window::{Window, WindowId},
     window_manager::WindowManager,
@@ -8,6 +7,7 @@ use super::{
 use crate::{platform, renderer::Renderer};
 use std::{
     cell::RefCell,
+    fmt::Display,
     rc::{Rc, Weak},
     sync::OnceLock,
 };
@@ -34,6 +34,12 @@ struct ApplicationEventHandler {
     event_loop: Weak<EventLoop>,
     window_manager: Weak<RefCell<WindowManager>>,
     quit_on_last_window_closed: bool,
+}
+
+#[derive(Debug)]
+pub enum ApplicationError {
+    AlreadyExists,
+    Other(Box<dyn std::error::Error>),
 }
 
 impl Application {
@@ -159,3 +165,14 @@ impl EventHandler for ApplicationEventHandler {
         }
     }
 }
+
+impl Display for ApplicationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ApplicationError::AlreadyExists => write!(f, "application instance already exists"),
+            ApplicationError::Other(e) => write!(f, "other application error: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for ApplicationError {}
