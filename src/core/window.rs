@@ -175,6 +175,10 @@ impl Window {
         self.layout = layout;
     }
 
+    pub fn layout(&self) -> &Box<dyn Layout> {
+        &self.layout
+    }
+
     pub fn render(&self) {
         let frame = self.surface.current_frame();
         let view = frame
