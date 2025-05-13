@@ -186,8 +186,7 @@ impl Window {
             .create_view(&wgpu::TextureViewDescriptor::default());
         self.renderer
             .upgrade()
-            .unwrap()
-            .clear_view(&view, self.color);
+            .map(|r| r.clear_view(&view, self.color));
         frame.present();
     }
 }
