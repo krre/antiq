@@ -12,14 +12,18 @@ fn main() -> Result<()> {
     let window_1 = Window::new(&app)?;
 
     {
-        let w = window_1.upgrade().unwrap();
+        let w = window_1
+            .upgrade()
+            .ok_or("Window weak reference is invalid")?;
         w.borrow_mut().set_title("Multi Window Example 1");
     }
 
     let window_2 = Window::new(&app)?;
 
     {
-        let w = window_2.upgrade().unwrap();
+        let w = window_2
+            .upgrade()
+            .ok_or("Window weak reference is invalid")?;
         let mut w = w.borrow_mut();
         w.set_title("Multi Window Example 2");
         w.set_position(Pos2D::new(500, 200));

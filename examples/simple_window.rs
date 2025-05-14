@@ -7,7 +7,7 @@ fn main() -> Result<()> {
     let window = Window::new(&app)?;
 
     {
-        let w = window.upgrade().unwrap();
+        let w = window.upgrade().ok_or("Window weak reference is invalid")?;
         let mut w = w.borrow_mut();
         w.set_title("Simple Window Example");
         w.set_visible(true);
