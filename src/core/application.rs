@@ -1,7 +1,7 @@
 use super::{
     EventLoop, Result,
     event::{EventHandler, WindowAction, WindowEvent},
-    window::{Window, WindowId},
+    window::Window,
     window_manager::WindowManager,
 };
 use crate::{platform, renderer::Renderer};
@@ -85,9 +85,8 @@ impl Application {
         }))
     }
 
-    pub fn new_window(&self) -> Result<WindowId> {
-        let window = Window::new(self)?;
-        Ok(window.upgrade().map(|w| w.borrow().id()).unwrap())
+    pub fn new_window(&self) -> Result<Weak<RefCell<Window>>> {
+        Window::new(&self)
     }
 }
 
