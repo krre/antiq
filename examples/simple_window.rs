@@ -9,7 +9,7 @@ fn main() -> Result<()> {
     {
         let w = window.upgrade().unwrap();
         let mut w = w.borrow_mut();
-        w.set_title("Simple Window");
+        w.set_title("Simple Window Example");
         w.set_visible(true);
     }
 
