@@ -1,6 +1,6 @@
 use antiq::{
     application::Application,
-    core::Result,
+    core::{Result, UpgradeOrErr},
     ui::{layout::fill::Fill, widget::view::View},
     window::Window,
 };
@@ -12,7 +12,7 @@ fn main() -> Result<()> {
     let window = Window::new(&app)?;
 
     {
-        let w = window.upgrade().unwrap();
+        let w = window.upgrade_or_err()?;
         let mut w = w.borrow_mut();
         w.set_title("View Example");
         w.set_visible(true);
