@@ -122,7 +122,7 @@ impl Dispatch<XdgToplevel, XdgToplevelData> for State {
                 states: _,
             } => {
                 if width != 0 && height != 0 {
-                    if data.is_inited.load(Ordering::Relaxed) == true {
+                    if data.is_inited.load(Ordering::Relaxed) {
                         state.event_handler.window_event(WindowEvent {
                             id: data.window_id,
                             action: WindowAction::AskResize(Size2D::new(

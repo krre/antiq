@@ -17,10 +17,10 @@ impl Surface {
         };
 
         let config = surface
-            .get_default_config(&renderer.adapter(), 800, 600)
+            .get_default_config(renderer.adapter(), 800, 600)
             .expect("Surface isn't supported by the adapter.");
 
-        surface.configure(&renderer.device(), &config);
+        surface.configure(renderer.device(), &config);
 
         Self { surface, config }
     }

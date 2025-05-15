@@ -34,10 +34,9 @@ impl PipelineStorage {
     }
 
     pub fn pipeline(&self, name: PipelineName) -> &wgpu::RenderPipeline {
-        &self
-            .pipelines
+        self.pipelines
             .get(&name)
-            .expect(&format!("Pipeline {:?} not found", name))
+            .unwrap_or_else(|| panic!("Pipeline {:?} not found", name))
     }
 
     fn create_pipeline(
@@ -52,20 +51,20 @@ impl PipelineStorage {
             push_constant_ranges: &[],
         });
 
-        let swapchain_capabilities = surface.get_capabilities(&adapter);
+        let swapchain_capabilities = surface.get_capabilities(adapter);
         let swapchain_format = swapchain_capabilities.formats[0];
 
         let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None,
             layout: Some(&pipeline_layout),
             vertex: wgpu::VertexState {
-                module: &shader,
+                module: shader,
                 entry_point: Some("vs_main"),
                 buffers: &[],
                 compilation_options: Default::default(),
             },
             fragment: Some(wgpu::FragmentState {
-                module: &shader,
+                module: shader,
                 entry_point: Some("fs_main"),
                 targets: &[Some(swapchain_format.into())],
                 compilation_options: Default::default(),

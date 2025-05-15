@@ -61,7 +61,7 @@ impl Window {
         let platform_window = platform::Window::new(
             application.platform_application.clone(),
             application.event_loop().platform_event_loop.clone(),
-            size.clone(),
+            size,
         )?;
         let renderer = application.renderer().clone();
         let surface = Surface::new(platform_window.as_ref(), &renderer.upgrade().unwrap());
@@ -175,8 +175,8 @@ impl Window {
         self.layout = layout;
     }
 
-    pub fn layout(&self) -> &Box<dyn Layout> {
-        &self.layout
+    pub fn layout(&self) -> &dyn Layout {
+        self.layout.as_ref()
     }
 
     pub fn render(&self) {

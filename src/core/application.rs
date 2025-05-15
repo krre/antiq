@@ -86,7 +86,7 @@ impl Application {
     }
 
     pub fn new_window(&self) -> Result<Weak<RefCell<Window>>> {
-        Window::new(&self)
+        Window::new(self)
     }
 }
 
@@ -115,7 +115,7 @@ impl ApplicationBuilder {
     }
 
     pub fn build(self) -> std::result::Result<Application, ApplicationError> {
-        if let Err(_) = APP_LOCK.set(()) {
+        if APP_LOCK.set(()).is_err() {
             return Err(ApplicationError::AlreadyExists);
         }
 

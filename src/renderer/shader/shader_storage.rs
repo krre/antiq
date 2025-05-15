@@ -15,17 +15,16 @@ impl ShaderStorage {
     pub fn new(device: &wgpu::Device) -> Self {
         let shaders = HashMap::from([(
             ShaderName::Dot,
-            Self::load_shader(&device, include_str!("sources/dot.wgsl")),
+            Self::load_shader(device, include_str!("sources/dot.wgsl")),
         )]);
 
         Self { shaders }
     }
 
     pub fn shader(&self, name: ShaderName) -> &wgpu::ShaderModule {
-        &self
-            .shaders
+        self.shaders
             .get(&name)
-            .expect(&format!("Shader {:?} not found", name))
+            .unwrap_or_else(|| panic!("Shader {:?} not found", name))
     }
 
     fn load_shader(device: &wgpu::Device, source: &str) -> Rc<wgpu::ShaderModule> {
