@@ -1,7 +1,7 @@
 use antiq::{
     application::Application,
     core::{Result, UpgradeOrErr},
-    ui::{layout::fill::Fill, widget::view::View},
+    ui::{layout::Fill, widget::view::View},
     window::Window,
 };
 
