@@ -1,3 +1,4 @@
+pub mod layout;
 pub mod widget;
 
 mod scene;
