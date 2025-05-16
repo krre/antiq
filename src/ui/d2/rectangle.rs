@@ -1,6 +1,4 @@
-use crate::core::Color;
-
-use super::Widget;
+use crate::{core::Color, ui::widget::Widget};
 
 pub struct Rectangle {
     color: Color,
