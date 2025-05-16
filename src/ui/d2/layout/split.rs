@@ -1,3 +1,5 @@
+use crate::ui::layout::Layout;
+
 use super::Layout2D;
 
 pub struct Split {}
@@ -8,6 +10,8 @@ impl Split {
     }
 }
 
-impl Layout2D for Split {
+impl Layout for Split {
     fn build(&self) {}
 }
+
+impl Layout2D for Split {}

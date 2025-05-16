@@ -1,4 +1,4 @@
-use crate::ui::widget::Widget;
+use crate::ui::{layout::Layout, widget::Widget};
 
 use super::Layout2D;
 
@@ -18,6 +18,8 @@ impl Fill {
     }
 }
 
-impl Layout2D for Fill {
+impl Layout for Fill {
     fn build(&self) {}
 }
+
+impl Layout2D for Fill {}

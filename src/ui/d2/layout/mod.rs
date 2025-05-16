@@ -10,6 +10,4 @@ pub use grid::Grid;
 pub use row::Row;
 pub use split::Split;
 
-pub trait Layout2D {
-    fn build(&self);
-}
+pub trait Layout2D {}

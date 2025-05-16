@@ -1,3 +1,5 @@
+use crate::ui::layout::Layout;
+
 use super::Layout2D;
 
 pub struct Column {}
@@ -8,6 +10,8 @@ impl Column {
     }
 }
 
-impl Layout2D for Column {
+impl Layout for Column {
     fn build(&self) {}
 }
+
+impl Layout2D for Column {}
