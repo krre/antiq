@@ -2,6 +2,8 @@ use std::rc::Rc;
 
 use crate::ui::{d3::Scene, widget::Widget};
 
+use super::Widget2D;
+
 pub struct View {
     scene: Rc<Scene>,
 }
@@ -25,3 +27,5 @@ impl View {
 impl Widget for View {
     fn build(&self) {}
 }
+
+impl Widget2D for View {}

@@ -1,5 +1,7 @@
 use crate::{core::Color, ui::widget::Widget};
 
+use super::Widget2D;
+
 pub struct Rectangle {
     color: Color,
 }
@@ -23,3 +25,5 @@ impl Rectangle {
 impl Widget for Rectangle {
     fn build(&self) {}
 }
+
+impl Widget2D for Rectangle {}
