@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::ui::{scene::Scene, widget::Widget};
+use crate::ui::{d3::Scene, widget::Widget};
 
 pub struct View {
     scene: Rc<Scene>,
