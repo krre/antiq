@@ -1,4 +1,4 @@
-use super::Layout;
+use super::Layout2D;
 
 pub struct Grid {}
 
@@ -8,6 +8,6 @@ impl Grid {
     }
 }
 
-impl Layout for Grid {
+impl Layout2D for Grid {
     fn build(&self) {}
 }

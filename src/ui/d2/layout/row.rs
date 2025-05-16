@@ -1,4 +1,4 @@
-use super::Layout;
+use super::Layout2D;
 
 pub struct Row {}
 
@@ -8,6 +8,6 @@ impl Row {
     }
 }
 
-impl Layout for Row {
+impl Layout2D for Row {
     fn build(&self) {}
 }

@@ -7,7 +7,7 @@ use std::{
 use crate::{
     platform,
     renderer::{Renderer, Surface},
-    ui::d2::layout::{Fill, Layout},
+    ui::d2::layout::{Fill, Layout2D},
 };
 
 use super::{
@@ -30,7 +30,7 @@ pub struct Window {
     surface: Surface,
     visible: bool,
     maximized: bool,
-    layout: Box<dyn Layout>,
+    layout: Box<dyn Layout2D>,
 }
 
 impl WindowId {
@@ -171,11 +171,11 @@ impl Window {
         self.maximized
     }
 
-    pub fn set_layout(&mut self, layout: Box<dyn Layout>) {
+    pub fn set_layout(&mut self, layout: Box<dyn Layout2D>) {
         self.layout = layout;
     }
 
-    pub fn layout(&self) -> &dyn Layout {
+    pub fn layout(&self) -> &dyn Layout2D {
         self.layout.as_ref()
     }
 

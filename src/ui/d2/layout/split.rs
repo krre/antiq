@@ -1,4 +1,4 @@
-use super::Layout;
+use super::Layout2D;
 
 pub struct Split {}
 
@@ -8,6 +8,6 @@ impl Split {
     }
 }
 
-impl Layout for Split {
+impl Layout2D for Split {
     fn build(&self) {}
 }

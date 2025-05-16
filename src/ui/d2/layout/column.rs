@@ -1,4 +1,4 @@
-use super::Layout;
+use super::Layout2D;
 
 pub struct Column {}
 
@@ -8,6 +8,6 @@ impl Column {
     }
 }
 
-impl Layout for Column {
+impl Layout2D for Column {
     fn build(&self) {}
 }
