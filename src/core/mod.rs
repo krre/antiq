@@ -57,7 +57,7 @@ impl Size2D {
         self.height
     }
 
-    pub fn size(&self) -> (u32, u32) {
+    pub fn as_tuple(&self) -> (u32, u32) {
         (self.width, self.height)
     }
 }
@@ -83,7 +83,7 @@ impl Pos2D {
         self.y
     }
 
-    pub fn pos(&self) -> (i32, i32) {
+    pub fn as_tuple(&self) -> (i32, i32) {
         (self.x, self.y)
     }
 }
@@ -114,7 +114,7 @@ impl Border2D {
         self.right
     }
 
-    pub fn border(&self) -> (u16, u16, u16, u16) {
+    pub fn as_tuple(&self) -> (u16, u16, u16, u16) {
         (self.left, self.right, self.top, self.bottom)
     }
 }
