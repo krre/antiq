@@ -98,16 +98,32 @@ impl Border2D {
         }
     }
 
+    pub fn set_top(&mut self, top: u16) {
+        self.top = top;
+    }
+
     pub fn top(&self) -> u16 {
         self.top
+    }
+
+    pub fn set_bottom(&mut self, bottom: u16) {
+        self.bottom = bottom;
     }
 
     pub fn bottom(&self) -> u16 {
         self.bottom
     }
 
+    pub fn set_left(&mut self, left: u16) {
+        self.left = left;
+    }
+
     pub fn left(&self) -> u16 {
         self.left
+    }
+
+    pub fn set_right(&mut self, right: u16) {
+        self.right = right;
     }
 
     pub fn right(&self) -> u16 {
