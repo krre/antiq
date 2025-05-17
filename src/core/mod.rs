@@ -59,8 +59,16 @@ impl Pos2D {
         Self { x, y }
     }
 
+    pub fn set_x(&mut self, x: i32) {
+        self.x = x;
+    }
+
     pub fn x(&self) -> i32 {
         self.x
+    }
+
+    pub fn set_y(&mut self, y: i32) {
+        self.y = y;
     }
 
     pub fn y(&self) -> i32 {
