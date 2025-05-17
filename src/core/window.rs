@@ -7,11 +7,14 @@ use std::{
 use crate::{
     platform,
     renderer::{Renderer, Surface},
-    ui::d2::layout::{Fill, Layout2D},
+    ui::d2::{
+        geometry::Pos2D,
+        layout::{Fill, Layout2D},
+    },
 };
 
 use super::{
-    Border2D, Color, Pos2D, Result, Size2D, application::Application, window_manager::WindowManager,
+    Border2D, Color, Result, Size2D, application::Application, window_manager::WindowManager,
 };
 
 static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
@@ -119,7 +122,7 @@ impl Window {
 
     pub fn set_position(&mut self, pos: Pos2D) {
         let border = self.border();
-        let correct_pos = Pos2D::new(pos.x - border.left as i32, pos.y - border.top as i32);
+        let correct_pos = Pos2D::new(pos.x() - border.left as i32, pos.y() - border.top as i32);
 
         self.platform_window.set_position(correct_pos);
         self.position = correct_pos;

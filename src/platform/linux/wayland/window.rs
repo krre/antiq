@@ -15,8 +15,9 @@ use wayland_protocols::xdg::{
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
-    core::{Pos2D, Size2D},
+    core::Size2D,
     platform::{PlatformApplication, PlatformEventLoop, PlatformWindow},
+    ui::d2::geometry::Pos2D,
     window::WindowId,
 };
 

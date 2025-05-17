@@ -1,7 +1,9 @@
 use std::any::Any;
 
+use crate::ui::d2::geometry::Pos2D;
+
+use super::Size2D;
 use super::window::WindowId;
-use super::{Pos2D, Size2D};
 pub enum ApplicationAction {
     Quit,
 }

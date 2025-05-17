@@ -23,12 +23,6 @@ pub struct Size2D {
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
-pub struct Pos2D {
-    x: i32,
-    y: i32,
-}
-
-#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Border2D {
     left: u16,
     right: u16,
@@ -59,32 +53,6 @@ impl Size2D {
 
     pub fn as_tuple(&self) -> (u32, u32) {
         (self.width, self.height)
-    }
-}
-
-impl Pos2D {
-    pub fn new(x: i32, y: i32) -> Self {
-        Self { x, y }
-    }
-
-    pub fn set_x(&mut self, x: i32) {
-        self.x = x;
-    }
-
-    pub fn x(&self) -> i32 {
-        self.x
-    }
-
-    pub fn set_y(&mut self, y: i32) {
-        self.y = y;
-    }
-
-    pub fn y(&self) -> i32 {
-        self.y
-    }
-
-    pub fn as_tuple(&self) -> (i32, i32) {
-        (self.x, self.y)
     }
 }
 

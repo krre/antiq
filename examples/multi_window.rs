@@ -1,6 +1,7 @@
 use antiq::{
     application::Application,
-    core::{Color, Pos2D, Result, Size2D, UpgradeOrErr},
+    core::{Color, Result, Size2D, UpgradeOrErr},
+    ui::d2::geometry::Pos2D,
     window::Window,
 };
 

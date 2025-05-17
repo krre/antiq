@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use crate::{
-    core::{Pos2D, Size2D},
-    ui::{d3::Scene, widget::Widget},
+    core::Size2D,
+    ui::{d2::geometry::Pos2D, d3::Scene, widget::Widget},
 };
 
 use super::{Widget2D, WidgetState};

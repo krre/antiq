@@ -1,7 +1,9 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
+use crate::ui::d2::geometry::Pos2D;
+
 use super::{
-    Pos2D, Size2D,
+    Size2D,
     window::{Window, WindowId},
 };
 
