@@ -2,11 +2,11 @@ use crate::ui::{layout::Layout, widget::Widget};
 
 use super::Layout2D;
 
-pub struct Fill {
+pub struct Fill2D {
     widget: Box<dyn Widget>,
 }
 
-impl Fill {
+impl Fill2D {
     pub fn new() -> Self {
         Self {
             widget: Box::new(()),
@@ -18,8 +18,8 @@ impl Fill {
     }
 }
 
-impl Layout for Fill {
+impl Layout for Fill2D {
     fn build(&self) {}
 }
 
-impl Layout2D for Fill {}
+impl Layout2D for Fill2D {}

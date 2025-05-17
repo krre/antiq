@@ -1,7 +1,7 @@
 use antiq::{
     application::Application,
     core::{Result, UpgradeOrErr},
-    ui::d2::{layout::Fill, widget::View},
+    ui::d2::{layout::Fill2D, widget::View},
     window::Window,
 };
 
@@ -18,7 +18,7 @@ fn main() -> Result<()> {
         w.set_visible(true);
 
         let view = View::new();
-        let mut fill_layout = Fill::new();
+        let mut fill_layout = Fill2D::new();
         fill_layout.set_widget(Box::new(view));
 
         w.set_layout(Box::new(fill_layout));

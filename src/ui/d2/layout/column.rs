@@ -2,16 +2,16 @@ use crate::ui::layout::Layout;
 
 use super::Layout2D;
 
-pub struct Column {}
+pub struct Column2D {}
 
-impl Column {
+impl Column2D {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Layout for Column {
+impl Layout for Column2D {
     fn build(&self) {}
 }
 
-impl Layout2D for Column {}
+impl Layout2D for Column2D {}

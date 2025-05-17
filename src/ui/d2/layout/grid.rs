@@ -2,16 +2,16 @@ use crate::ui::layout::Layout;
 
 use super::Layout2D;
 
-pub struct Grid {}
+pub struct Grid2D {}
 
-impl Grid {
+impl Grid2D {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Layout for Grid {
+impl Layout for Grid2D {
     fn build(&self) {}
 }
 
-impl Layout2D for Grid {}
+impl Layout2D for Grid2D {}

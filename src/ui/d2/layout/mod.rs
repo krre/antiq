@@ -4,10 +4,10 @@ mod grid;
 mod row;
 mod split;
 
-pub use column::Column;
-pub use fill::Fill;
-pub use grid::Grid;
-pub use row::Row;
-pub use split::Split;
+pub use column::Column2D;
+pub use fill::Fill2D;
+pub use grid::Grid2D;
+pub use row::Row2D;
+pub use split::Split2D;
 
 pub trait Layout2D {}

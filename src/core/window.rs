@@ -9,7 +9,7 @@ use crate::{
     renderer::{Renderer, Surface},
     ui::d2::{
         geometry::{Border2D, Pos2D, Size2D},
-        layout::{Fill, Layout2D},
+        layout::{Fill2D, Layout2D},
     },
 };
 
@@ -78,7 +78,7 @@ impl Window {
             surface,
             visible: false,
             maximized: false,
-            layout: Box::new(Fill::new()),
+            layout: Box::new(Fill2D::new()),
         }));
 
         application
