@@ -7,13 +7,16 @@ use std::{
 use crate::{
     platform,
     renderer::{Renderer, Surface},
-    ui::d2::{
-        geometry::{Border2D, Pos2D, Size2D},
-        layout::{Fill2D, Layout2D},
+    ui::{
+        Color,
+        d2::{
+            geometry::{Border2D, Pos2D, Size2D},
+            layout::{Fill2D, Layout2D},
+        },
     },
 };
 
-use super::{Color, Result, application::Application, window_manager::WindowManager};
+use super::{Result, application::Application, window_manager::WindowManager};
 
 static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 

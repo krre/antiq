@@ -3,12 +3,10 @@ pub mod event;
 pub mod preferences;
 pub mod window;
 
-mod color;
 mod event_loop;
 mod id;
 mod window_manager;
 
-pub use color::Color;
 pub use event_loop::EventLoop;
 pub use id::Id;
 

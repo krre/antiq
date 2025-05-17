@@ -7,7 +7,7 @@ pub use shader::ShaderStorage;
 pub use surface::Surface;
 use wgpu::{Adapter, Device, Instance, Queue};
 
-use crate::core::Color;
+use crate::ui::Color;
 
 pub struct Renderer {
     instance: Instance,
