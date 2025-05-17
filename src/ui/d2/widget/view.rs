@@ -6,17 +6,17 @@ use crate::ui::{
     widget::Widget,
 };
 
-use super::{Widget2D, WidgetState};
+use super::{Widget2D, Widget2DState};
 
 pub struct View {
-    state: WidgetState,
+    state: Widget2DState,
     scene: Rc<Scene>,
 }
 
 impl View {
     pub fn new() -> Self {
         Self {
-            state: WidgetState::new(),
+            state: Widget2DState::new(),
             scene: Rc::new(Scene::new()),
         }
     }

@@ -6,17 +6,17 @@ use crate::{
     },
 };
 
-use super::{Widget2D, WidgetState};
+use super::{Widget2D, Widget2DState};
 
 pub struct Rectangle {
-    state: WidgetState,
+    state: Widget2DState,
     color: Color,
 }
 
 impl Rectangle {
     pub fn new() -> Self {
         Self {
-            state: WidgetState::new(),
+            state: Widget2DState::new(),
             color: Color::new(1.0, 1.0, 1.0),
         }
     }

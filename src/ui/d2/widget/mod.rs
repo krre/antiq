@@ -17,13 +17,13 @@ pub trait Widget2D {
     fn is_visible(&self) -> bool;
 }
 
-pub struct WidgetState {
+pub struct Widget2DState {
     position: Pos2D,
     size: Size2D,
     visible: bool,
 }
 
-impl WidgetState {
+impl Widget2DState {
     pub fn new() -> Self {
         Self {
             position: Pos2D::default(),
