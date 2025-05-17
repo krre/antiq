@@ -1,6 +1,9 @@
 use crate::{
-    core::{Color, Size2D},
-    ui::{d2::geometry::Pos2D, widget::Widget},
+    core::Color,
+    ui::{
+        d2::geometry::{Pos2D, Size2D},
+        widget::Widget,
+    },
 };
 
 use super::{Widget2D, WidgetState};

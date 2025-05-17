@@ -1,6 +1,6 @@
 use std::{env, rc::Rc};
 
-use crate::core::{Result, Size2D};
+use crate::{core::Result, ui::d2::geometry::Size2D};
 
 use super::{PlatformApplication, PlatformEventLoop, PlatformWindow};
 

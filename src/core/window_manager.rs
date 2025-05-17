@@ -1,11 +1,8 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use crate::ui::d2::geometry::Pos2D;
+use crate::ui::d2::geometry::{Pos2D, Size2D};
 
-use super::{
-    Size2D,
-    window::{Window, WindowId},
-};
+use super::window::{Window, WindowId};
 
 pub(crate) struct WindowManager {
     windows: HashMap<WindowId, Rc<RefCell<Window>>>,

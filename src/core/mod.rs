@@ -17,43 +17,11 @@ use serde::{Deserialize, Serialize};
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
-pub struct Size2D {
-    width: u32,
-    height: u32,
-}
-
-#[derive(Clone, Copy, Serialize, Deserialize, Default, Debug, PartialEq)]
 pub struct Border2D {
     left: u16,
     right: u16,
     top: u16,
     bottom: u16,
-}
-
-impl Size2D {
-    pub fn new(width: u32, height: u32) -> Self {
-        Self { width, height }
-    }
-
-    pub fn set_width(&mut self, width: u32) {
-        self.width = width;
-    }
-
-    pub fn width(&self) -> u32 {
-        self.width
-    }
-
-    pub fn set_height(&mut self, height: u32) {
-        self.height = height;
-    }
-
-    pub fn height(&self) -> u32 {
-        self.height
-    }
-
-    pub fn as_tuple(&self) -> (u32, u32) {
-        (self.width, self.height)
-    }
 }
 
 impl Border2D {

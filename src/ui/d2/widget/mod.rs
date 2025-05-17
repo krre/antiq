@@ -4,9 +4,7 @@ mod view;
 pub use rectangle::Rectangle;
 pub use view::View;
 
-use crate::core::Size2D;
-
-use super::geometry::Pos2D;
+use super::geometry::{Pos2D, Size2D};
 
 pub trait Widget2D {
     fn set_position(&mut self, position: Pos2D);

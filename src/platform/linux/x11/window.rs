@@ -7,9 +7,9 @@ use x11rb::protocol::xproto::*;
 use x11rb::wrapper::ConnectionExt as _;
 
 use crate::{
-    core::{Border2D, Size2D},
+    core::Border2D,
     platform::{PlatformApplication, PlatformWindow},
-    ui::d2::geometry::Pos2D,
+    ui::d2::geometry::{Pos2D, Size2D},
     window::WindowId,
 };
 

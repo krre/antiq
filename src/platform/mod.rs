@@ -4,10 +4,10 @@ use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
     core::{
-        Border2D, Result, Size2D,
+        Border2D, Result,
         event::{Event, EventHandler},
     },
-    ui::d2::geometry::Pos2D,
+    ui::d2::geometry::{Pos2D, Size2D},
     window::WindowId,
 };
 

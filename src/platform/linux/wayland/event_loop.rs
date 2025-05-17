@@ -7,10 +7,11 @@ use std::{
 
 use crate::{
     core::{
-        Result, Size2D,
+        Result,
         event::{Event, EventHandler, WindowAction, WindowEvent},
     },
     platform::{PlatformApplication, PlatformEventLoop},
+    ui::d2::geometry::Size2D,
 };
 
 use wayland_client::{Connection, Dispatch, EventQueue, QueueHandle};

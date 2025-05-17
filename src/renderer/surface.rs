@@ -1,4 +1,4 @@
-use crate::{core::Size2D, platform::PlatformWindow};
+use crate::{platform::PlatformWindow, ui::d2::geometry::Size2D};
 
 use super::Renderer;
 

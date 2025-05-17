@@ -8,14 +8,12 @@ use crate::{
     platform,
     renderer::{Renderer, Surface},
     ui::d2::{
-        geometry::Pos2D,
+        geometry::{Pos2D, Size2D},
         layout::{Fill, Layout2D},
     },
 };
 
-use super::{
-    Border2D, Color, Result, Size2D, application::Application, window_manager::WindowManager,
-};
+use super::{Border2D, Color, Result, application::Application, window_manager::WindowManager};
 
 static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 
