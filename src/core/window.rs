@@ -20,7 +20,7 @@ use super::{Result, application::Application, window_manager::WindowManager};
 
 static ID_COUNT: AtomicUsize = AtomicUsize::new(0);
 
-#[derive(Copy, Clone, Hash, Debug)]
+#[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
 pub struct WindowId(usize);
 
 pub struct Window {
@@ -50,14 +50,6 @@ impl WindowId {
         self.0
     }
 }
-
-impl PartialEq for WindowId {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
-
-impl Eq for WindowId {}
 
 impl Window {
     pub fn new(application: &Application) -> Result<Weak<RefCell<Self>>> {
