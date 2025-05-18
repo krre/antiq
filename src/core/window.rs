@@ -76,10 +76,9 @@ impl Window {
             layout: Box::new(Fill2D::new()),
         }));
 
-        application
-            .window_manager()
-            .upgrade()
-            .map(|wm| wm.borrow_mut().append(window.borrow().id(), window.clone()));
+        if let Some(wm) = application.window_manager().upgrade() {
+            wm.borrow_mut().append(window.borrow().id(), window.clone())
+        }
 
         {
             let mut w = window.borrow_mut();
@@ -183,9 +182,11 @@ impl Window {
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        self.renderer
-            .upgrade()
-            .map(|r| r.clear_view(&view, self.color));
+
+        if let Some(r) = self.renderer.upgrade() {
+            r.clear_view(&view, self.color)
+        }
+
         frame.present();
     }
 }

@@ -154,7 +154,9 @@ impl EventHandler for ApplicationEventHandler {
                     wm.borrow_mut().remove(event.id);
 
                     if wm.borrow().count() == 0 && self.quit_on_last_window_closed {
-                        self.event_loop.upgrade().map(|el| el.quit());
+                        if let Some(el) = self.event_loop.upgrade() {
+                            el.quit()
+                        }
                     }
                 }
                 WindowAction::Resize(size) => {

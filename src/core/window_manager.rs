@@ -26,23 +26,27 @@ impl WindowManager {
     }
 
     pub fn render(&self, id: WindowId) {
-        self.windows.get(&id).map(|w| w.borrow().render());
+        if let Some(w) = self.windows.get(&id) {
+            w.borrow().render()
+        }
     }
 
     pub fn resize(&self, id: WindowId, size: Size2D) {
-        self.windows
-            .get(&id)
-            .map(|w| w.borrow_mut().update_size(size));
+        if let Some(w) = self.windows.get(&id) {
+            w.borrow_mut().update_size(size)
+        }
     }
 
     pub fn ask_resize(&self, id: WindowId, size: Size2D) {
-        self.windows.get(&id).map(|w| w.borrow_mut().set_size(size));
+        if let Some(w) = self.windows.get(&id) {
+            w.borrow_mut().set_size(size)
+        }
     }
 
     pub fn move_to(&self, id: WindowId, pos: Pos2D) {
-        self.windows
-            .get(&id)
-            .map(|w| w.borrow_mut().update_position(pos));
+        if let Some(w) = self.windows.get(&id) {
+            w.borrow_mut().update_position(pos)
+        }
     }
 
     pub fn count(&self) -> usize {
