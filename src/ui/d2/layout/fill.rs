@@ -18,6 +18,12 @@ impl Fill2D {
     }
 }
 
+impl Default for Fill2D {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layout for Fill2D {
     fn build(&self) {}
 }

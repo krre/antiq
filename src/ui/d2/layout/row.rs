@@ -26,6 +26,12 @@ impl Row2D {
     }
 }
 
+impl Default for Row2D {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layout for Row2D {
     fn build(&self) {}
 }

@@ -137,6 +137,12 @@ impl ApplicationBuilder {
     }
 }
 
+impl Default for ApplicationBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl EventHandler for ApplicationEventHandler {
     fn window_event(&self, event: WindowEvent) {
         if let Some(wm) = self.window_manager.upgrade() {

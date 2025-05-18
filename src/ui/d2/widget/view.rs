@@ -30,6 +30,12 @@ impl View {
     }
 }
 
+impl Default for View {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Widget for View {
     fn build(&self) {}
 }

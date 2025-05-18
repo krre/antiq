@@ -10,6 +10,12 @@ impl Split2D {
     }
 }
 
+impl Default for Split2D {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layout for Split2D {
     fn build(&self) {}
 }

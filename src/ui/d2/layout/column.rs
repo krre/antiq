@@ -10,6 +10,12 @@ impl Column2D {
     }
 }
 
+impl Default for Column2D {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layout for Column2D {
     fn build(&self) {}
 }

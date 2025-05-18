@@ -28,6 +28,12 @@ impl Rectangle {
     }
 }
 
+impl Default for Rectangle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Widget for Rectangle {
     fn build(&self) {}
 }

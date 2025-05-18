@@ -10,6 +10,12 @@ impl Grid2D {
     }
 }
 
+impl Default for Grid2D {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layout for Grid2D {
     fn build(&self) {}
 }

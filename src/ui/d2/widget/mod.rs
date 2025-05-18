@@ -32,3 +32,9 @@ impl Widget2DState {
         }
     }
 }
+
+impl Default for Widget2DState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
