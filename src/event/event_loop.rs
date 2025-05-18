@@ -6,8 +6,7 @@ use crate::{
     platform::{self, PlatformApplication},
 };
 
-use super::event::{Event, EventHandler};
-
+use super::{Event, EventHandler};
 pub struct EventLoop {
     pub(crate) platform_event_loop: Rc<dyn platform::PlatformEventLoop>,
 }
