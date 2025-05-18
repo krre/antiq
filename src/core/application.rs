@@ -118,19 +118,21 @@ impl ApplicationBuilder {
             return Err(ApplicationError::AlreadyExists);
         }
 
-        let mut application = Application {
+        let platform_application =
+            platform::Application::new().map_err(|e| ApplicationError::Other(e))?;
+
+        let event_loop = EventLoop::from_platform_application(platform_application.clone())
+            .map_err(|e| ApplicationError::Other(e))?;
+
+        let application = Application {
             name: self.name,
             organization: self.organization,
-            event_loop: Rc::new(EventLoop::new_uninit()),
+            event_loop: Rc::new(event_loop),
             window_manager: Rc::new(RefCell::new(WindowManager::new())),
             renderer: Rc::new(Renderer::new()),
-            platform_application: platform::Application::new()
-                .map_err(|e| ApplicationError::Other(e))?,
+            platform_application,
             quit_on_last_window_closed: self.quit_on_last_window_closed,
         };
-
-        let event_loop = EventLoop::new(&application).map_err(|e| ApplicationError::Other(e))?;
-        application.event_loop = Rc::new(event_loop);
 
         Ok(application)
     }
