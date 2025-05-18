@@ -12,10 +12,8 @@ use x11rb::{
 };
 
 use crate::{
-    core::{
-        Result,
-        event::{Event, EventHandler, WindowAction, WindowEvent},
-    },
+    core::Result,
+    event::{Event, EventHandler, WindowAction, WindowEvent},
     platform::{PlatformApplication, PlatformEventLoop, x11::Atoms},
     ui::d2::geometry::{Pos2D, Size2D},
     window::WindowId,

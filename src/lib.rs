@@ -1,4 +1,5 @@
 pub mod core;
+pub mod event;
 pub mod platform;
 pub mod renderer;
 pub mod ui;

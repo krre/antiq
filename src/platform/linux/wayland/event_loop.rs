@@ -6,10 +6,8 @@ use std::{
 };
 
 use crate::{
-    core::{
-        Result,
-        event::{Event, EventHandler, WindowAction, WindowEvent},
-    },
+    core::Result,
+    event::{Event, EventHandler, WindowAction, WindowEvent},
     platform::{PlatformApplication, PlatformEventLoop},
     ui::d2::geometry::Size2D,
 };

@@ -1,11 +1,8 @@
 use std::rc::Rc;
 
-use crate::{core::Result, platform};
+use crate::{application::Application, core::Result, platform};
 
-use super::{
-    application::Application,
-    event::{Event, EventHandler},
-};
+use super::event::{Event, EventHandler};
 
 pub struct EventLoop {
     pub(crate) platform_event_loop: Rc<dyn platform::PlatformEventLoop>,

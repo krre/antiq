@@ -1,13 +1,10 @@
 pub mod application;
-pub mod event;
 pub mod preferences;
 pub mod window;
 
-mod event_loop;
 mod id;
 mod window_manager;
 
-pub use event_loop::EventLoop;
 pub use id::Id;
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;

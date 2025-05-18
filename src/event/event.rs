@@ -1,8 +1,10 @@
 use std::any::Any;
 
-use crate::ui::d2::geometry::{Pos2D, Size2D};
+use crate::{
+    ui::d2::geometry::{Pos2D, Size2D},
+    window::WindowId,
+};
 
-use super::window::WindowId;
 pub enum ApplicationAction {
     Quit,
 }

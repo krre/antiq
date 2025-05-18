@@ -3,10 +3,8 @@ use std::any::Any;
 use wgpu::SurfaceTargetUnsafe;
 
 use crate::{
-    core::{
-        Result,
-        event::{Event, EventHandler},
-    },
+    core::Result,
+    event::{Event, EventHandler},
     ui::d2::geometry::{Border2D, Pos2D, Size2D},
     window::WindowId,
 };

@@ -1,10 +1,9 @@
-use super::{
-    EventLoop, Result,
-    event::{EventHandler, WindowAction, WindowEvent},
-    window::Window,
-    window_manager::WindowManager,
+use super::{Result, window::Window, window_manager::WindowManager};
+use crate::{
+    event::{EventHandler, EventLoop, WindowAction, WindowEvent},
+    platform,
+    renderer::Renderer,
 };
-use crate::{platform, renderer::Renderer};
 use std::{
     cell::RefCell,
     fmt::Display,
