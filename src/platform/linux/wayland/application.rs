@@ -1,4 +1,4 @@
-use std::{rc::Rc, sync::Arc};
+use std::rc::Rc;
 use wayland_client::{
     Connection, Dispatch, QueueHandle, delegate_noop,
     globals::{GlobalList, GlobalListContents, registry_queue_init},
@@ -14,7 +14,7 @@ use crate::core::Result;
 use crate::platform::PlatformApplication;
 
 pub struct Application {
-    pub(crate) connection: Arc<Connection>,
+    pub(crate) connection: Connection,
     pub(crate) globals: GlobalList,
     pub(crate) compositor: WlCompositor,
     pub(crate) shm: WlShm,
@@ -29,7 +29,7 @@ delegate_noop!(State: ignore ZxdgDecorationManagerV1);
 
 impl Application {
     pub fn new() -> Result<Rc<dyn PlatformApplication>> {
-        let connection = Arc::new(Connection::connect_to_env()?);
+        let connection = Connection::connect_to_env()?;
         let (globals, queue) = registry_queue_init::<State>(&connection).unwrap();
         let qh = queue.handle();
         let compositor: WlCompositor = globals.bind(&qh, 4..=5, ()).unwrap();
@@ -43,10 +43,6 @@ impl Application {
             shm,
             xdg_decoration_manager,
         }))
-    }
-
-    pub fn connection(&self) -> Arc<Connection> {
-        self.connection.clone()
     }
 }
 
