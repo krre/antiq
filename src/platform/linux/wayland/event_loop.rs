@@ -37,7 +37,7 @@ impl EventLoop {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let event_queue = RefCell::new(application.connection.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
-        let xdg_wm_base: XdgWmBase = application.globals.bind(&queue_handle, 5..=6, ()).unwrap();
+        let xdg_wm_base: XdgWmBase = application.globals.bind(&queue_handle, 5..=6, ())?;
 
         Ok(Rc::new(Self {
             event_queue,
