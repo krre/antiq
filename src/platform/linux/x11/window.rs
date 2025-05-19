@@ -31,7 +31,7 @@ impl Window {
         size: Size2D,
     ) -> crate::core::Result<Box<dyn PlatformWindow>> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
-        let conn = application.connection.as_ref();
+        let conn = &application.connection;
         let screen = &conn.setup().roots[application.screen_num];
         let id = conn.generate_id()?;
 

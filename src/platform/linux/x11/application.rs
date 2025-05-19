@@ -18,18 +18,18 @@ x11rb::atom_manager! {
 }
 
 pub struct Application {
-    pub(crate) connection: Rc<XCBConnection>,
+    pub(crate) connection: XCBConnection,
     pub(crate) screen_num: usize,
     pub(crate) atoms: Atoms,
 }
 
 impl Application {
     pub fn new() -> Result<Rc<dyn PlatformApplication>> {
-        let (conn, screen_num) = XCBConnection::connect(None)?;
-        let atoms = Atoms::new(&conn)?.reply()?;
+        let (connection, screen_num) = XCBConnection::connect(None)?;
+        let atoms = Atoms::new(&connection)?.reply()?;
 
         Ok(Rc::new(Self {
-            connection: Rc::new(conn),
+            connection,
             screen_num,
             atoms,
         }))

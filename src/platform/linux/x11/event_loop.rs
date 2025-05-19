@@ -28,7 +28,7 @@ pub struct EventLoop {
 impl EventLoop {
     pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
-        let conn = application.connection.as_ref();
+        let conn = &application.connection;
         let screen = conn.setup().roots[application.screen_num].clone();
         conn.change_window_attributes(
             screen.root,
