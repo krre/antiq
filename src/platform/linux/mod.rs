@@ -32,11 +32,13 @@ pub struct Application;
 
 impl Application {
     pub fn new() -> Result<Rc<dyn PlatformApplication>> {
-        match backend() {
-            Backend::Wayland => wayland::Application::new(),
-            Backend::X11 => x11::Application::new(),
+        let app: Rc<dyn PlatformApplication> = match backend() {
+            Backend::Wayland => Rc::new(wayland::Application::new()?),
+            Backend::X11 => Rc::new(x11::Application::new()?),
             Backend::Unknown => panic!("Unknown display server!"),
-        }
+        };
+
+        Ok(app)
     }
 }
 

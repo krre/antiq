@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use crate::core::Result;
 use crate::platform::PlatformApplication;
 use x11rb::xcb_ffi::XCBConnection;
@@ -24,15 +22,15 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Result<Rc<dyn PlatformApplication>> {
+    pub fn new() -> Result<Self> {
         let (connection, screen_num) = XCBConnection::connect(None)?;
         let atoms = Atoms::new(&connection)?.reply()?;
 
-        Ok(Rc::new(Self {
+        Ok(Self {
             connection,
             screen_num,
             atoms,
-        }))
+        })
     }
 }
 
