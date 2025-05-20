@@ -1,4 +1,4 @@
-use crate::ui::{layout::Layout, widget::Widget};
+use crate::ui::{d2::widget::Blank, layout::Layout, widget::Widget};
 
 use super::Layout2D;
 
@@ -9,7 +9,7 @@ pub struct Fill2D {
 impl Fill2D {
     pub fn new() -> Self {
         Self {
-            widget: Box::new(()),
+            widget: Box::new(Blank::new()),
         }
     }
 

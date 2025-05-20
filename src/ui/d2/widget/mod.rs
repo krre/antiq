@@ -1,6 +1,8 @@
+mod blank;
 mod rectangle;
 mod view;
 
+pub use blank::Blank;
 pub use rectangle::Rectangle;
 pub use view::View;
 

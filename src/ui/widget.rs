@@ -6,18 +6,6 @@ pub trait Widget {
     fn build(&self);
 }
 
-impl Widget for () {
-    fn set_visible(&mut self, visible: bool) {
-        let _ = visible;
-    }
-
-    fn is_visible(&self) -> bool {
-        false
-    }
-
-    fn build(&self) {}
-}
-
 pub struct WidgetState {
     pub(crate) visible: bool,
 }
