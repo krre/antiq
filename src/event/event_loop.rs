@@ -14,7 +14,7 @@ pub struct EventLoop {
 impl EventLoop {
     pub fn new(application: &Application) -> Result<Self> {
         let platform_event_loop =
-            platform::EventLoop::new(application.platform_application.clone())?;
+            platform::new_event_loop(application.platform_application.clone())?;
 
         Ok(Self {
             platform_event_loop,
@@ -24,7 +24,7 @@ impl EventLoop {
     pub(crate) fn from_platform_application(
         platform_application: Rc<dyn PlatformApplication>,
     ) -> Result<Self> {
-        let platform_event_loop = platform::EventLoop::new(platform_application.clone())?;
+        let platform_event_loop = platform::new_event_loop(platform_application.clone())?;
 
         Ok(Self {
             platform_event_loop,

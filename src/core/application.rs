@@ -118,7 +118,7 @@ impl ApplicationBuilder {
             return Err(ApplicationError::AlreadyExists);
         }
 
-        let platform_application = platform::Application::new().map_err(ApplicationError::Other)?;
+        let platform_application = platform::new_application().map_err(ApplicationError::Other)?;
 
         let event_loop = EventLoop::from_platform_application(platform_application.clone())
             .map_err(ApplicationError::Other)?;

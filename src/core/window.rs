@@ -54,7 +54,7 @@ impl WindowId {
 impl Window {
     pub fn new(application: &Application) -> Result<Weak<RefCell<Self>>> {
         let size = Size2D::new(800, 600);
-        let platform_window = platform::Window::new(
+        let platform_window = platform::new_window(
             application.platform_application.clone(),
             application.event_loop().platform_event_loop.clone(),
             size,
