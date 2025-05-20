@@ -28,7 +28,7 @@ pub struct Window {
     color: Color,
     position: Pos2D,
     size: Size2D,
-    platform_window: Box<dyn platform::PlatformWindow>,
+    platform_window: Rc<dyn platform::PlatformWindow>,
     window_manager: Weak<RefCell<WindowManager>>,
     renderer: Weak<Renderer>,
     surface: Surface,

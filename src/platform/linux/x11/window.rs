@@ -29,7 +29,7 @@ impl Window {
     pub fn new(
         application: Rc<dyn PlatformApplication>,
         size: Size2D,
-    ) -> crate::core::Result<Box<dyn PlatformWindow>> {
+    ) -> crate::core::Result<Self> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let conn = &application.connection;
         let screen = &conn.setup().roots[application.screen_num];
@@ -61,10 +61,10 @@ impl Window {
 
         conn.flush()?;
 
-        Ok(Box::new(Self {
+        Ok(Self {
             application,
             id: WindowId::new(id as usize),
-        }))
+        })
     }
 
     fn inner_id(&self) -> u32 {

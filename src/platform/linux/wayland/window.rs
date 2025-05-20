@@ -57,7 +57,7 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
         _size: Size2D,
-    ) -> crate::core::Result<Box<dyn PlatformWindow>> {
+    ) -> crate::core::Result<Self> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let event_loop = Rc::downcast::<EventLoop>(event_loop.clone() as Rc<dyn Any>).unwrap();
         let qh = &event_loop.queue_handle;
@@ -87,7 +87,7 @@ impl Window {
 
         surface.commit();
 
-        Ok(Box::new(Self {
+        Ok(Self {
             id,
             application,
             event_loop,
@@ -95,7 +95,7 @@ impl Window {
             _xdg_surface: xdg_surface,
             xdg_toplevel,
             _xdg_toplevel_decoration: xdg_toplevel_decoration,
-        }))
+        })
     }
 }
 

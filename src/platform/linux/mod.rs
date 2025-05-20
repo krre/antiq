@@ -63,11 +63,13 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
-    ) -> Result<Box<dyn PlatformWindow>> {
-        if backend() == Backend::Wayland {
-            wayland::Window::new(application, event_loop, size)
+    ) -> Result<Rc<dyn PlatformWindow>> {
+        let window: Rc<dyn PlatformWindow> = if backend() == Backend::Wayland {
+            Rc::new(wayland::Window::new(application, event_loop, size)?)
         } else {
-            x11::Window::new(application, size)
-        }
+            Rc::new(x11::Window::new(application, size)?)
+        };
+
+        Ok(window)
     }
 }
