@@ -46,11 +46,13 @@ pub struct EventLoop;
 
 impl EventLoop {
     pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
-        if backend() == Backend::Wayland {
-            wayland::EventLoop::new(application)
+        let event_loop: Rc<dyn PlatformEventLoop> = if backend() == Backend::Wayland {
+            Rc::new(wayland::EventLoop::new(application)?)
         } else {
-            x11::EventLoop::new(application)
-        }
+            Rc::new(x11::EventLoop::new(application)?)
+        };
+
+        Ok(event_loop)
     }
 }
 

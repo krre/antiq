@@ -26,7 +26,7 @@ pub struct EventLoop {
 }
 
 impl EventLoop {
-    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Self> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let conn = &application.connection;
         let screen = conn.setup().roots[application.screen_num].clone();
@@ -36,7 +36,7 @@ impl EventLoop {
         )?;
         conn.flush()?;
 
-        Ok(Rc::new(Self { application }))
+        Ok(Self { application })
     }
 
     fn send_client_message_event(

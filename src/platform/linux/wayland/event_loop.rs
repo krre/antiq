@@ -33,18 +33,18 @@ pub(crate) struct State {
 }
 
 impl EventLoop {
-    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Self> {
         let application = Rc::downcast::<Application>(application.clone() as Rc<dyn Any>).unwrap();
         let event_queue = RefCell::new(application.connection.new_event_queue());
         let queue_handle = event_queue.borrow().handle();
         let xdg_wm_base: XdgWmBase = application.globals.bind(&queue_handle, 5..=6, ())?;
 
-        Ok(Rc::new(Self {
+        Ok(Self {
             event_queue,
             queue_handle,
             xdg_wm_base,
             running: Cell::new(false),
-        }))
+        })
     }
 }
 
