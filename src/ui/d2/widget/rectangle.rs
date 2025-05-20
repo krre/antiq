@@ -45,6 +45,14 @@ impl Widget for Rectangle {
         self.state.visible
     }
 
+    fn set_opactity(&mut self, opacity: f32) {
+        self.state.opacity = opacity;
+    }
+
+    fn opacity(&self) -> f32 {
+        self.state.opacity
+    }
+
     fn build(&self) {}
 }
 
