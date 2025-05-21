@@ -9,8 +9,8 @@ use crate::platform::{PlatformApplication, PlatformEventLoop};
 pub struct EventLoop {}
 
 impl EventLoop {
-    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Rc<dyn PlatformEventLoop>> {
-        Ok(Rc::new(Self {}))
+    pub fn new(application: Rc<dyn PlatformApplication>) -> Result<Self> {
+        Ok(Self {})
     }
 }
 
@@ -40,5 +40,5 @@ impl PlatformEventLoop for EventLoop {
 pub fn new_event_loop(
     application: Rc<dyn PlatformApplication>,
 ) -> Result<Rc<dyn PlatformEventLoop>> {
-    EventLoop::new(application)
+    Ok(Rc::new(EventLoop::new(application)?))
 }

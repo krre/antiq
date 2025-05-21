@@ -11,15 +11,15 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new() -> Result<Rc<dyn PlatformApplication>> {
-        Ok(Rc::new(Self {
+    pub fn new() -> Result<Self> {
+        Ok(Self {
             hinstance: unsafe { GetModuleHandleW(None) }?,
-        }))
+        })
     }
 }
 
 impl PlatformApplication for Application {}
 
 pub fn new_application() -> Result<Rc<dyn PlatformApplication>> {
-    Application::new()
+    Ok(Rc::new(Application::new()?))
 }
