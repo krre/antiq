@@ -1,8 +1,8 @@
-use std::any::Any;
 use std::rc::Rc;
 
-use crate::core::{Result, Size2D};
+use crate::core::{Result};
 use crate::platform::{PlatformApplication, PlatformEventLoop, PlatformWindow};
+use crate::ui::d2::geometry::{Pos2D, Size2D};
 
 pub struct Window {}
 
@@ -33,11 +33,11 @@ impl PlatformWindow for Window {
         todo!()
     }
 
-    fn set_position(&self, pos: crate::core::Pos2D) {
+    fn set_position(&self, pos: Pos2D) {
         todo!()
     }
 
-    fn set_size(&self, size: crate::core::Size2D) {
+    fn set_size(&self, size: Size2D) {
         todo!()
     }
 }

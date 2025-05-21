@@ -1,10 +1,9 @@
-use std::any::Any;
 use std::rc::Rc;
 
 use windows::Win32::UI::WindowsAndMessaging::*;
 
 use crate::core::Result;
-use crate::core::event::EventHandler;
+use crate::event::{Event, EventHandler};
 use crate::platform::{PlatformApplication, PlatformEventLoop};
 
 pub struct EventLoop {}
@@ -29,7 +28,7 @@ impl PlatformEventLoop for EventLoop {
         Ok(())
     }
 
-    fn send_event(&self, event: Box<dyn crate::core::event::Event>) {
+    fn send_event(&self, event: Box<dyn Event>) {
         todo!()
     }
 

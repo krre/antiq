@@ -1,7 +1,6 @@
 use windows::Win32::Foundation::HMODULE;
 use windows::Win32::System::LibraryLoader::*;
 
-use std::any::Any;
 use std::rc::Rc;
 
 use crate::core::Result;
