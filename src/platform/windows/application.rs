@@ -19,3 +19,7 @@ impl Application {
 }
 
 impl PlatformApplication for Application {}
+
+pub fn new_application() -> Result<Rc<dyn PlatformApplication>> {
+    Application::new()
+}

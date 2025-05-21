@@ -36,3 +36,9 @@ impl PlatformEventLoop for EventLoop {
         todo!()
     }
 }
+
+pub fn new_event_loop(
+    application: Rc<dyn PlatformApplication>,
+) -> Result<Rc<dyn PlatformEventLoop>> {
+    EventLoop::new(application)
+}

@@ -11,8 +11,8 @@ impl Window {
         application: Rc<dyn PlatformApplication>,
         event_loop: Rc<dyn PlatformEventLoop>,
         size: Size2D,
-    ) -> Result<Box<dyn PlatformWindow>> {
-        Ok(Box::new(Self {}))
+    ) -> Result<Rc<dyn PlatformWindow>> {
+        Ok(Rc::new(Self {}))
     }
 }
 
@@ -40,4 +40,12 @@ impl PlatformWindow for Window {
     fn set_size(&self, size: Size2D) {
         todo!()
     }
+}
+
+pub fn new_window(
+    application: Rc<dyn PlatformApplication>,
+    event_loop: Rc<dyn PlatformEventLoop>,
+    size: Size2D,
+) -> Result<Rc<dyn PlatformWindow>> {
+    Window::new(application, event_loop, size)
 }
