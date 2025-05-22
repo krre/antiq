@@ -1,11 +1,25 @@
-pub trait Widget {
-    fn set_visible(&mut self, visible: bool);
+pub trait HasWidgetState {
+    fn widget_state(&self) -> &WidgetState;
 
-    fn is_visible(&self) -> bool;
+    fn widget_state_mut(&mut self) -> &mut WidgetState;
+}
 
-    fn set_opactity(&mut self, opacity: f32);
+pub trait Widget: HasWidgetState {
+    fn set_visible(&mut self, visible: bool) {
+        self.widget_state_mut().visible = visible;
+    }
 
-    fn opacity(&self) -> f32;
+    fn is_visible(&self) -> bool {
+        self.widget_state().visible
+    }
+
+    fn set_opactity(&mut self, opacity: f32) {
+        self.widget_state_mut().opacity = opacity;
+    }
+
+    fn opacity(&self) -> f32 {
+        self.widget_state().opacity
+    }
 
     fn build(&self);
 }

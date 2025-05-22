@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::ui::{
     d2::geometry::{Pos2D, Size2D},
     d3::Scene,
-    widget::{Widget, WidgetState},
+    widget::{HasWidgetState, Widget, WidgetState},
 };
 
 use super::{Widget2D, Widget2DState};
@@ -39,23 +39,17 @@ impl Default for View {
 }
 
 impl Widget for View {
-    fn set_visible(&mut self, visible: bool) {
-        self.state.visible = visible;
-    }
-
-    fn is_visible(&self) -> bool {
-        self.state.visible
-    }
-
-    fn set_opactity(&mut self, opacity: f32) {
-        self.state.opacity = opacity;
-    }
-
-    fn opacity(&self) -> f32 {
-        self.state.opacity
-    }
-
     fn build(&self) {}
+}
+
+impl HasWidgetState for View {
+    fn widget_state(&self) -> &WidgetState {
+        &self.state
+    }
+
+    fn widget_state_mut(&mut self) -> &mut WidgetState {
+        &mut self.state
+    }
 }
 
 impl Widget2D for View {
