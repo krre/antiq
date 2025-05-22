@@ -12,7 +12,9 @@ pub trait Node: HasNodeState {
     }
 
     fn remove_child(&mut self, index: usize) {
-        self.node_state_mut().children.remove(index);
+        if index < self.count() {
+            self.node_state_mut().children.remove(index);
+        }
     }
 
     fn count(&self) -> usize {
