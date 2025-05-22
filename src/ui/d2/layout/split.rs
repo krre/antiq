@@ -1,12 +1,19 @@
-use crate::ui::layout::Layout;
+use crate::ui::{
+    layout::{HasLayoutState, Layout, LayoutState},
+    node::{HasNodeState, NodeState},
+};
 
 use super::Layout2D;
 
-pub struct Split2D {}
+pub struct Split2D {
+    layout_state: LayoutState,
+}
 
 impl Split2D {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            layout_state: LayoutState::new(),
+        }
     }
 }
 
@@ -21,3 +28,23 @@ impl Layout for Split2D {
 }
 
 impl Layout2D for Split2D {}
+
+impl HasNodeState for Split2D {
+    fn node_state(&self) -> &NodeState {
+        Layout::node_state(self)
+    }
+
+    fn node_state_mut(&mut self) -> &mut NodeState {
+        Layout::node_state_mut(self)
+    }
+}
+
+impl HasLayoutState for Split2D {
+    fn layout_state(&self) -> &LayoutState {
+        &self.layout_state
+    }
+
+    fn layout_state_mut(&mut self) -> &mut LayoutState {
+        &mut self.layout_state
+    }
+}
