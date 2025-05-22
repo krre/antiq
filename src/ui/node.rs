@@ -11,6 +11,14 @@ pub trait Node: HasNodeState {
         self.node_state_mut().children.push(child);
     }
 
+    fn insert_child(&mut self, index: usize, child: Rc<dyn Node>) {
+        if index > self.count() {
+            self.add_child(child);
+        } else {
+            self.node_state_mut().children.insert(index, child);
+        }
+    }
+
     fn remove_child(&mut self, index: usize) {
         if index < self.count() {
             self.node_state_mut().children.remove(index);
