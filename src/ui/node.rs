@@ -16,10 +16,24 @@ pub trait Node {
     fn update(&mut self);
 }
 
-#[derive(Default)]
 pub struct NodeState {
     parent: Option<Rc<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
+}
+
+impl NodeState {
+    pub fn new() -> Self {
+        Self {
+            parent: None,
+            children: Vec::new(),
+        }
+    }
+}
+
+impl Default for NodeState {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Node for NodeState {
