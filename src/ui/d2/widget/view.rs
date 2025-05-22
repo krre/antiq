@@ -1,12 +1,11 @@
 use std::rc::Rc;
 
 use crate::ui::{
-    d2::geometry::{Pos2D, Size2D},
     d3::Scene,
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
-use super::{Widget2D, Widget2DState};
+use super::{HasWidget2DState, Widget2DState};
 
 pub struct View {
     state: WidgetState,
@@ -52,20 +51,12 @@ impl HasWidgetState for View {
     }
 }
 
-impl Widget2D for View {
-    fn set_position(&mut self, position: Pos2D) {
-        self.state2d.position = position;
+impl HasWidget2DState for View {
+    fn widget_2d_state(&self) -> &Widget2DState {
+        &self.state2d
     }
 
-    fn position(&self) -> Pos2D {
-        self.state2d.position
-    }
-
-    fn set_size(&mut self, size: Size2D) {
-        self.state2d.size = size;
-    }
-
-    fn size(&self) -> Size2D {
-        self.state2d.size
+    fn widget_2d_state_mut(&mut self) -> &mut Widget2DState {
+        &mut self.state2d
     }
 }

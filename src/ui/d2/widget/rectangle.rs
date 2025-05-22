@@ -1,10 +1,9 @@
 use crate::ui::{
     Color,
-    d2::geometry::{Pos2D, Size2D},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
-use super::{Widget2D, Widget2DState};
+use super::{HasWidget2DState, Widget2DState};
 
 pub struct Rectangle {
     state: WidgetState,
@@ -50,20 +49,12 @@ impl HasWidgetState for Rectangle {
     }
 }
 
-impl Widget2D for Rectangle {
-    fn set_position(&mut self, position: Pos2D) {
-        self.state2d.position = position;
+impl HasWidget2DState for Rectangle {
+    fn widget_2d_state(&self) -> &Widget2DState {
+        &self.state2d
     }
 
-    fn position(&self) -> Pos2D {
-        self.state2d.position
-    }
-
-    fn set_size(&mut self, size: Size2D) {
-        self.state2d.size = size;
-    }
-
-    fn size(&self) -> Size2D {
-        self.state2d.size
+    fn widget_2d_state_mut(&mut self) -> &mut Widget2DState {
+        &mut self.state2d
     }
 }
