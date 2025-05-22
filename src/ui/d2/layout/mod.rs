@@ -10,4 +10,6 @@ pub use grid::Grid2D;
 pub use row::Row2D;
 pub use split::Split2D;
 
-pub trait Layout2D {}
+use crate::ui::layout::Layout;
+
+pub trait Layout2D: Layout {}
