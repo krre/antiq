@@ -1,19 +1,41 @@
 use std::rc::Rc;
 
-pub trait Node {
-    fn add_child(&mut self, child: Rc<dyn Node>);
+pub trait HasNodeState {
+    fn node_state(&self) -> &NodeState;
 
-    fn remove_child(&mut self, index: usize);
+    fn node_state_mut(&mut self) -> &mut NodeState;
+}
 
-    fn count(&self) -> usize;
+pub trait Node: HasNodeState {
+    fn add_child(&mut self, child: Rc<dyn Node>) {
+        self.node_state_mut().children.push(child);
+    }
 
-    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>>;
+    fn remove_child(&mut self, index: usize) {
+        self.node_state_mut().children.remove(index);
+    }
 
-    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>);
+    fn count(&self) -> usize {
+        self.node_state().children.len()
+    }
 
-    fn parent(&self) -> Option<Rc<dyn Node>>;
+    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>> {
+        if index > self.node_state().children.len() - 1 {
+            None
+        } else {
+            Some(self.node_state().children[index].clone())
+        }
+    }
 
-    fn update(&mut self);
+    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>) {
+        self.node_state_mut().parent = parent;
+    }
+
+    fn parent(&self) -> Option<Rc<dyn Node>> {
+        self.node_state().parent.clone()
+    }
+
+    fn update(&mut self) {}
 }
 
 pub struct NodeState {
@@ -34,36 +56,4 @@ impl Default for NodeState {
     fn default() -> Self {
         Self::new()
     }
-}
-
-impl Node for NodeState {
-    fn add_child(&mut self, child: Rc<dyn Node>) {
-        self.children.push(child);
-    }
-
-    fn remove_child(&mut self, index: usize) {
-        self.children.remove(index);
-    }
-
-    fn count(&self) -> usize {
-        self.children.len()
-    }
-
-    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>> {
-        if index > self.children.len() - 1 {
-            None
-        } else {
-            Some(self.children[index].clone())
-        }
-    }
-
-    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>) {
-        self.parent = parent;
-    }
-
-    fn parent(&self) -> Option<Rc<dyn Node>> {
-        self.parent.clone()
-    }
-
-    fn update(&mut self) {}
 }
