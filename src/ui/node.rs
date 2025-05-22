@@ -21,13 +21,13 @@ pub trait Update {
 }
 
 #[derive(Default)]
-pub struct UpdatedNode<T: Update> {
+pub struct NodeState<T: Update> {
     parent: Option<Rc<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
     data: T,
 }
 
-impl<T: Update> Node for UpdatedNode<T> {
+impl<T: Update> Node for NodeState<T> {
     fn add_child(&mut self, child: Rc<dyn Node>) {
         self.children.push(child);
     }
@@ -61,7 +61,7 @@ impl<T: Update> Node for UpdatedNode<T> {
     }
 }
 
-impl<T: Update + Default> UpdatedNode<T> {
+impl<T: Update + Default> NodeState<T> {
     pub fn new() -> Self {
         Self {
             parent: None,
