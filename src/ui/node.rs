@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 pub trait HasNodeState {
     fn node_state(&self) -> &NodeState;
@@ -27,11 +27,11 @@ pub trait Node: HasNodeState {
         }
     }
 
-    fn set_parent(&mut self, parent: Option<Rc<dyn Node>>) {
+    fn set_parent(&mut self, parent: Option<Weak<dyn Node>>) {
         self.node_state_mut().parent = parent;
     }
 
-    fn parent(&self) -> Option<Rc<dyn Node>> {
+    fn parent(&self) -> Option<Weak<dyn Node>> {
         self.node_state().parent.clone()
     }
 
@@ -39,7 +39,7 @@ pub trait Node: HasNodeState {
 }
 
 pub struct NodeState {
-    parent: Option<Rc<dyn Node>>,
+    parent: Option<Weak<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
 }
 
