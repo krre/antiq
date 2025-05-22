@@ -1,5 +1,6 @@
 use crate::ui::{
     Color,
+    node::{HasNodeState, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
@@ -38,6 +39,16 @@ impl Widget for Rectangle {
 }
 
 impl Widget2D for Rectangle {}
+
+impl HasNodeState for Rectangle {
+    fn node_state(&self) -> &NodeState {
+        Widget::node_state(self)
+    }
+
+    fn node_state_mut(&mut self) -> &mut NodeState {
+        Widget::node_state_mut(self)
+    }
+}
 
 impl HasWidgetState for Rectangle {
     fn widget_state(&self) -> &WidgetState {

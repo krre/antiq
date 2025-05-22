@@ -1,4 +1,7 @@
-use crate::ui::widget::{HasWidgetState, Widget, WidgetState};
+use crate::ui::{
+    node::{HasNodeState, NodeState},
+    widget::{HasWidgetState, Widget, WidgetState},
+};
 
 use super::{HasWidget2DState, Widget2D, Widget2DState};
 
@@ -25,6 +28,16 @@ impl Widget for Blank {
 }
 
 impl Widget2D for Blank {}
+
+impl HasNodeState for Blank {
+    fn node_state(&self) -> &NodeState {
+        Widget::node_state(self)
+    }
+
+    fn node_state_mut(&mut self) -> &mut NodeState {
+        Widget::node_state_mut(self)
+    }
+}
 
 impl HasWidgetState for Blank {
     fn widget_state(&self) -> &WidgetState {

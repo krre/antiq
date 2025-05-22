@@ -2,6 +2,7 @@ use std::rc::Rc;
 
 use crate::ui::{
     d3::Scene,
+    node::{HasNodeState, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
@@ -40,6 +41,16 @@ impl Widget for View {
 }
 
 impl Widget2D for View {}
+
+impl HasNodeState for View {
+    fn node_state(&self) -> &NodeState {
+        Widget::node_state(self)
+    }
+
+    fn node_state_mut(&mut self) -> &mut NodeState {
+        Widget::node_state_mut(self)
+    }
+}
 
 impl HasWidgetState for View {
     fn widget_state(&self) -> &WidgetState {
