@@ -5,10 +5,9 @@ use crate::ui::{
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
-use super::{HasWidget2DState, Widget2DState};
+use super::{HasWidget2DState, Widget2D, Widget2DState};
 
 pub struct View {
-    state: WidgetState,
     state2d: Widget2DState,
     scene: Rc<Scene>,
 }
@@ -16,7 +15,6 @@ pub struct View {
 impl View {
     pub fn new() -> Self {
         Self {
-            state: WidgetState::new(),
             state2d: Widget2DState::new(),
             scene: Rc::new(Scene::new()),
         }
@@ -41,13 +39,15 @@ impl Widget for View {
     fn build(&self) {}
 }
 
+impl Widget2D for View {}
+
 impl HasWidgetState for View {
     fn widget_state(&self) -> &WidgetState {
-        &self.state
+        HasWidget2DState::widget_state(self)
     }
 
     fn widget_state_mut(&mut self) -> &mut WidgetState {
-        &mut self.state
+        HasWidget2DState::widget_state_mut(self)
     }
 }
 

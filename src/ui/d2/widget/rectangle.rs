@@ -3,10 +3,9 @@ use crate::ui::{
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
-use super::{HasWidget2DState, Widget2DState};
+use super::{HasWidget2DState, Widget2D, Widget2DState};
 
 pub struct Rectangle {
-    state: WidgetState,
     state2d: Widget2DState,
     color: Color,
 }
@@ -14,7 +13,6 @@ pub struct Rectangle {
 impl Rectangle {
     pub fn new() -> Self {
         Self {
-            state: WidgetState::new(),
             state2d: Widget2DState::new(),
             color: Color::new(1.0, 1.0, 1.0),
         }
@@ -39,13 +37,15 @@ impl Widget for Rectangle {
     fn build(&self) {}
 }
 
+impl Widget2D for Rectangle {}
+
 impl HasWidgetState for Rectangle {
     fn widget_state(&self) -> &WidgetState {
-        &self.state
+        HasWidget2DState::widget_state(self)
     }
 
     fn widget_state_mut(&mut self) -> &mut WidgetState {
-        &mut self.state
+        HasWidget2DState::widget_state_mut(self)
     }
 }
 
