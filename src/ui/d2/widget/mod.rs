@@ -6,9 +6,11 @@ pub use blank::Blank;
 pub use rectangle::Rectangle;
 pub use view::View;
 
+use crate::ui::widget::Widget;
+
 use super::geometry::{Pos2D, Size2D};
 
-pub trait Widget2D {
+pub trait Widget2D: Widget {
     fn set_position(&mut self, position: Pos2D);
 
     fn position(&self) -> Pos2D;
