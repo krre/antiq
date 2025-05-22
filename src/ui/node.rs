@@ -22,7 +22,7 @@ pub trait Node: HasNodeState {
     }
 
     fn child_at(&self, index: usize) -> Option<Rc<dyn Node>> {
-        if index > self.node_state().children.len() - 1 {
+        if index > self.count() - 1 {
             None
         } else {
             Some(self.node_state().children[index].clone())
