@@ -16,18 +16,13 @@ pub trait Node {
     fn update(&mut self);
 }
 
-pub trait Update {
-    fn update(&mut self);
-}
-
 #[derive(Default)]
-pub struct NodeState<T: Update> {
+pub struct NodeState {
     parent: Option<Rc<dyn Node>>,
     children: Vec<Rc<dyn Node>>,
-    data: T,
 }
 
-impl<T: Update> Node for NodeState<T> {
+impl Node for NodeState {
     fn add_child(&mut self, child: Rc<dyn Node>) {
         self.children.push(child);
     }
@@ -56,29 +51,5 @@ impl<T: Update> Node for NodeState<T> {
         self.parent.clone()
     }
 
-    fn update(&mut self) {
-        self.data.update();
-    }
-}
-
-impl<T: Update + Default> NodeState<T> {
-    pub fn new() -> Self {
-        Self {
-            parent: None,
-            children: Vec::new(),
-            data: Default::default(),
-        }
-    }
-
-    pub fn into_inner(self) -> T {
-        self.data
-    }
-
-    pub fn get_ref(&self) -> &T {
-        &self.data
-    }
-
-    pub fn get_mut(&mut self) -> &mut T {
-        &mut self.data
-    }
+    fn update(&mut self) {}
 }
