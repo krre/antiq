@@ -51,7 +51,7 @@ pub struct Widget2DState {
 impl Widget2DState {
     pub fn new() -> Self {
         Self {
-            state: WidgetState::default(),
+            state: WidgetState::new(),
             position: Pos2D::default(),
             size: Size2D::default(),
         }
