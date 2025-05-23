@@ -1,6 +1,6 @@
 use crate::ui::{
     Color,
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
@@ -33,6 +33,8 @@ impl Default for Rectangle {
         Self::new()
     }
 }
+
+impl Node for Rectangle {}
 
 impl Widget for Rectangle {
     fn build(&self) {}

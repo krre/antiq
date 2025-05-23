@@ -1,4 +1,4 @@
-use super::node::{HasNodeState, NodeState};
+use super::node::{HasNodeState, Node, NodeState};
 
 pub trait HasWidgetState {
     fn widget_state(&self) -> &WidgetState;
@@ -6,7 +6,7 @@ pub trait HasWidgetState {
     fn widget_state_mut(&mut self) -> &mut WidgetState;
 }
 
-pub trait Widget: HasWidgetState + HasNodeState {
+pub trait Widget: Node + HasWidgetState + HasNodeState {
     fn set_visible(&mut self, visible: bool) {
         self.widget_state_mut().visible = visible;
     }

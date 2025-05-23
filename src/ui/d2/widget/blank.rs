@@ -1,5 +1,5 @@
 use crate::ui::{
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
@@ -22,6 +22,8 @@ impl Default for Blank {
         Self::new()
     }
 }
+
+impl Node for Blank {}
 
 impl Widget for Blank {
     fn build(&self) {}

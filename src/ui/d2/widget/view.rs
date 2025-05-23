@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use crate::ui::{
     d3::Scene,
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
 
@@ -35,6 +35,8 @@ impl Default for View {
         Self::new()
     }
 }
+
+impl Node for View {}
 
 impl Widget for View {
     fn build(&self) {}
