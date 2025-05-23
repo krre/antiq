@@ -1,7 +1,7 @@
 use crate::ui::{
     d2::widget::Blank,
     layout::{HasLayoutState, Layout, LayoutState},
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
     widget::Widget,
 };
 
@@ -30,6 +30,8 @@ impl Default for Fill2D {
         Self::new()
     }
 }
+
+impl Node for Fill2D {}
 
 impl Layout for Fill2D {
     fn build(&self) {}

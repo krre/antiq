@@ -6,7 +6,7 @@ use std::{
 use crate::ui::{
     d2::widget::Widget2D,
     layout::{HasLayoutState, Layout, LayoutState},
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
 };
 
 use super::Layout2D;
@@ -37,6 +37,8 @@ impl Default for Row2D {
         Self::new()
     }
 }
+
+impl Node for Row2D {}
 
 impl Layout for Row2D {
     fn build(&self) {}

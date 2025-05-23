@@ -1,6 +1,6 @@
 use crate::ui::{
     layout::{HasLayoutState, Layout, LayoutState},
-    node::{HasNodeState, NodeState},
+    node::{HasNodeState, Node, NodeState},
 };
 
 use super::Layout2D;
@@ -22,6 +22,8 @@ impl Default for Split2D {
         Self::new()
     }
 }
+
+impl Node for Split2D {}
 
 impl Layout for Split2D {
     fn build(&self) {}
