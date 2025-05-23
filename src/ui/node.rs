@@ -1,4 +1,7 @@
-use std::rc::{Rc, Weak};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+};
 
 pub trait HasNodeState {
     fn node_state(&self) -> &NodeState;
@@ -7,11 +10,11 @@ pub trait HasNodeState {
 }
 
 pub trait Node: HasNodeState {
-    fn add_child(&mut self, child: Rc<dyn Node>) {
+    fn add_child(&mut self, child: Rc<RefCell<dyn Node>>) {
         self.node_state_mut().children.push(child);
     }
 
-    fn insert_child(&mut self, index: usize, child: Rc<dyn Node>) {
+    fn insert_child(&mut self, index: usize, child: Rc<RefCell<dyn Node>>) {
         if index > self.count() {
             self.add_child(child);
         } else {
@@ -29,19 +32,19 @@ pub trait Node: HasNodeState {
         self.node_state().children.len()
     }
 
-    fn child_at(&self, index: usize) -> Option<Rc<dyn Node>> {
+    fn child_at(&self, index: usize) -> Option<Weak<RefCell<dyn Node>>> {
         if index > self.count() - 1 {
             None
         } else {
-            Some(self.node_state().children[index].clone())
+            Some(Rc::downgrade(&self.node_state().children[index]).clone())
         }
     }
 
-    fn set_parent(&mut self, parent: Option<Weak<dyn Node>>) {
+    fn set_parent(&mut self, parent: Option<Weak<RefCell<dyn Node>>>) {
         self.node_state_mut().parent = parent;
     }
 
-    fn parent(&self) -> Option<Weak<dyn Node>> {
+    fn parent(&self) -> Option<Weak<RefCell<dyn Node>>> {
         self.node_state().parent.clone()
     }
 
@@ -49,8 +52,8 @@ pub trait Node: HasNodeState {
 }
 
 pub struct NodeState {
-    parent: Option<Weak<dyn Node>>,
-    children: Vec<Rc<dyn Node>>,
+    parent: Option<Weak<RefCell<dyn Node>>>,
+    children: Vec<Rc<RefCell<dyn Node>>>,
 }
 
 impl NodeState {
