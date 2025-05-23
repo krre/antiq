@@ -1,10 +1,15 @@
+use std::{cell::RefCell, rc::Rc};
+
 use antiq::{
     application::Application,
     core::{Result, UpgradeOrErr},
-    ui::d2::{
-        geometry::Size2D,
-        layout::Row2D,
-        widget::{Rectangle, Widget2D},
+    ui::{
+        d2::{
+            geometry::Size2D,
+            layout::Row2D,
+            widget::{Rectangle, Widget2D},
+        },
+        layout::Layout,
     },
     window::Window,
 };
@@ -24,7 +29,7 @@ fn main() -> Result<()> {
         rect.set_size(Size2D::new(200, 100));
 
         let mut row = Row2D::new();
-        row.add_widget(rect);
+        row.add_widget(Rc::new(RefCell::new(rect)));
 
         w.set_layout(Box::new(row));
     }

@@ -1,10 +1,4 @@
-use std::{
-    cell::RefCell,
-    rc::{Rc, Weak},
-};
-
 use crate::ui::{
-    d2::widget::Widget2D,
     layout::{HasLayoutState, Layout, LayoutState},
     node::{HasNodeState, Node, NodeState},
 };
@@ -13,22 +7,13 @@ use super::Layout2D;
 
 pub struct Row2D {
     layout_state: LayoutState,
-    widgets: Vec<Rc<RefCell<dyn Widget2D>>>,
 }
 
 impl Row2D {
     pub fn new() -> Self {
         Self {
             layout_state: LayoutState::new(),
-            widgets: Vec::new(),
         }
-    }
-
-    pub fn add_widget<T: Widget2D + 'static>(&mut self, widget: T) -> Weak<RefCell<T>> {
-        let rc = Rc::new(RefCell::new(widget));
-        let weak = Rc::downgrade(&rc);
-        self.widgets.push(rc);
-        weak
     }
 }
 
