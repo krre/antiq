@@ -14,7 +14,6 @@ fn main() -> Result<()> {
         let w = window.upgrade_or_err()?;
         let mut w = w.borrow_mut();
         w.set_title("Simple Window Example");
-        w.set_visible(true);
     }
 
     app.run()?;

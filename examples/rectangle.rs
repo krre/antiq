@@ -19,7 +19,6 @@ fn main() -> Result<()> {
         let w = window.upgrade_or_err()?;
         let mut w = w.borrow_mut();
         w.set_title("Rectangle Example");
-        w.set_visible(true);
 
         let mut rect = Rectangle::new();
         rect.set_size(Size2D::new(200, 100));

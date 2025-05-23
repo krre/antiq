@@ -15,7 +15,6 @@ fn main() -> Result<()> {
         let w = window.upgrade_or_err()?;
         let mut w = w.borrow_mut();
         w.set_title("View Example");
-        w.set_visible(true);
 
         let view = View::new();
         let mut fill_layout = Fill2D::new();
