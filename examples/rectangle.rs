@@ -1,13 +1,10 @@
 use antiq::{
     application::Application,
     core::{Result, UpgradeOrErr},
-    ui::{
-        d2::{
-            geometry::Size2D,
-            layout::Row2D,
-            widget::{Rectangle, Widget2D},
-        },
-        layout::Layout,
+    ui::d2::{
+        geometry::Size2D,
+        layout::Row2D,
+        widget::{Rectangle, Widget2D},
     },
     window::Window,
 };
