@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 use antiq::{
     application::Application,
     core::{Result, UpgradeOrErr},
@@ -29,7 +27,7 @@ fn main() -> Result<()> {
         rect.set_size(Size2D::new(200, 100));
 
         let mut row = Row2D::new();
-        row.add_widget(Rc::new(RefCell::new(rect)));
+        row.add_widget2d(rect);
 
         w.set_layout(Box::new(row));
     }

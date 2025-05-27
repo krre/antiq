@@ -1,4 +1,7 @@
+use std::{cell::RefCell, rc::Rc};
+
 use crate::ui::{
+    d2::widget::Widget2D,
     layout::{HasLayoutState, Layout, LayoutState},
     node::{HasNodeState, Node, NodeState},
 };
@@ -14,6 +17,10 @@ impl Row2D {
         Self {
             layout_state: LayoutState::new(),
         }
+    }
+
+    pub fn add_widget2d<T: Widget2D + 'static>(&mut self, widget: T) {
+        self.add_widget(Rc::new(RefCell::new(widget)));
     }
 }
 
