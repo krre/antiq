@@ -26,8 +26,7 @@ pub struct WindowId(usize);
 pub struct Window {
     title: String,
     color: Color,
-    position: Pos2D,
-    size: Size2D,
+    geometry: Rc<RefCell<WindowGeometry>>,
     platform_window: Rc<dyn platform::PlatformWindow>,
     window_manager: Weak<RefCell<WindowManager>>,
     renderer: Weak<Renderer>,
@@ -35,6 +34,11 @@ pub struct Window {
     visible: bool,
     maximized: bool,
     layout: Box<dyn Layout2D>,
+}
+
+pub(crate) struct WindowGeometry {
+    position: Pos2D,
+    size: Size2D,
 }
 
 impl WindowId {
@@ -53,6 +57,10 @@ impl WindowId {
 
 impl Window {
     pub fn new(application: &Application) -> Result<Weak<RefCell<Self>>> {
+        let geometry = Rc::new(RefCell::new(WindowGeometry {
+            position: Pos2D::default(),
+            size: Size2D::default(),
+        }));
         let size = Size2D::new(800, 600);
         let platform_window = platform::new_window(
             application.platform_application.clone(),
@@ -65,8 +73,7 @@ impl Window {
         let window = Rc::new(RefCell::new(Self {
             title: String::new(),
             color: Color::new(0.05, 0.027, 0.15),
-            position: Pos2D::default(),
-            size: Size2D::default(),
+            geometry,
             platform_window,
             window_manager: application.window_manager().clone(),
             renderer,
@@ -120,32 +127,32 @@ impl Window {
         );
 
         self.platform_window.set_position(correct_pos);
-        self.position = correct_pos;
+        self.geometry.borrow_mut().position = correct_pos;
     }
 
     pub(crate) fn update_position(&mut self, pos: Pos2D) {
-        self.position = pos;
+        self.geometry.borrow_mut().position = pos;
     }
 
     pub fn position(&self) -> Pos2D {
-        self.position
+        self.geometry.borrow().position
     }
 
     pub fn set_size(&mut self, size: Size2D) {
         self.platform_window.set_size(size);
         self.surface
             .set_size(self.renderer.upgrade().unwrap().device(), size);
-        self.size = size;
+        self.geometry.borrow_mut().size = size;
     }
 
     pub(crate) fn update_size(&mut self, size: Size2D) {
         self.surface
             .set_size(self.renderer.upgrade().unwrap().device(), size);
-        self.size = size;
+        self.geometry.borrow_mut().size = size;
     }
 
     pub fn size(&self) -> Size2D {
-        self.size
+        self.geometry.borrow().size
     }
 
     pub fn set_color(&mut self, color: Color) {
