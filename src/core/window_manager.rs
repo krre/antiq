@@ -1,11 +1,14 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use crate::ui::d2::geometry::{Pos2D, Size2D};
+use crate::{
+    ui::d2::geometry::{Pos2D, Size2D},
+    window::WindowGeometry,
+};
 
-use super::window::{Window, WindowId};
+use super::window::WindowId;
 
 pub(crate) struct WindowManager {
-    windows: HashMap<WindowId, Rc<RefCell<Window>>>,
+    windows: HashMap<WindowId, Rc<RefCell<WindowGeometry>>>,
 }
 
 impl WindowManager {
@@ -15,9 +18,9 @@ impl WindowManager {
         }
     }
 
-    pub fn append(&mut self, id: WindowId, window: Rc<RefCell<Window>>) {
+    pub fn append(&mut self, id: WindowId, window_geometry: Rc<RefCell<WindowGeometry>>) {
         #[allow(unused_variables)]
-        let window = self.windows.insert(id, window);
+        let window = self.windows.insert(id, window_geometry);
     }
 
     pub fn remove(&mut self, id: WindowId) {

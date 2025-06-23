@@ -25,12 +25,9 @@ pub struct WindowId(usize);
 
 pub struct Window {
     title: String,
-    color: Color,
     geometry: Rc<RefCell<WindowGeometry>>,
     platform_window: Rc<dyn platform::PlatformWindow>,
     window_manager: Weak<RefCell<WindowManager>>,
-    renderer: Weak<Renderer>,
-    surface: Surface,
     visible: bool,
     maximized: bool,
     layout: Box<dyn Layout2D>,
@@ -39,6 +36,9 @@ pub struct Window {
 pub(crate) struct WindowGeometry {
     position: Pos2D,
     size: Size2D,
+    color: Color,
+    surface: Surface,
+    renderer: Weak<Renderer>,
 }
 
 impl WindowId {
@@ -55,12 +55,39 @@ impl WindowId {
     }
 }
 
+impl WindowGeometry {
+    pub fn set_size(&mut self, size: Size2D) {
+        self.surface
+            .set_size(self.renderer.upgrade().unwrap().device(), size);
+        self.size = size;
+    }
+
+    pub(crate) fn update_size(&mut self, size: Size2D) {
+        self.surface
+            .set_size(self.renderer.upgrade().unwrap().device(), size);
+        self.size = size;
+    }
+
+    pub(crate) fn update_position(&mut self, pos: Pos2D) {
+        self.position = pos;
+    }
+
+    pub fn render(&self) {
+        let frame = self.surface.current_frame();
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+
+        if let Some(r) = self.renderer.upgrade() {
+            r.clear_view(&view, self.color)
+        }
+
+        frame.present();
+    }
+}
+
 impl Window {
     pub fn new(application: &Application) -> Result<Weak<RefCell<Self>>> {
-        let geometry = Rc::new(RefCell::new(WindowGeometry {
-            position: Pos2D::default(),
-            size: Size2D::default(),
-        }));
         let size = Size2D::new(800, 600);
         let platform_window = platform::new_window(
             application.platform_application.clone(),
@@ -70,21 +97,26 @@ impl Window {
         let renderer = application.renderer().clone();
         let surface = Surface::new(platform_window.as_ref(), &renderer.upgrade().unwrap());
 
+        let geometry = Rc::new(RefCell::new(WindowGeometry {
+            position: Pos2D::default(),
+            size: Size2D::default(),
+            color: Color::new(0.05, 0.027, 0.15),
+            surface,
+            renderer,
+        }));
+
         let window = Rc::new(RefCell::new(Self {
             title: String::new(),
-            color: Color::new(0.05, 0.027, 0.15),
-            geometry,
+            geometry: geometry.clone(),
             platform_window,
             window_manager: application.window_manager().clone(),
-            renderer,
-            surface,
             visible: false,
             maximized: false,
             layout: Box::new(Fill2D::new()),
         }));
 
         if let Some(wm) = application.window_manager().upgrade() {
-            wm.borrow_mut().append(window.borrow().id(), window.clone())
+            wm.borrow_mut().append(window.borrow().id(), geometry)
         }
 
         {
@@ -130,25 +162,13 @@ impl Window {
         self.geometry.borrow_mut().position = correct_pos;
     }
 
-    pub(crate) fn update_position(&mut self, pos: Pos2D) {
-        self.geometry.borrow_mut().position = pos;
-    }
-
     pub fn position(&self) -> Pos2D {
         self.geometry.borrow().position
     }
 
     pub fn set_size(&mut self, size: Size2D) {
         self.platform_window.set_size(size);
-        self.surface
-            .set_size(self.renderer.upgrade().unwrap().device(), size);
-        self.geometry.borrow_mut().size = size;
-    }
-
-    pub(crate) fn update_size(&mut self, size: Size2D) {
-        self.surface
-            .set_size(self.renderer.upgrade().unwrap().device(), size);
-        self.geometry.borrow_mut().size = size;
+        self.geometry.borrow_mut().set_size(size);
     }
 
     pub fn size(&self) -> Size2D {
@@ -156,12 +176,12 @@ impl Window {
     }
 
     pub fn set_color(&mut self, color: Color) {
-        self.color = color;
+        self.geometry.borrow_mut().color = color;
         self.render();
     }
 
     pub fn color(&self) -> Color {
-        self.color
+        self.geometry.borrow().color
     }
 
     pub fn border(&self) -> Border2D {
@@ -185,16 +205,7 @@ impl Window {
     }
 
     pub fn render(&self) {
-        let frame = self.surface.current_frame();
-        let view = frame
-            .texture
-            .create_view(&wgpu::TextureViewDescriptor::default());
-
-        if let Some(r) = self.renderer.upgrade() {
-            r.clear_view(&view, self.color)
-        }
-
-        frame.present();
+        self.geometry.borrow().render();
     }
 }
 
