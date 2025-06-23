@@ -87,7 +87,7 @@ impl WindowGeometry {
 }
 
 impl Window {
-    pub fn new(application: &Application) -> Result<Weak<RefCell<Self>>> {
+    pub fn new(application: &Application) -> Result<Self> {
         let size = Size2D::new(800, 600);
         let platform_window = platform::new_window(
             application.platform_application.clone(),
@@ -105,7 +105,7 @@ impl Window {
             renderer,
         }));
 
-        let window = Rc::new(RefCell::new(Self {
+        let mut window = Self {
             title: String::new(),
             geometry: geometry.clone(),
             platform_window,
@@ -113,20 +113,17 @@ impl Window {
             visible: false,
             maximized: false,
             layout: Box::new(Fill2D::new()),
-        }));
+        };
 
         if let Some(wm) = application.window_manager().upgrade() {
-            wm.borrow_mut().append(window.borrow().id(), geometry)
+            wm.borrow_mut().append(window.id(), geometry)
         }
 
-        {
-            let mut w = window.borrow_mut();
-            w.set_visible(true);
-            w.set_title("Untitled");
-            w.set_size(size);
-        }
+        window.set_visible(true);
+        window.set_title("Untitled");
+        window.set_size(size);
 
-        Ok(Rc::downgrade(&window))
+        Ok(window)
     }
 
     pub fn id(&self) -> WindowId {

@@ -1,5 +1,5 @@
 use antiq::application::Application;
-use antiq::core::{Result, UpgradeOrErr};
+use antiq::core::Result;
 use antiq::window::Window;
 
 #[test]
@@ -8,12 +8,10 @@ fn create_window() -> Result<()> {
 
     let title = "Test Window".to_string();
 
-    let window = Window::new(&app)?.upgrade_or_err()?;
-    {
-        window.borrow_mut().set_title(&title);
-    }
+    let mut window = Window::new(&app)?;
+    window.set_title(&title);
 
-    assert_eq!(window.borrow().title(), title);
+    assert_eq!(window.title(), title);
 
     Ok(())
 }

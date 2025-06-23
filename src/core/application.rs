@@ -84,7 +84,7 @@ impl Application {
         }))
     }
 
-    pub fn new_window(&self) -> Result<Weak<RefCell<Window>>> {
+    pub fn new_window(&self) -> Result<Window> {
         Window::new(self)
     }
 }
