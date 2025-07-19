@@ -1,9 +1,6 @@
 pub mod application;
-pub mod preferences;
-pub mod window;
 
 mod id;
-mod window_manager;
 
 pub use id::Id;
 
