@@ -1,5 +1,7 @@
 pub mod core;
+
 pub use core::application::Application;
+pub use core::log::log;
 
 #[macro_export]
 macro_rules! run_app {
