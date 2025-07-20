@@ -7,8 +7,10 @@ pub struct ApplicationBackend<App: Application> {
 }
 
 impl<App: Application> ApplicationBackend<App> {
-    pub fn new(app: App) -> Self {
-        Self { app }
+    pub fn new() -> Self {
+        Self {
+            app: App::default(),
+        }
     }
 
     pub fn run(&self) {

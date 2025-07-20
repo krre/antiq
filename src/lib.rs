@@ -13,8 +13,7 @@ macro_rules! run_app {
 
         #[wasm_bindgen(start)]
         pub fn start() -> Result<(), JsValue> {
-            let app: $app_type = Default::default();
-            let backend = ApplicationBackend::new(app);
+            let backend = ApplicationBackend::<$app_type>::new();
             backend.run();
             Ok(())
         }
