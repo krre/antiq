@@ -1,3 +1,5 @@
+use wasm_bindgen::JsValue;
+
 pub trait Application: Default {
     fn run(&self);
 }
@@ -7,10 +9,12 @@ pub struct ApplicationBackend<App: Application> {
 }
 
 impl<App: Application> ApplicationBackend<App> {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Result<Self, JsValue> {
+        let backend = Self {
             app: App::default(),
-        }
+        };
+
+        Ok(backend)
     }
 
     pub fn run(&self) {

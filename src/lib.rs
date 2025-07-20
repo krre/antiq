@@ -13,8 +13,11 @@ macro_rules! run_app {
 
         #[wasm_bindgen(start)]
         pub fn start() -> Result<(), JsValue> {
-            let backend = ApplicationBackend::<$app_type>::new();
+            let backend = ApplicationBackend::<$app_type>::new()?;
             backend.run();
+
+            Box::leak(Box::new(backend));
+
             Ok(())
         }
     };
