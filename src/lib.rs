@@ -3,13 +3,20 @@ pub mod core;
 pub use core::application::Application;
 pub use core::log::log;
 
+pub use core::application::ApplicationBackend;
+
 #[macro_export]
 macro_rules! run_app {
     ($app_type:ty) => {
-        #[wasm_bindgen::prelude::wasm_bindgen(start)]
-        pub fn start() {
+        use antiq::ApplicationBackend;
+        use wasm_bindgen::prelude::*;
+
+        #[wasm_bindgen(start)]
+        pub fn start() -> Result<(), JsValue> {
             let app: $app_type = Default::default();
-            app.run();
+            let backend = ApplicationBackend::new(app);
+            backend.run();
+            Ok(())
         }
     };
 }
