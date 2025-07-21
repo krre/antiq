@@ -1,6 +1,8 @@
+use std::rc::Rc;
+
 use wasm_bindgen::JsValue;
 
-use crate::renderer::Renderer;
+use crate::{core::context::Context, renderer::Renderer};
 
 pub trait Application: Default {
     fn run(&self);
@@ -8,14 +10,17 @@ pub trait Application: Default {
 
 pub struct ApplicationBackend<App: Application> {
     app: App,
-    renderer: Renderer,
+    context: Rc<Context>,
 }
 
 impl<App: Application> ApplicationBackend<App> {
     pub fn new() -> Result<Self, JsValue> {
+        let renderer = Renderer::new();
+        let context = Context::new(renderer);
+
         let backend = Self {
             app: App::default(),
-            renderer: Renderer::new(),
+            context: Rc::new(context),
         };
 
         Ok(backend)
@@ -25,7 +30,7 @@ impl<App: Application> ApplicationBackend<App> {
         self.app.run();
     }
 
-    pub fn renderer(&self) -> &Renderer {
-        &self.renderer
+    pub fn context(&self) -> &Context {
+        &self.context
     }
 }
