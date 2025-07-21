@@ -1,9 +1,11 @@
 pub mod core;
+pub mod renderer;
 
 pub use core::application::Application;
+pub use core::application::ApplicationBackend;
 pub use core::log::log;
 
-pub use core::application::ApplicationBackend;
+pub use renderer::Renderer;
 
 #[macro_export]
 macro_rules! run_app {
