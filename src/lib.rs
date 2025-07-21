@@ -3,6 +3,7 @@ pub mod renderer;
 
 pub use core::application::Application;
 pub use core::application::ApplicationBackend;
+pub use core::context::Context;
 pub use core::log::log;
 
 pub use renderer::Renderer;

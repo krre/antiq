@@ -4,7 +4,6 @@ pub mod log;
 
 mod id;
 
-pub use context::Context;
 pub use id::Id;
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
