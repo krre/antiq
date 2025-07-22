@@ -1,3 +1,5 @@
+use crate::ui::d2::geometry::Size2D;
+
 pub struct Window(web_sys::Window);
 
 impl Window {
@@ -7,9 +9,9 @@ impl Window {
         }
     }
 
-    pub fn size(&self) -> (u32, u32) {
+    pub fn size(&self) -> Size2D {
         let width = self.0.inner_width().ok().unwrap().as_f64().unwrap() as u32;
         let height = self.0.inner_height().ok().unwrap().as_f64().unwrap() as u32;
-        (width, height)
+        Size2D::new(width, height)
     }
 }
