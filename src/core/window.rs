@@ -1,19 +1,25 @@
 use std::rc::Rc;
 
 use wasm_bindgen::{JsCast, prelude::Closure};
+use web_sys::MouseEvent;
 
-use crate::ui::d2::geometry::Size2D;
+use crate::ui::d2::geometry::{Pos2D, Size2D};
 
 pub trait WindowEvent {
     fn resize(&self, size: Size2D) {
         let _ = size;
+    }
+
+    fn mouse_move(&self, pos: Pos2D) {
+        let _ = pos;
     }
 }
 
 pub struct Window {
     inner: web_sys::Window,
     event_handler: Option<Rc<dyn WindowEvent>>,
-    resize_listener: Option<Closure<dyn FnMut()>>,
+    resize_closure: Option<Closure<dyn FnMut()>>,
+    mouse_move_closure: Option<Closure<dyn FnMut(MouseEvent)>>,
 }
 
 impl Window {
@@ -21,7 +27,8 @@ impl Window {
         Self {
             inner: web_sys::window().unwrap(),
             event_handler: None,
-            resize_listener: None,
+            resize_closure: None,
+            mouse_move_closure: None,
         }
     }
 
@@ -31,31 +38,59 @@ impl Window {
         Size2D::new(width, height)
     }
 
-    pub fn set_event_handler(&mut self, event_hander: Option<Rc<dyn WindowEvent>>) {
-        if let Some(closure) = &self.resize_listener {
+    pub fn set_event_handler(&mut self, event_handler: Option<Rc<dyn WindowEvent>>) {
+        if let Some(closure) = &self.resize_closure {
             let _ = self
                 .inner
                 .remove_event_listener_with_callback("resize", closure.as_ref().unchecked_ref());
         }
 
-        self.resize_listener = None;
+        if let Some(mouse_move) = &self.mouse_move_closure {
+            let _ = self.inner.remove_event_listener_with_callback(
+                "mousemove",
+                mouse_move.as_ref().unchecked_ref(),
+            );
+        }
+
         self.event_handler = None;
 
-        if let Some(hander) = event_hander {
-            self.event_handler = Some(hander.clone());
-            let window = self.inner.clone();
+        self.resize_closure = None;
+        self.mouse_move_closure = None;
 
-            let closure = Closure::<dyn FnMut()>::new(move || {
+        if let Some(handler) = event_handler {
+            self.event_handler = Some(handler.clone());
+            let window = self.inner.clone();
+            let resize_handler = handler.clone();
+
+            // resize
+            let resize_closure = Closure::<dyn FnMut()>::new(move || {
                 let width = window.inner_width().unwrap().as_f64().unwrap() as u32;
                 let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
-                hander.resize(Size2D::new(width, height));
+                resize_handler.resize(Size2D::new(width, height));
             });
 
             self.inner
-                .add_event_listener_with_callback("resize", closure.as_ref().unchecked_ref())
+                .add_event_listener_with_callback("resize", resize_closure.as_ref().unchecked_ref())
                 .unwrap();
 
-            self.resize_listener = Some(closure);
+            self.resize_closure = Some(resize_closure);
+
+            // mousemove
+            let mouse_handler = handler.clone();
+            let mouse_move_closure =
+                Closure::<dyn FnMut(MouseEvent)>::new(move |event: MouseEvent| {
+                    let x = event.client_x();
+                    let y = event.client_y();
+                    mouse_handler.mouse_move(Pos2D::new(x, y));
+                });
+
+            self.inner
+                .add_event_listener_with_callback(
+                    "mousemove",
+                    mouse_move_closure.as_ref().unchecked_ref(),
+                )
+                .unwrap();
+            self.mouse_move_closure = Some(mouse_move_closure);
         }
     }
 }
