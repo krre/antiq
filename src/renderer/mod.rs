@@ -1,3 +1,5 @@
+pub mod webgpu;
+
 pub struct Renderer {}
 
 impl Renderer {
