@@ -1,9 +1,12 @@
 use std::rc::Rc;
 
 use wasm_bindgen::{JsCast, prelude::Closure};
-use web_sys::MouseEvent;
+use web_sys::{HtmlCanvasElement, MouseEvent};
 
-use crate::ui::d2::geometry::{Pos2D, Size2D};
+use crate::{
+    core::canvas::Canvas,
+    ui::d2::geometry::{Pos2D, Size2D},
+};
 
 pub trait WindowEvent {
     fn resize(&self, size: Size2D) {
@@ -17,6 +20,7 @@ pub trait WindowEvent {
 
 pub struct Window {
     inner: web_sys::Window,
+    canvas: Canvas,
     event_handler: Option<Rc<dyn WindowEvent>>,
     resize_closure: Option<Closure<dyn FnMut()>>,
     mouse_move_closure: Option<Closure<dyn FnMut(MouseEvent)>>,
@@ -24,12 +28,25 @@ pub struct Window {
 
 impl Window {
     pub fn new() -> Self {
+        let window = web_sys::window().unwrap();
+        let document = window.document().unwrap();
+        let canvas = document
+            .get_element_by_id("webgpu-canvas")
+            .unwrap()
+            .dyn_into::<HtmlCanvasElement>()
+            .unwrap();
+
         Self {
-            inner: web_sys::window().unwrap(),
+            inner: window,
+            canvas: Canvas::new(canvas),
             event_handler: None,
             resize_closure: None,
             mouse_move_closure: None,
         }
+    }
+
+    pub fn canvas(&self) -> &Canvas {
+        &self.canvas
     }
 
     pub fn size(&self) -> Size2D {
