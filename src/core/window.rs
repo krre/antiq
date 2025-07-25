@@ -36,6 +36,11 @@ impl Window {
             .dyn_into::<HtmlCanvasElement>()
             .unwrap();
 
+        let width = window.inner_width().unwrap().as_f64().unwrap() as u32;
+        let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
+        canvas.set_width(width);
+        canvas.set_height(height);
+
         Self {
             inner: window,
             canvas: Canvas::new(canvas),
@@ -77,6 +82,7 @@ impl Window {
         if let Some(handler) = event_handler {
             self.event_handler = Some(handler.clone());
             let window = self.inner.clone();
+            let canvas = self.canvas.inner().clone();
             let resize_handler = handler.clone();
 
             // resize
@@ -84,6 +90,9 @@ impl Window {
                 let width = window.inner_width().unwrap().as_f64().unwrap() as u32;
                 let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
                 resize_handler.resize(Size2D::new(width, height));
+
+                canvas.set_width(width);
+                canvas.set_height(height);
             });
 
             self.inner
