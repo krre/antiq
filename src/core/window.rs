@@ -6,7 +6,7 @@ use web_sys::{HtmlCanvasElement, MouseEvent};
 
 use crate::{
     core::canvas::Canvas,
-    renderer::webgpu::gpu::Gpu,
+    renderer::webgpu::Gpu,
     ui::d2::geometry::{Pos2D, Size2D},
 };
 

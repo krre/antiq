@@ -1,7 +1,7 @@
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 
-use crate::renderer::webgpu::gpu_adapter::GpuAdapter;
+use super::GpuAdapter;
 
 pub struct Gpu {
     _inner: web_sys::Gpu,
