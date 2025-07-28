@@ -6,7 +6,7 @@ use web_sys::{HtmlCanvasElement, MouseEvent};
 
 use crate::{
     core::canvas::Canvas,
-    renderer::webgpu::Gpu,
+    renderer::webgpu::{Gpu, GpuCanvasContext},
     ui::d2::geometry::{Pos2D, Size2D},
 };
 
@@ -43,6 +43,15 @@ impl Window {
         let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
         canvas.set_width(width);
         canvas.set_height(height);
+
+        let web_sys_context = canvas
+            .get_context("webgpu")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<web_sys::GpuCanvasContext>()
+            .unwrap();
+
+        let _webgpu_context = GpuCanvasContext::new(web_sys_context);
 
         let gpu = window.navigator().gpu();
 

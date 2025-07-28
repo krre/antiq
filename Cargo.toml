@@ -17,6 +17,7 @@ web-sys = { version = "0.3.77", features = [
     'Gpu',
     'GpuAdapter',
     'GpuDevice',
+    'GpuCanvasContext',
     'HtmlElement',
     'HtmlCanvasElement',
     'Navigator',
