@@ -6,7 +6,7 @@ use web_sys::{HtmlCanvasElement, MouseEvent};
 
 use crate::{
     core::canvas::Canvas,
-    renderer::webgpu::{CanvasContext, Gpu},
+    renderer::webgpu::CanvasContext,
     ui::d2::geometry::{Pos2D, Size2D},
 };
 
@@ -23,7 +23,6 @@ pub trait WindowEvent {
 pub struct Window {
     inner: web_sys::Window,
     canvas: Canvas,
-    gpu: Gpu,
     event_handler: Option<Rc<dyn WindowEvent>>,
     resize_closure: Option<Closure<dyn FnMut()>>,
     mouse_move_closure: Option<Closure<dyn FnMut(MouseEvent)>>,
@@ -53,24 +52,21 @@ impl Window {
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
 
-        let gpu = window.navigator().gpu();
-
         Self {
             inner: window,
             canvas: Canvas::new(canvas),
             event_handler: None,
             resize_closure: None,
             mouse_move_closure: None,
-            gpu: Gpu::new(gpu),
         }
+    }
+
+    pub(crate) fn inner(&self) -> &web_sys::Window {
+        &self.inner
     }
 
     pub fn canvas(&self) -> &Canvas {
         &self.canvas
-    }
-
-    pub fn gpu(&self) -> &Gpu {
-        &self.gpu
     }
 
     pub fn size(&self) -> Size2D {

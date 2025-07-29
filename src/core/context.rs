@@ -9,9 +9,12 @@ pub struct Context {
 
 impl Context {
     pub fn new() -> Self {
+        let window = Window::new();
+        let renderer = Renderer::new(&window);
+
         Self {
-            renderer: Rc::new(Renderer::new()),
-            window: Rc::new(Window::new()),
+            renderer: Rc::new(renderer),
+            window: Rc::new(window),
         }
     }
 
