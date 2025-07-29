@@ -3,7 +3,7 @@ name = "antiq"
 version = "0.1.0"
 authors = ["Vladimir Zarypov <krre31@gmail.com>"]
 edition = "2024"
-description = "3DUI toolkit"
+description = "Web 3DUI toolkit"
 repository = "https://github.com/krre/antiq"
 
 [dependencies]
