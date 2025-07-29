@@ -1,23 +1,23 @@
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 
-use crate::renderer::webgpu::GpuDevice;
+use crate::renderer::webgpu::Device;
 
-pub struct GpuAdapter {
+pub struct Adapter {
     _inner: web_sys::GpuAdapter,
 }
 
-impl GpuAdapter {
+impl Adapter {
     pub(crate) fn new(gpu_adapter: web_sys::GpuAdapter) -> Self {
         Self {
             _inner: gpu_adapter,
         }
     }
 
-    pub async fn request_device(&self) -> Result<GpuDevice, JsValue> {
+    pub async fn request_device(&self) -> Result<Device, JsValue> {
         let device = JsFuture::from(self._inner.request_device())
             .await?
             .dyn_into::<web_sys::GpuDevice>()?;
-        Ok(GpuDevice::new(device))
+        Ok(Device::new(device))
     }
 }
