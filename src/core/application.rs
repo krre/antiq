@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use wasm_bindgen::JsValue;
 
-use crate::{core::context::Context, renderer::Renderer};
+use crate::core::context::Context;
 
 pub trait Application {
     fn new(context: Rc<Context>) -> Self;
@@ -17,8 +17,7 @@ pub struct ApplicationBackend<App: Application> {
 
 impl<App: Application> ApplicationBackend<App> {
     pub fn new() -> Result<Self, JsValue> {
-        let renderer = Renderer::new();
-        let context = Rc::new(Context::new(renderer));
+        let context = Rc::new(Context::new());
         let app = App::new(context.clone());
 
         let backend = Self { app, context };
