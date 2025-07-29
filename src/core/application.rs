@@ -4,9 +4,7 @@ use wasm_bindgen::JsValue;
 
 use crate::core::context::Context;
 
-pub trait Application {
-    fn new(context: Rc<Context>) -> Self;
-
+pub trait Application: Default {
     fn run(&self);
 }
 
@@ -18,7 +16,7 @@ pub struct ApplicationBackend<App: Application> {
 impl<App: Application> ApplicationBackend<App> {
     pub fn new() -> Result<Self, JsValue> {
         let context = Rc::new(Context::new());
-        let app = App::new(context.clone());
+        let app = App::default();
 
         let backend = Self { app, context };
 
