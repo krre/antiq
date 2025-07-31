@@ -7,7 +7,10 @@ use web_sys::{HtmlCanvasElement, MouseEvent};
 use crate::{
     core::canvas::Canvas,
     renderer::webgpu::CanvasContext,
-    ui::d2::geometry::{Pos2D, Size2D},
+    ui::{
+        Ui3d,
+        d2::geometry::{Pos2D, Size2D},
+    },
 };
 
 pub trait WindowEvent {
@@ -22,6 +25,7 @@ pub trait WindowEvent {
 
 pub struct Window {
     inner: web_sys::Window,
+    ui: Ui3d,
     canvas: Canvas,
     event_handler: Option<Rc<dyn WindowEvent>>,
     resize_closure: Option<Closure<dyn FnMut()>>,
@@ -29,7 +33,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new() -> Self {
+    pub fn new(ui: Ui3d) -> Self {
         let window = web_sys::window().unwrap();
         let document = window.document().unwrap();
         let canvas = document
@@ -54,6 +58,7 @@ impl Window {
 
         Self {
             inner: window,
+            ui,
             canvas: Canvas::new(canvas),
             event_handler: None,
             resize_closure: None,
