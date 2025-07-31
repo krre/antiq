@@ -1,6 +1,5 @@
 pub mod application;
 pub mod canvas;
-pub mod context;
 pub mod log;
 pub mod window;
 

@@ -1,8 +1,6 @@
-use std::rc::Rc;
-
 use wasm_bindgen::JsValue;
 
-use crate::{core::context::Context, ui::Ui3d};
+use crate::{Renderer, Window, ui::Ui3d};
 
 pub trait Application: Default {
     fn build_ui(&self) -> Ui3d;
@@ -11,25 +9,25 @@ pub trait Application: Default {
 pub struct ApplicationBackend<App: Application> {
     _app: App,
     _ui: Ui3d,
-    context: Rc<Context>,
+    window: Window,
+    renderer: Renderer,
 }
 
 impl<App: Application> ApplicationBackend<App> {
     pub fn new() -> Result<Self, JsValue> {
-        let context = Rc::new(Context::new());
         let app = App::default();
         let ui = app.build_ui();
+
+        let window = Window::new();
+        let renderer = Renderer::new(&window);
 
         let backend = Self {
             _app: app,
             _ui: ui,
-            context,
+            window,
+            renderer,
         };
 
         Ok(backend)
-    }
-
-    pub fn context(&self) -> &Context {
-        &self.context
     }
 }
