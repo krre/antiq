@@ -5,8 +5,9 @@ use wasm_bindgen::prelude::Closure;
 use web_sys::{HtmlCanvasElement, MouseEvent};
 
 use crate::{
+    Renderer,
     core::canvas::Canvas,
-    renderer::webgpu::CanvasContext,
+    renderer::webgpu::{CanvasContext, Gpu},
     ui::{
         Ui3d,
         d2::geometry::{Pos2D, Size2D},
@@ -26,6 +27,7 @@ pub trait WindowEvent {
 pub struct Window {
     inner: web_sys::Window,
     ui: Ui3d,
+    renderer: Renderer,
     canvas: Canvas,
     event_handler: Option<Rc<dyn WindowEvent>>,
     resize_closure: Option<Closure<dyn FnMut()>>,
@@ -56,18 +58,18 @@ impl Window {
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
 
+        let gpu = Gpu::new(window.navigator().gpu());
+        let renderer = Renderer::new(gpu);
+
         Self {
             inner: window,
             ui,
+            renderer,
             canvas: Canvas::new(canvas),
             event_handler: None,
             resize_closure: None,
             mouse_move_closure: None,
         }
-    }
-
-    pub(crate) fn inner(&self) -> &web_sys::Window {
-        &self.inner
     }
 
     pub fn canvas(&self) -> &Canvas {

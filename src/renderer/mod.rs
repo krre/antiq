@@ -1,4 +1,4 @@
-use crate::{Window, renderer::webgpu::Gpu};
+use crate::renderer::webgpu::Gpu;
 
 pub mod webgpu;
 
@@ -7,9 +7,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub(crate) fn new(window: &Window) -> Self {
-        let gpu = Gpu::new(window.inner().navigator().gpu());
-
+    pub(crate) fn new(gpu: Gpu) -> Self {
         Self { gpu }
     }
 
