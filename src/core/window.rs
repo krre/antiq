@@ -1,18 +1,12 @@
-use std::rc::Rc;
-
 use wasm_bindgen::JsCast;
-use wasm_bindgen::prelude::Closure;
-use web_sys::{HtmlCanvasElement, MouseEvent};
+use web_sys::HtmlCanvasElement;
 
 use crate::{
     Renderer,
     core::canvas::Canvas,
     event::EventDispatcher,
     renderer::webgpu::{CanvasContext, Gpu},
-    ui::{
-        Ui3d,
-        d2::geometry::{Pos2D, Size2D},
-    },
+    ui::{Ui3d, d2::geometry::Size2D},
 };
 
 pub struct Window {
