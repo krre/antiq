@@ -4,12 +4,14 @@ pub mod event_dispatcher;
 
 pub(crate) use event_dispatcher::EventDispatcher;
 
-pub trait WindowEvent {
-    fn resize(&self, size: Size2D) {
-        let _ = size;
-    }
+pub enum Event<T> {
+    WindowResize(Size2D),
+    MouseMove(Pos2D),
+    User(T),
+}
 
-    fn mouse_move(&self, pos: Pos2D) {
-        let _ = pos;
+pub trait EventHandler<T = ()> {
+    fn handle(event: Event<T>) {
+        let _ = event;
     }
 }
