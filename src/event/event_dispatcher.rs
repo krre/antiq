@@ -1,8 +1,14 @@
+use std::rc::Rc;
+
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::Closure;
 use web_sys::{MouseEvent, Window};
 
-pub(crate) struct EventDispatcher {}
+use crate::event::EventHandler;
+
+pub(crate) struct EventDispatcher {
+    listeners: Vec<Rc<dyn EventHandler>>,
+}
 
 impl EventDispatcher {
     pub(crate) fn new(window: &Window) -> Self {
@@ -23,6 +29,12 @@ impl EventDispatcher {
             .unwrap();
         mouse_move_closure.forget();
 
-        Self {}
+        Self {
+            listeners: Vec::new(),
+        }
+    }
+
+    pub(crate) fn add_listener(&mut self, listener: Rc<dyn EventHandler>) {
+        self.listeners.push(listener);
     }
 }

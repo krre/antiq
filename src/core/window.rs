@@ -1,10 +1,12 @@
+use std::rc::Rc;
+
 use wasm_bindgen::JsCast;
 use web_sys::HtmlCanvasElement;
 
 use crate::{
     Renderer,
     core::canvas::Canvas,
-    event::EventDispatcher,
+    event::{EventDispatcher, EventHandler},
     renderer::webgpu::{CanvasContext, Gpu},
     ui::{Ui3d, d2::geometry::Size2D},
 };
@@ -12,7 +14,8 @@ use crate::{
 pub struct Window {
     inner: web_sys::Window,
     event_dispatcher: EventDispatcher,
-    ui: Ui3d,
+    ui: Rc<Ui3d>,
+    system_event_handler: Rc<SystemEventHandler>,
     renderer: Renderer,
     canvas: Canvas,
 }
@@ -20,7 +23,13 @@ pub struct Window {
 impl Window {
     pub fn new(ui: Ui3d) -> Self {
         let window = web_sys::window().unwrap();
-        let event_dispatcher = EventDispatcher::new(&window);
+
+        let ui = Rc::new(ui);
+        let system_event_handler = Rc::new(SystemEventHandler {});
+
+        let mut event_dispatcher = EventDispatcher::new(&window);
+        event_dispatcher.add_listener(ui.clone());
+        event_dispatcher.add_listener(system_event_handler.clone());
 
         let document = window.document().unwrap();
         let canvas = document
@@ -50,6 +59,7 @@ impl Window {
             inner: window,
             event_dispatcher,
             ui,
+            system_event_handler,
             renderer,
             canvas: Canvas::new(canvas),
         }
@@ -65,3 +75,7 @@ impl Window {
         Size2D::new(width, height)
     }
 }
+
+pub(crate) struct SystemEventHandler {}
+
+impl EventHandler for SystemEventHandler {}
