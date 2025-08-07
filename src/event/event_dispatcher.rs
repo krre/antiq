@@ -7,7 +7,7 @@ use web_sys::{MouseEvent, Window};
 use crate::event::EventHandler;
 
 pub(crate) struct EventDispatcher {
-    listeners: Vec<Rc<dyn EventHandler>>,
+    handlers: Vec<Rc<dyn EventHandler>>,
 }
 
 impl EventDispatcher {
@@ -30,11 +30,11 @@ impl EventDispatcher {
         mouse_move_closure.forget();
 
         Self {
-            listeners: Vec::new(),
+            handlers: Vec::new(),
         }
     }
 
-    pub(crate) fn add_listener(&mut self, listener: Rc<dyn EventHandler>) {
-        self.listeners.push(listener);
+    pub(crate) fn add_handler(&mut self, listener: Rc<dyn EventHandler>) {
+        self.handlers.push(listener);
     }
 }

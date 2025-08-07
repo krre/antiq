@@ -28,8 +28,8 @@ impl Window {
         let system_event_handler = Rc::new(SystemEventHandler {});
 
         let mut event_dispatcher = EventDispatcher::new(&window);
-        event_dispatcher.add_listener(ui.clone());
-        event_dispatcher.add_listener(system_event_handler.clone());
+        event_dispatcher.add_handler(ui.clone());
+        event_dispatcher.add_handler(system_event_handler.clone());
 
         let document = window.document().unwrap();
         let canvas = document
