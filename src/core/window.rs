@@ -38,10 +38,9 @@ impl Window {
             .dyn_into::<HtmlCanvasElement>()
             .unwrap();
 
-        let width = window.inner_width().unwrap().as_f64().unwrap() as u32;
-        let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
-        canvas.set_width(width);
-        canvas.set_height(height);
+        let size = Self::inner_size(&window);
+        canvas.set_width(size.width());
+        canvas.set_height(size.height());
 
         let web_sys_context = canvas
             .get_context("webgpu")
@@ -70,8 +69,12 @@ impl Window {
     }
 
     pub fn size(&self) -> Size2D {
-        let width = self.inner.inner_width().ok().unwrap().as_f64().unwrap() as u32;
-        let height = self.inner.inner_height().ok().unwrap().as_f64().unwrap() as u32;
+        Self::inner_size(&self.inner)
+    }
+
+    fn inner_size(window: &web_sys::Window) -> Size2D {
+        let width = window.inner_width().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
+        let height = window.inner_height().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
         Size2D::new(width, height)
     }
 }
