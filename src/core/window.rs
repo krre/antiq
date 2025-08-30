@@ -72,7 +72,7 @@ impl Window {
         Self::inner_size(&self.inner)
     }
 
-    fn inner_size(window: &web_sys::Window) -> Size2D {
+    pub(crate) fn inner_size(window: &web_sys::Window) -> Size2D {
         let width = window.inner_width().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
         let height = window.inner_height().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
         Size2D::new(width, height)
