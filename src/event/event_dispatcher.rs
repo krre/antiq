@@ -2,7 +2,6 @@ use std::rc::Rc;
 
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::Closure;
-use web_sys::{MouseEvent, Window};
 
 use crate::event::EventHandler;
 
@@ -11,16 +10,17 @@ pub(crate) struct EventDispatcher {
 }
 
 impl EventDispatcher {
-    pub(crate) fn new(window: &Window) -> Self {
+    pub(crate) fn new(window: &web_sys::Window) -> Self {
         // resize
         let resize_closure = Closure::<dyn FnMut()>::new(move || {});
+
         window
             .add_event_listener_with_callback("resize", resize_closure.as_ref().unchecked_ref())
             .unwrap();
         resize_closure.forget();
 
         // mousemove
-        let mouse_move_closure = Closure::<dyn FnMut(MouseEvent)>::new(move |event: MouseEvent| {});
+        let mouse_move_closure = Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |event: web_sys::MouseEvent| {});
         window
             .add_event_listener_with_callback(
                 "mousemove",
