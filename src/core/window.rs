@@ -12,7 +12,6 @@ use crate::{
 };
 
 pub struct Window {
-    inner: web_sys::Window,
     event_dispatcher: EventDispatcher,
     ui: Rc<Ui3d>,
     system_event_handler: Rc<SystemEventHandler>,
@@ -55,7 +54,6 @@ impl Window {
         let renderer = Renderer::new(gpu);
 
         Self {
-            inner: window,
             event_dispatcher,
             ui,
             system_event_handler,
