@@ -22,23 +22,23 @@ pub struct Window {
 
 impl Window {
     pub fn new(ui: Ui3d) -> Self {
-        let window = web_sys::window().unwrap();
+        let window = gloo::utils::window();
 
         let ui = Rc::new(ui);
         let system_event_handler = Rc::new(SystemEventHandler {});
 
-        let mut event_dispatcher = EventDispatcher::new(&window);
+        let mut event_dispatcher = EventDispatcher::new();
         event_dispatcher.add_handler(ui.clone());
         event_dispatcher.add_handler(system_event_handler.clone());
 
-        let document = window.document().unwrap();
+        let document = gloo::utils::document();
         let canvas = document
             .get_element_by_id("webgpu-canvas")
             .unwrap()
             .dyn_into::<HtmlCanvasElement>()
             .unwrap();
 
-        let size = Self::inner_size(&window);
+        let size = Self::size();
         canvas.set_width(size.width());
         canvas.set_height(size.height());
 
@@ -68,11 +68,8 @@ impl Window {
         &self.canvas
     }
 
-    pub fn size(&self) -> Size2D {
-        Self::inner_size(&self.inner)
-    }
-
-    pub(crate) fn inner_size(window: &web_sys::Window) -> Size2D {
+    pub fn size() -> Size2D {
+        let window = gloo::utils::window();
         let width = window.inner_width().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
         let height = window.inner_height().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
         Size2D::new(width, height)

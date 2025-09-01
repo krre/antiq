@@ -10,7 +10,9 @@ pub(crate) struct EventDispatcher {
 }
 
 impl EventDispatcher {
-    pub(crate) fn new(window: &web_sys::Window) -> Self {
+    pub(crate) fn new() -> Self {
+        let window = gloo::utils::window();
+
         // resize
         let resize_closure = Closure::<dyn FnMut()>::new(move || {});
 
