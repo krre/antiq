@@ -3,7 +3,7 @@ use std::rc::Rc;
 use gloo::events::EventListener;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
-use futures::channel::mpsc;
+use futures::channel::mpsc::{self, UnboundedSender};
 use futures::StreamExt;
 
 use crate::event::{Event, EventHandler};
@@ -12,6 +12,7 @@ use crate::Window;
 
 pub(crate) struct EventDispatcher {
     handlers: Vec<Rc<dyn EventHandler>>,
+    sender: UnboundedSender<Event<()>>,
     _listeners: Vec<EventListener>,
 }
 
@@ -36,6 +37,7 @@ impl EventDispatcher {
 
         let dispatcher = Rc::new(Self {
             handlers,
+            sender,
             _listeners: vec![resize_listener, mouse_move_listener]
         });
 
@@ -50,5 +52,9 @@ impl EventDispatcher {
         });
 
         dispatcher
+    }
+
+    pub fn send(&self, event: Event<()>) {
+        self.sender.unbounded_send(event).ok();
     }
 }
