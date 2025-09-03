@@ -4,15 +4,11 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlCanvasElement;
 
 use crate::{
-    Renderer,
-    core::canvas::Canvas,
-    event::{EventDispatcher, EventHandler},
-    renderer::webgpu::{CanvasContext, Gpu},
-    ui::{Ui3d, d2::geometry::Size2D},
+    core::canvas::Canvas, event::{Event, EventDispatcher, EventHandler}, renderer::webgpu::{CanvasContext, Gpu}, ui::{d2::geometry::Size2D, Ui3d}, Renderer
 };
 
 pub struct Window {
-    event_dispatcher: EventDispatcher,
+    event_dispatcher: Rc<EventDispatcher>,
     ui: Rc<Ui3d>,
     system_event_handler: Rc<SystemEventHandler>,
     renderer: Renderer,
@@ -26,9 +22,7 @@ impl Window {
         let ui = Rc::new(ui);
         let system_event_handler = Rc::new(SystemEventHandler {});
 
-        let mut event_dispatcher = EventDispatcher::new();
-        event_dispatcher.add_handler(ui.clone());
-        event_dispatcher.add_handler(system_event_handler.clone());
+        let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         let document = gloo::utils::document();
         let canvas = document
@@ -76,4 +70,12 @@ impl Window {
 
 pub(crate) struct SystemEventHandler {}
 
-impl EventHandler for SystemEventHandler {}
+impl EventHandler for SystemEventHandler {
+    fn handle(&self, event: &Event<()>) {
+        match event {
+            Event::WindowResize(size) => gloo::console::log!("size", size.width(), size.height()),
+            Event::MouseMove(pos) => gloo::console::log!("pos", pos.x(), pos.y()),
+            Event::User(_) => todo!(),
+        }
+    }
+}

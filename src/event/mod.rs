@@ -11,7 +11,7 @@ pub enum Event<T> {
 }
 
 pub trait EventHandler<T = ()> {
-    fn handle(&self, event: Event<T>) {
+    fn handle(&self, event: &Event<T>) {
         let _ = event;
     }
 }
