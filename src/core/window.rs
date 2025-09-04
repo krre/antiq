@@ -4,7 +4,7 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlCanvasElement;
 
 use crate::{
-    core::canvas::Canvas, event::{Event, EventDispatcher, EventHandler}, renderer::webgpu::{CanvasContext, Gpu}, ui::{d2::geometry::Size2D, Ui3d}, Renderer
+    core::canvas::Canvas, event::{Event, EventDispatcher, EventHandler}, renderer::webgpu::{CanvasContext, Gpu}, ui::{d2::geometry::{Pos2D, Size2D}, Ui3d}, Renderer
 };
 
 pub struct Window {
@@ -70,11 +70,21 @@ impl Window {
 
 pub(crate) struct SystemEventHandler {}
 
+impl SystemEventHandler {
+    fn resize(&self, size: &Size2D) {
+        gloo::console::log!("size", size.width(), size.height())
+    }
+
+    fn mouse_move(&self, pos: &Pos2D) {
+        gloo::console::log!("pos", pos.x(), pos.y())
+    }
+}
+
 impl EventHandler for SystemEventHandler {
     fn handle(&self, event: &Event<()>) {
         match event {
-            Event::WindowResize(size) => gloo::console::log!("size", size.width(), size.height()),
-            Event::MouseMove(pos) => gloo::console::log!("pos", pos.x(), pos.y()),
+            Event::WindowResize(size) => self.resize(size),
+            Event::MouseMove(pos) => self.mouse_move(pos),
             Event::User(_) => todo!(),
         }
     }
