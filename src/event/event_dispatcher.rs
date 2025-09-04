@@ -1,14 +1,14 @@
 use std::rc::Rc;
 
+use futures::StreamExt;
+use futures::channel::mpsc::{self, UnboundedSender};
 use gloo::events::EventListener;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
-use futures::channel::mpsc::{self, UnboundedSender};
-use futures::StreamExt;
 
+use crate::Window;
 use crate::event::{Event, EventHandler};
 use crate::ui::d2::geometry::Pos2D;
-use crate::Window;
 
 pub(crate) struct EventDispatcher {
     handlers: Vec<Rc<dyn EventHandler>>,
@@ -32,13 +32,15 @@ impl EventDispatcher {
             let event = event.dyn_ref::<web_sys::MouseEvent>().unwrap();
             let x = event.client_x();
             let y = event.client_y();
-            mouse_move_sender.unbounded_send(Event::MouseMove(Pos2D::new(x, y))).ok();
+            mouse_move_sender
+                .unbounded_send(Event::MouseMove(Pos2D::new(x, y)))
+                .ok();
         });
 
         let dispatcher = Rc::new(Self {
             handlers,
             sender,
-            _listeners: vec![resize_listener, mouse_move_listener]
+            _listeners: vec![resize_listener, mouse_move_listener],
         });
 
         let dispatcher_clone = dispatcher.clone();

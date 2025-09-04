@@ -4,7 +4,14 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlCanvasElement;
 
 use crate::{
-    core::canvas::Canvas, event::{Event, EventDispatcher, EventHandler}, renderer::webgpu::{CanvasContext, Gpu}, ui::{d2::geometry::{Pos2D, Size2D}, Ui3d}, Renderer
+    Renderer,
+    core::canvas::Canvas,
+    event::{Event, EventDispatcher, EventHandler},
+    renderer::webgpu::{CanvasContext, Gpu},
+    ui::{
+        Ui3d,
+        d2::geometry::{Pos2D, Size2D},
+    },
 };
 
 pub struct Window {
