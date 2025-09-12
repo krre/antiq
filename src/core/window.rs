@@ -35,7 +35,7 @@ impl Window {
             .get_element_by_id(webgpu_canvas_name)
             .expect_throw("Can't find WebGPU canvas element")
             .dyn_into::<HtmlCanvasElement>()
-            .unwrap_throw();
+            .expect_throw("Failed cast to HtmlCanvasElement");
 
         let size = Self::size();
         canvas.set_width(size.width());
@@ -43,10 +43,10 @@ impl Window {
 
         let web_sys_context = canvas
             .get_context("webgpu")
-            .unwrap_throw()
+            .expect_throw("Can't get WebGPU context")
             .expect_throw("Can't find WebGPU object")
             .dyn_into::<web_sys::GpuCanvasContext>()
-            .unwrap_throw();
+            .expect_throw("Failed cast to GpuCanvasContext");
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
 
@@ -63,8 +63,16 @@ impl Window {
 
     pub fn size() -> Size2D {
         let window = gloo::utils::window();
-        let width = window.inner_width().unwrap_throw().as_f64().unwrap_or(0.0) as u32;
-        let height = window.inner_height().unwrap_throw().as_f64().unwrap_or(0.0) as u32;
+        let width = window
+            .inner_width()
+            .expect_throw("Can't get window width")
+            .as_f64()
+            .unwrap_or(0.0) as u32;
+        let height = window
+            .inner_height()
+            .expect_throw("Can't get window height")
+            .as_f64()
+            .unwrap_or(0.0) as u32;
         Size2D::new(width, height)
     }
 }
