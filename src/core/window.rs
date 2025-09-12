@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 use web_sys::HtmlCanvasElement;
 
 use crate::{
@@ -34,9 +35,9 @@ impl Window {
         let document = gloo::utils::document();
         let canvas = document
             .get_element_by_id(webgpu_canvas_name)
-            .unwrap()
+            .expect_throw("Can't find WebGPU canvas element")
             .dyn_into::<HtmlCanvasElement>()
-            .unwrap();
+            .unwrap_throw();
 
         let size = Self::size();
         canvas.set_width(size.width());
@@ -44,10 +45,10 @@ impl Window {
 
         let web_sys_context = canvas
             .get_context("webgpu")
-            .unwrap()
-            .unwrap()
+            .unwrap_throw()
+            .expect_throw("Can't find WebGPU object")
             .dyn_into::<web_sys::GpuCanvasContext>()
-            .unwrap();
+            .unwrap_throw();
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
 
@@ -69,8 +70,8 @@ impl Window {
 
     pub fn size() -> Size2D {
         let window = gloo::utils::window();
-        let width = window.inner_width().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
-        let height = window.inner_height().ok().unwrap().as_f64().unwrap_or(0.0) as u32;
+        let width = window.inner_width().unwrap_throw().as_f64().unwrap_or(0.0) as u32;
+        let height = window.inner_height().unwrap_throw().as_f64().unwrap_or(0.0) as u32;
         Size2D::new(width, height)
     }
 }
