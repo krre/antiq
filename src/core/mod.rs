@@ -1,5 +1,4 @@
 pub mod application;
-pub mod canvas;
 pub mod log;
 pub mod window;
 

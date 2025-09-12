@@ -6,7 +6,6 @@ use web_sys::HtmlCanvasElement;
 
 use crate::{
     Renderer,
-    core::canvas::Canvas,
     event::{Event, EventDispatcher, EventHandler},
     renderer::webgpu::{CanvasContext, Gpu},
     ui::{
@@ -20,7 +19,6 @@ pub struct Window {
     ui: Rc<Ui3d>,
     system_event_handler: Rc<SystemEventHandler>,
     renderer: Renderer,
-    canvas: Canvas,
 }
 
 impl Window {
@@ -60,12 +58,7 @@ impl Window {
             ui,
             system_event_handler,
             renderer,
-            canvas: Canvas::new(canvas),
         }
-    }
-
-    pub fn canvas(&self) -> &Canvas {
-        &self.canvas
     }
 
     pub fn size() -> Size2D {
