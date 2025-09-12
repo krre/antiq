@@ -23,7 +23,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(ui: Ui3d) -> Self {
+    pub fn new(ui: Ui3d, webgpu_canvas_name: &str) -> Self {
         let window = gloo::utils::window();
 
         let ui = Rc::new(ui);
@@ -33,7 +33,7 @@ impl Window {
 
         let document = gloo::utils::document();
         let canvas = document
-            .get_element_by_id("webgpu-canvas")
+            .get_element_by_id(webgpu_canvas_name)
             .unwrap()
             .dyn_into::<HtmlCanvasElement>()
             .unwrap();

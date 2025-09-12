@@ -4,6 +4,10 @@ use crate::{Window, ui::Ui3d};
 
 pub trait Application: Default {
     fn build_ui(&self) -> Ui3d;
+
+    fn webgpu_canvas_name(&self) -> String {
+        String::from("webgpu-canvas")
+    }
 }
 
 pub struct ApplicationBackend<App: Application> {
@@ -15,7 +19,7 @@ impl<App: Application> ApplicationBackend<App> {
     pub fn new() -> Result<Self, JsValue> {
         let app = App::default();
         let ui = app.build_ui();
-        let window = Window::new(ui);
+        let window = Window::new(ui, &app.webgpu_canvas_name());
 
         Ok(Self {
             _app: app,
