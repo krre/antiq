@@ -90,7 +90,7 @@ impl SystemEventHandler {
 
 impl SystemEventHandler {
     fn resize(&self, size: &Size2D) {
-        gloo::console::log!("size", size.width(), size.height())
+        self.renderer.resize(size);
     }
 
     fn mouse_move(&self, pos: &Pos2D) {
