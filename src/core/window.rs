@@ -18,7 +18,7 @@ pub struct Window {
     event_dispatcher: Rc<EventDispatcher>,
     ui: Rc<Ui3d>,
     system_event_handler: Rc<SystemEventHandler>,
-    renderer: Renderer,
+    renderer: Rc<Renderer>,
 }
 
 impl Window {
@@ -26,7 +26,11 @@ impl Window {
         let window = gloo::utils::window();
 
         let ui = Rc::new(ui);
-        let system_event_handler = Rc::new(SystemEventHandler {});
+
+        let gpu = Gpu::new(window.navigator().gpu());
+        let renderer = Rc::new(Renderer::new(gpu));
+
+        let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
 
         let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
@@ -49,9 +53,6 @@ impl Window {
             .expect_throw("Failed cast to GpuCanvasContext");
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
-
-        let gpu = Gpu::new(window.navigator().gpu());
-        let renderer = Renderer::new(gpu);
 
         Self {
             event_dispatcher,
@@ -77,7 +78,15 @@ impl Window {
     }
 }
 
-pub(crate) struct SystemEventHandler {}
+pub(crate) struct SystemEventHandler {
+    renderer: Rc<Renderer>,
+}
+
+impl SystemEventHandler {
+    fn new(renderer: Rc<Renderer>) -> Self {
+        SystemEventHandler { renderer }
+    }
+}
 
 impl SystemEventHandler {
     fn resize(&self, size: &Size2D) {
