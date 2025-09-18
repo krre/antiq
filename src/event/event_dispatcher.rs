@@ -4,6 +4,7 @@ use futures::StreamExt;
 use futures::channel::mpsc::{self, UnboundedSender};
 use gloo::events::EventListener;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 use wasm_bindgen_futures::spawn_local;
 
 use crate::Window;
@@ -29,7 +30,9 @@ impl EventDispatcher {
 
         let mouse_move_sender = sender.clone();
         let mouse_move_listener = EventListener::new(&window, "mousemove", move |event| {
-            let event = event.dyn_ref::<web_sys::MouseEvent>().unwrap();
+            let event = event
+                .dyn_ref::<web_sys::MouseEvent>()
+                .expect_throw("Can't get mouse move event");
             let x = event.client_x();
             let y = event.client_y();
             mouse_move_sender
