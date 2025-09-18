@@ -94,7 +94,7 @@ impl SystemEventHandler {
     }
 
     fn mouse_move(&self, pos: &Pos2D) {
-        gloo::console::log!("pos", pos.x(), pos.y())
+        // gloo::console::log!("pos", pos.x(), pos.y())
     }
 }
 

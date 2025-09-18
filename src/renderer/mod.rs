@@ -12,7 +12,7 @@ impl Renderer {
     }
 
     pub fn resize(&self, size: &Size2D) {
-        gloo::console::log!("resize renderer", size.width(), size.height())
+        // gloo::console::log!("resize renderer", size.width(), size.height())
     }
 
     pub fn render(&self) {}
