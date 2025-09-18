@@ -8,8 +8,8 @@ pub struct Gpu {
 }
 
 impl Gpu {
-    pub(crate) fn new(gui: web_sys::Gpu) -> Self {
-        Self { _inner: gui }
+    pub(crate) fn new(gpu: web_sys::Gpu) -> Self {
+        Self { _inner: gpu }
     }
 
     pub async fn request_adapter(&self) -> Result<Adapter, JsValue> {
