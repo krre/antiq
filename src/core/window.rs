@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
-use web_sys::HtmlCanvasElement;
+use web_sys::{GpuCanvasContext, HtmlCanvasElement};
 
 use crate::{
     Renderer,
@@ -49,7 +49,7 @@ impl Window {
             .get_context("webgpu")
             .expect_throw("Can't get WebGPU context")
             .expect_throw("Can't find WebGPU object")
-            .dyn_into::<web_sys::GpuCanvasContext>()
+            .dyn_into::<GpuCanvasContext>()
             .expect_throw("Failed cast to GpuCanvasContext");
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
