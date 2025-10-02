@@ -1,7 +1,7 @@
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::{
-    renderer::webgpu::{Adapter, Gpu},
+    renderer::webgpu::{Adapter, Device, Gpu},
     ui::d2::geometry::Size2D,
 };
 
@@ -10,6 +10,7 @@ pub mod webgpu;
 pub struct Renderer {
     gpu: Gpu,
     adapter: Adapter,
+    device: Device,
 }
 
 impl Renderer {
@@ -17,8 +18,18 @@ impl Renderer {
         let adapter = gpu
             .request_adapter()
             .await
-            .expect_throw("Can't request adapter");
-        Self { gpu, adapter }
+            .expect_throw("Can't request WebGPU adapter");
+
+        let device = adapter
+            .request_device()
+            .await
+            .expect_throw("Can't request WebGPU device");
+
+        Self {
+            gpu,
+            adapter,
+            device,
+        }
     }
 
     pub fn resize(&self, size: &Size2D) {
