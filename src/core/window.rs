@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
-use web_sys::{GpuCanvasContext, HtmlCanvasElement};
+use web_sys::GpuCanvasContext;
 
 use crate::{
     Renderer,
@@ -22,7 +22,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(ui: Ui3d, webgpu_canvas_name: &str) -> Self {
+    pub fn new(ui: Ui3d) -> Self {
         let window = gloo::utils::window();
         let gpu = Gpu::new(window.navigator().gpu());
         let renderer = Rc::new(Renderer::new(gpu));
