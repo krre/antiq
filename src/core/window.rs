@@ -24,14 +24,16 @@ pub struct Window {
 impl Window {
     pub fn new(ui: Ui3d, webgpu_canvas_name: &str) -> Self {
         let window = gloo::utils::window();
-
-        let ui = Rc::new(ui);
-
         let gpu = Gpu::new(window.navigator().gpu());
         let renderer = Rc::new(Renderer::new(gpu));
 
         let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
+        let ui = Rc::new(ui);
         let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
+
+        let body = gloo::utils::body();
+        body.set_attribute("style", "margin: 0; padding: 0;")
+            .expect_throw("Can't set body style");
 
         let document = gloo::utils::document();
 
@@ -49,8 +51,7 @@ impl Window {
         canvas.set_width(size.width());
         canvas.set_height(size.height());
 
-        gloo::utils::body()
-            .append_child(&canvas)
+        body.append_child(&canvas)
             .expect_throw("Can't append canvas to body");
 
         let web_sys_context = canvas
