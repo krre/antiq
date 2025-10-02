@@ -22,10 +22,10 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(ui: Ui3d) -> Self {
+    pub async fn new(ui: Ui3d) -> Self {
         let window = gloo::utils::window();
         let gpu = Gpu::new(window.navigator().gpu());
-        let renderer = Rc::new(Renderer::new(gpu));
+        let renderer = Rc::new(Renderer::new(gpu).await);
 
         let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
         let ui = Rc::new(ui);

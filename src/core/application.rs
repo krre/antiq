@@ -13,7 +13,7 @@ impl<App: Application> ApplicationBackend<App> {
     pub async fn new() -> Self {
         let app = App::default();
         let ui = app.build_ui();
-        let window = Window::new(ui);
+        let window = Window::new(ui).await;
 
         Self {
             _app: app,
