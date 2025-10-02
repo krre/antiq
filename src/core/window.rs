@@ -44,7 +44,7 @@ impl Window {
             .expect_throw("Can't cast to HtmlCanvasElement");
 
         canvas
-            .set_attribute("style", "display:block; width:100vw; height:100vh;")
+            .set_attribute("style", "display: block; width: 100vw; height: 100vh;")
             .expect_throw("Can't set canvas style");
 
         let size = Self::size();
