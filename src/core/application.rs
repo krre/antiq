@@ -1,5 +1,3 @@
-use wasm_bindgen::JsValue;
-
 use crate::{Window, ui::Ui3d};
 
 pub trait Application: Default {
@@ -12,14 +10,14 @@ pub struct ApplicationBackend<App: Application> {
 }
 
 impl<App: Application> ApplicationBackend<App> {
-    pub fn new() -> Result<Self, JsValue> {
+    pub async fn new() -> Self {
         let app = App::default();
         let ui = app.build_ui();
         let window = Window::new(ui);
 
-        Ok(Self {
+        Self {
             _app: app,
             _window: window,
-        })
+        }
     }
 }
