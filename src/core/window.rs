@@ -31,19 +31,27 @@ impl Window {
         let renderer = Rc::new(Renderer::new(gpu));
 
         let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
-
         let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         let document = gloo::utils::document();
+
         let canvas = document
-            .get_element_by_id(webgpu_canvas_name)
-            .expect_throw("Can't find WebGPU canvas element")
-            .dyn_into::<HtmlCanvasElement>()
-            .expect_throw("Failed cast to HtmlCanvasElement");
+            .create_element("canvas")
+            .expect_throw("Can't create canvas element")
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .expect_throw("Can't cast to HtmlCanvasElement");
+
+        canvas
+            .set_attribute("style", "display:block; width:100vw; height:100vh;")
+            .expect_throw("Can't set canvas style");
 
         let size = Self::size();
         canvas.set_width(size.width());
         canvas.set_height(size.height());
+
+        gloo::utils::body()
+            .append_child(&canvas)
+            .expect_throw("Can't append canvas to body");
 
         let web_sys_context = canvas
             .get_context("webgpu")
