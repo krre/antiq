@@ -5,7 +5,7 @@ pub mod ui;
 
 pub use core::application::Application;
 pub use core::application::ApplicationBackend;
-pub use core::log::log;
+pub use core::console;
 pub use core::window::Window;
 
 pub use renderer::Renderer;

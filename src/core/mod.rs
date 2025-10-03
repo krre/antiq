@@ -1,5 +1,5 @@
 pub mod application;
-pub mod log;
+pub mod console;
 pub mod window;
 
 mod id;
