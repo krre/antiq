@@ -1,4 +1,5 @@
 use wasm_bindgen::JsValue;
+use web_sys::{GpuCanvasConfiguration, GpuTextureFormat};
 
 use crate::{
     renderer::webgpu::{Adapter, CanvasContext, Device, Gpu},
@@ -18,6 +19,10 @@ impl Renderer {
     pub(crate) async fn new(gpu: Gpu, context: CanvasContext) -> Result<Self, JsValue> {
         let adapter = gpu.request_adapter().await?;
         let device = adapter.request_device().await?;
+
+        let configuration =
+            GpuCanvasConfiguration::new(device.into_inner(), GpuTextureFormat::Rgba8unorm);
+        context.configure(configuration)?;
 
         Ok(Self {
             gpu,
