@@ -1,9 +1,15 @@
+use web_sys::GpuDevice;
+
 pub struct Device {
-    _inner: web_sys::GpuDevice,
+    inner: GpuDevice,
 }
 
 impl Device {
-    pub(crate) fn new(device: web_sys::GpuDevice) -> Self {
-        Self { _inner: device }
+    pub(crate) fn new(device: GpuDevice) -> Self {
+        Self { inner: device }
+    }
+
+    pub fn into_inner(&self) -> &GpuDevice {
+        &self.inner
     }
 }

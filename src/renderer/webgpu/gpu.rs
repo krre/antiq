@@ -18,4 +18,8 @@ impl Gpu {
             .dyn_into::<web_sys::GpuAdapter>()?;
         Ok(Adapter::new(adapter))
     }
+
+    pub fn into_inner(&self) -> &web_sys::Gpu {
+        &self.inner
+    }
 }

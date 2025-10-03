@@ -2,7 +2,7 @@ use wasm_bindgen::JsValue;
 use web_sys::{GpuCanvasConfiguration, GpuCanvasContext};
 
 pub struct CanvasContext {
-    inner: web_sys::GpuCanvasContext,
+    inner: GpuCanvasContext,
 }
 
 impl CanvasContext {
@@ -15,5 +15,9 @@ impl CanvasContext {
     pub fn configure(&self, configuration: GpuCanvasConfiguration) -> Result<(), JsValue> {
         self.inner.configure(&configuration)?;
         Ok(())
+    }
+
+    pub fn into_inner(&self) -> &GpuCanvasContext {
+        &self.inner
     }
 }
