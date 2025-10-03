@@ -3,7 +3,7 @@ use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::UnwrapThrowExt;
-use web_sys::{GpuCanvasContext, window};
+use web_sys::{GpuCanvasContext, HtmlCanvasElement, window};
 
 use crate::{
     Renderer,
@@ -29,7 +29,7 @@ impl Window {
 
         let canvas = document
             .create_element("canvas")?
-            .dyn_into::<web_sys::HtmlCanvasElement>()?;
+            .dyn_into::<HtmlCanvasElement>()?;
 
         canvas.set_attribute("style", "display: block; width: 100vw; height: 100vh;")?;
 
