@@ -25,12 +25,6 @@ pub struct Window {
 impl Window {
     pub async fn new(ui: Ui3d) -> Result<Self, JsValue> {
         let window = window().ok_or("Global window not found")?;
-        let gpu = Gpu::new(window.navigator().gpu());
-        let renderer = Rc::new(Renderer::new(gpu).await?);
-
-        let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
-        let ui = Rc::new(ui);
-        let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         let body = gloo::utils::body();
         body.set_attribute("style", "margin: 0; padding: 0;")?;
@@ -49,12 +43,18 @@ impl Window {
 
         body.append_child(&canvas)?;
 
-        let web_sys_context = canvas
+        let context = canvas
             .get_context("webgpu")?
             .ok_or("WebGPU context not found")?
             .dyn_into::<GpuCanvasContext>()?;
 
-        let _webgpu_context = CanvasContext::new(web_sys_context);
+        let gpu = Gpu::new(window.navigator().gpu());
+        let context = CanvasContext::new(context);
+        let renderer = Rc::new(Renderer::new(gpu, context).await?);
+
+        let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
+        let ui = Rc::new(ui);
+        let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         Ok(Self {
             event_dispatcher,
