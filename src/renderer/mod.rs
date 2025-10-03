@@ -1,4 +1,4 @@
-use wasm_bindgen::UnwrapThrowExt;
+use wasm_bindgen::JsValue;
 
 use crate::{
     renderer::webgpu::{Adapter, Device, Gpu},
@@ -14,22 +14,15 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub(crate) async fn new(gpu: Gpu) -> Self {
-        let adapter = gpu
-            .request_adapter()
-            .await
-            .expect_throw("Can't request WebGPU adapter");
+    pub(crate) async fn new(gpu: Gpu) -> Result<Self, JsValue> {
+        let adapter = gpu.request_adapter().await?;
+        let device = adapter.request_device().await?;
 
-        let device = adapter
-            .request_device()
-            .await
-            .expect_throw("Can't request WebGPU device");
-
-        Self {
+        Ok(Self {
             gpu,
             adapter,
             device,
-        }
+        })
     }
 
     pub fn resize(&self, size: &Size2D) {

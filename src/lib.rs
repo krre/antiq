@@ -17,9 +17,10 @@ macro_rules! run_app {
         use wasm_bindgen::prelude::*;
 
         #[wasm_bindgen(start)]
-        pub async fn start() {
+        pub async fn start() -> Result<(), JsValue> {
             let backend = ApplicationBackend::<$app_type>::new().await;
             Box::leak(Box::new(backend));
+            Ok(())
         }
     };
 }

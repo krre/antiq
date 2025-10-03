@@ -1,8 +1,9 @@
 use std::rc::Rc;
 
 use wasm_bindgen::JsCast;
+use wasm_bindgen::JsValue;
 use wasm_bindgen::UnwrapThrowExt;
-use web_sys::GpuCanvasContext;
+use web_sys::{GpuCanvasContext, window};
 
 use crate::{
     Renderer,
@@ -22,53 +23,45 @@ pub struct Window {
 }
 
 impl Window {
-    pub async fn new(ui: Ui3d) -> Self {
-        let window = gloo::utils::window();
+    pub async fn new(ui: Ui3d) -> Result<Self, JsValue> {
+        let window = window().ok_or("Global window not found")?;
         let gpu = Gpu::new(window.navigator().gpu());
-        let renderer = Rc::new(Renderer::new(gpu).await);
+        let renderer = Rc::new(Renderer::new(gpu).await?);
 
         let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
         let ui = Rc::new(ui);
         let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         let body = gloo::utils::body();
-        body.set_attribute("style", "margin: 0; padding: 0;")
-            .expect_throw("Can't set body style");
+        body.set_attribute("style", "margin: 0; padding: 0;")?;
 
-        let document = gloo::utils::document();
+        let document = window.document().ok_or("Document not found")?;
 
         let canvas = document
-            .create_element("canvas")
-            .expect_throw("Can't create canvas element")
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .expect_throw("Can't cast to HtmlCanvasElement");
+            .create_element("canvas")?
+            .dyn_into::<web_sys::HtmlCanvasElement>()?;
 
-        canvas
-            .set_attribute("style", "display: block; width: 100vw; height: 100vh;")
-            .expect_throw("Can't set canvas style");
+        canvas.set_attribute("style", "display: block; width: 100vw; height: 100vh;")?;
 
         let size = Self::size();
         canvas.set_width(size.width());
         canvas.set_height(size.height());
 
-        body.append_child(&canvas)
-            .expect_throw("Can't append canvas to body");
+        body.append_child(&canvas)?;
 
         let web_sys_context = canvas
-            .get_context("webgpu")
-            .expect_throw("Can't get WebGPU context")
-            .expect_throw("Can't find WebGPU object")
-            .dyn_into::<GpuCanvasContext>()
-            .expect_throw("Failed cast to GpuCanvasContext");
+            .get_context("webgpu")?
+            .ok_or("WebGPU context not found")?
+            .dyn_into::<GpuCanvasContext>()?;
 
         let _webgpu_context = CanvasContext::new(web_sys_context);
 
-        Self {
+        Ok(Self {
             event_dispatcher,
             ui,
             system_event_handler,
             renderer,
-        }
+        })
     }
 
     pub fn size() -> Size2D {
