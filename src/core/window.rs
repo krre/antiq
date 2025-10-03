@@ -25,10 +25,6 @@ pub struct Window {
 impl Window {
     pub async fn new(ui: Ui3d) -> Result<Self, JsValue> {
         let window = window().ok_or("Global window not found")?;
-
-        let body = gloo::utils::body();
-        body.set_attribute("style", "margin: 0; padding: 0;")?;
-
         let document = window.document().ok_or("Document not found")?;
 
         let canvas = document
@@ -41,6 +37,8 @@ impl Window {
         canvas.set_width(size.width());
         canvas.set_height(size.height());
 
+        let body = document.body().ok_or("Body element not found")?;
+        body.set_attribute("style", "margin: 0; padding: 0;")?;
         body.append_child(&canvas)?;
 
         let context = canvas
