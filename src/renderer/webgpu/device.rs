@@ -3,7 +3,7 @@ pub struct Device {
 }
 
 impl Device {
-    pub(crate) fn new(gpu_device: web_sys::GpuDevice) -> Self {
-        Self { _inner: gpu_device }
+    pub(crate) fn new(device: web_sys::GpuDevice) -> Self {
+        Self { _inner: device }
     }
 }

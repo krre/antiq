@@ -1,14 +1,14 @@
 use wasm_bindgen::JsValue;
-use web_sys::GpuCanvasConfiguration;
+use web_sys::{GpuCanvasConfiguration, GpuCanvasContext};
 
 pub struct CanvasContext {
     inner: web_sys::GpuCanvasContext,
 }
 
 impl CanvasContext {
-    pub(crate) fn new(gpu_canvas_context: web_sys::GpuCanvasContext) -> Self {
+    pub(crate) fn new(canvas_context: GpuCanvasContext) -> Self {
         Self {
-            inner: gpu_canvas_context,
+            inner: canvas_context,
         }
     }
 
