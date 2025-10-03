@@ -33,10 +33,6 @@ impl Window {
 
         canvas.set_attribute("style", "display: block; width: 100vw; height: 100vh;")?;
 
-        let size = Self::size();
-        canvas.set_width(size.width());
-        canvas.set_height(size.height());
-
         let body = document.body().ok_or("Body element not found")?;
         body.set_attribute("style", "margin: 0; padding: 0;")?;
         body.append_child(&canvas)?;
