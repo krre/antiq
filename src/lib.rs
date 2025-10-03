@@ -15,14 +15,11 @@ macro_rules! run_app {
     ($app_type:ty) => {
         use antiq::ApplicationBackend;
         use wasm_bindgen::prelude::*;
-        use wasm_bindgen_futures::spawn_local;
 
         #[wasm_bindgen(start)]
-        pub fn start() {
-            spawn_local(async {
-                let backend = ApplicationBackend::<$app_type>::new().await;
-                Box::leak(Box::new(backend));
-            });
+        pub async fn start() {
+            let backend = ApplicationBackend::<$app_type>::new().await;
+            Box::leak(Box::new(backend));
         }
     };
 }
