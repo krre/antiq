@@ -19,7 +19,7 @@ pub(crate) struct EventDispatcher {
 
 impl EventDispatcher {
     pub(crate) fn new(handlers: Vec<Rc<dyn EventHandler>>) -> Rc<Self> {
-        let window = gloo::utils::window();
+        let window = Window::window();
         let (sender, mut receiver) = mpsc::unbounded::<Event<()>>();
 
         let resize_sender = sender.clone();

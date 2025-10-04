@@ -3,7 +3,7 @@ use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::UnwrapThrowExt;
-use web_sys::{GpuCanvasContext, HtmlCanvasElement, window};
+use web_sys::{GpuCanvasContext, HtmlCanvasElement};
 
 use crate::{
     Renderer,
@@ -24,7 +24,7 @@ pub struct Window {
 
 impl Window {
     pub async fn new(ui: Ui3d) -> Result<Self, JsValue> {
-        let window = window().ok_or("Global window not found")?;
+        let window = Self::window();
         let document = window.document().ok_or("Document not found")?;
 
         let canvas = document
@@ -59,7 +59,7 @@ impl Window {
     }
 
     pub fn size() -> Size2D {
-        let window = gloo::utils::window();
+        let window = Self::window();
         let width = window
             .inner_width()
             .expect_throw("Can't get window width")
@@ -71,6 +71,10 @@ impl Window {
             .as_f64()
             .unwrap_or(0.0) as u32;
         Size2D::new(width, height)
+    }
+
+    pub fn window() -> web_sys::Window {
+        web_sys::window().expect_throw("Global window not found")
     }
 
     pub fn render(&self) {
