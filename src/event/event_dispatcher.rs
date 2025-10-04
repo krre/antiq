@@ -2,9 +2,9 @@ use std::rc::Rc;
 
 use futures::StreamExt;
 use futures::channel::mpsc::{self, UnboundedSender};
-use gloo::events::EventListener;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
+use wasm_bindgen::prelude::Closure;
 use wasm_bindgen_futures::spawn_local;
 
 use crate::Window;
@@ -14,22 +14,30 @@ use crate::ui::d2::geometry::Pos2D;
 pub(crate) struct EventDispatcher {
     handlers: Vec<Rc<dyn EventHandler>>,
     sender: UnboundedSender<Event<()>>,
-    _listeners: Vec<EventListener>,
+    _closures: Vec<Closure<dyn FnMut(web_sys::Event)>>,
 }
 
 impl EventDispatcher {
     pub(crate) fn new(handlers: Vec<Rc<dyn EventHandler>>) -> Rc<Self> {
         let window = Window::window();
         let (sender, mut receiver) = mpsc::unbounded::<Event<()>>();
+        let mut closures = Vec::new();
 
+        // Resize event
         let resize_sender = sender.clone();
-        let resize_listener = EventListener::new(&window, "resize", move |_| {
+        let resize_closure = Closure::wrap(Box::new(move |_event: web_sys::Event| {
             let size = Window::size();
             resize_sender.unbounded_send(Event::WindowResize(size)).ok();
-        });
+        }) as Box<dyn FnMut(web_sys::Event)>);
 
+        window
+            .add_event_listener_with_callback("resize", resize_closure.as_ref().unchecked_ref())
+            .expect_throw("Failed to add resize listener");
+        closures.push(resize_closure);
+
+        // Mouse move event
         let mouse_move_sender = sender.clone();
-        let mouse_move_listener = EventListener::new(&window, "mousemove", move |event| {
+        let mouse_move_closure = Closure::wrap(Box::new(move |event: web_sys::Event| {
             let event = event
                 .dyn_ref::<web_sys::MouseEvent>()
                 .expect_throw("Can't get mouse move event");
@@ -38,12 +46,20 @@ impl EventDispatcher {
             mouse_move_sender
                 .unbounded_send(Event::MouseMove(Pos2D::new(x, y)))
                 .ok();
-        });
+        }) as Box<dyn FnMut(web_sys::Event)>);
+
+        window
+            .add_event_listener_with_callback(
+                "mousemove",
+                mouse_move_closure.as_ref().unchecked_ref(),
+            )
+            .expect_throw("Failed to add mousemove listener");
+        closures.push(mouse_move_closure);
 
         let dispatcher = Rc::new(Self {
             handlers,
             sender,
-            _listeners: vec![resize_listener, mouse_move_listener],
+            _closures: closures,
         });
 
         let dispatcher_clone = dispatcher.clone();

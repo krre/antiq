@@ -95,10 +95,11 @@ impl SystemEventHandler {
 impl SystemEventHandler {
     fn resize(&self, size: &Size2D) {
         self.renderer.resize(size);
+        // web_sys::console::log_1(&format!("resize {:?}", size).into());
     }
 
     fn mouse_move(&self, pos: &Pos2D) {
-        // gloo::console::log!("pos", pos.x(), pos.y())
+        // web_sys::console::log_1(&format!("mouse_move {:?}", pos).into());
     }
 }
 
