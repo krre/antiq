@@ -16,9 +16,9 @@ use crate::{
 };
 
 pub struct Window {
-    event_dispatcher: Rc<EventDispatcher>,
-    ui: Rc<Ui3d>,
-    system_event_handler: Rc<SystemEventHandler>,
+    _event_dispatcher: Rc<EventDispatcher>,
+    _ui: Rc<Ui3d>,
+    _system_event_handler: Rc<SystemEventHandler>,
     renderer: Rc<Renderer>,
 }
 
@@ -51,9 +51,9 @@ impl Window {
         let event_dispatcher = EventDispatcher::new(vec![ui.clone(), system_event_handler.clone()]);
 
         Ok(Self {
-            event_dispatcher,
-            ui,
-            system_event_handler,
+            _event_dispatcher: event_dispatcher,
+            _ui: ui,
+            _system_event_handler: system_event_handler,
             renderer,
         })
     }
@@ -98,7 +98,7 @@ impl SystemEventHandler {
         // web_sys::console::log_1(&format!("resize {:?}", size).into());
     }
 
-    fn mouse_move(&self, pos: &Pos2D) {
+    fn mouse_move(&self, _pos: &Pos2D) {
         // web_sys::console::log_1(&format!("mouse_move {:?}", pos).into());
     }
 }

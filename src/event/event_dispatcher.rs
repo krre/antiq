@@ -11,7 +11,7 @@ use crate::Window;
 use crate::event::{Event, EventHandler};
 use crate::ui::d2::geometry::Pos2D;
 
-pub(crate) struct EventDispatcher {
+pub struct EventDispatcher {
     handlers: Vec<Rc<dyn EventHandler>>,
     sender: UnboundedSender<Event<()>>,
     _closures: Vec<Closure<dyn FnMut(web_sys::Event)>>,

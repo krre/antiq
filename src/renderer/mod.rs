@@ -14,7 +14,7 @@ pub mod webgpu;
 pub struct Renderer {
     gpu: Gpu,
     context: CanvasContext,
-    adapter: Adapter,
+    _adapter: Adapter,
     device: Device,
 }
 
@@ -30,12 +30,12 @@ impl Renderer {
         Ok(Self {
             gpu,
             context,
-            adapter,
+            _adapter: adapter,
             device,
         })
     }
 
-    pub fn resize(&self, size: &Size2D) {
+    pub fn resize(&self, _size: &Size2D) {
         // gloo::console::log!("resize renderer", size.width(), size.height())
     }
 
