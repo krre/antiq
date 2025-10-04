@@ -15,6 +15,7 @@ impl<App: Application> ApplicationBackend<App> {
     pub async fn new() -> Result<Self, JsValue> {
         let app = App::default();
         let ui = app.build_ui();
+
         let window = Window::new(ui).await?;
         window.render();
 
