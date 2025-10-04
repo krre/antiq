@@ -72,6 +72,10 @@ impl Window {
             .unwrap_or(0.0) as u32;
         Size2D::new(width, height)
     }
+
+    pub fn render(&self) {
+        self.renderer.render();
+    }
 }
 
 pub(crate) struct SystemEventHandler {

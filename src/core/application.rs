@@ -16,6 +16,7 @@ impl<App: Application> ApplicationBackend<App> {
         let app = App::default();
         let ui = app.build_ui();
         let window = Window::new(ui).await?;
+        window.render();
 
         Ok(Self {
             _app: app,
