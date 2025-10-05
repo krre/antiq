@@ -1,9 +1,9 @@
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
-    pub r: f64,
-    pub g: f64,
-    pub b: f64,
-    pub a: f64,
+    r: f64,
+    g: f64,
+    b: f64,
+    a: f64,
 }
 
 impl Color {
@@ -13,5 +13,37 @@ impl Color {
 
     pub fn with_alpha(r: f64, g: f64, b: f64, a: f64) -> Self {
         Self { r, g, b, a }
+    }
+
+    pub fn set_red(&mut self, r: f64) {
+        self.r = r;
+    }
+
+    pub fn red(&self) -> f64 {
+        self.r
+    }
+
+    pub fn set_green(&mut self, g: f64) {
+        self.g = g;
+    }
+
+    pub fn green(&self) -> f64 {
+        self.g
+    }
+
+    pub fn set_blue(&mut self, b: f64) {
+        self.b = b;
+    }
+
+    pub fn blue(&self) -> f64 {
+        self.b
+    }
+
+    pub fn set_alpha(&mut self, a: f64) {
+        self.a = a;
+    }
+
+    pub fn alpha(&self) -> f64 {
+        self.a
     }
 }

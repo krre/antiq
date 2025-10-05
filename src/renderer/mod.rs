@@ -53,9 +53,9 @@ impl Renderer {
 
         let color = GpuColorDict::new(
             1.0,
-            ui.backgroud_color().b,
-            ui.backgroud_color().g,
-            ui.backgroud_color().r,
+            ui.backgroud_color().blue(),
+            ui.backgroud_color().green(),
+            ui.backgroud_color().red(),
         );
         color_attachment.set_clear_value(&color);
 
