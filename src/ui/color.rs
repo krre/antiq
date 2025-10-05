@@ -46,4 +46,8 @@ impl Color {
     pub fn alpha(&self) -> f64 {
         self.a
     }
+
+    pub fn as_tuple(&self) -> (f64, f64, f64, f64) {
+        (self.r, self.g, self.b, self.a)
+    }
 }
