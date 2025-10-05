@@ -6,7 +6,7 @@ use web_sys::{
 
 use crate::{
     renderer::webgpu::{Adapter, CanvasContext, Device, Gpu},
-    ui::d2::geometry::Size2D,
+    ui::{Ui3d, d2::geometry::Size2D},
 };
 
 pub mod webgpu;
@@ -39,7 +39,7 @@ impl Renderer {
         // gloo::console::log!("resize renderer", size.width(), size.height())
     }
 
-    pub fn render(&self) {
+    pub fn render(&self, ui: &Ui3d) {
         let texture = self
             .context
             .into_inner()
@@ -51,7 +51,12 @@ impl Renderer {
         let color_attachment =
             GpuRenderPassColorAttachment::new(GpuLoadOp::Clear, GpuStoreOp::Store, &view);
 
-        let color = GpuColorDict::new(1.0, 1.0, 0.0, 0.0);
+        let color = GpuColorDict::new(
+            1.0,
+            ui.backgroud_color().b,
+            ui.backgroud_color().g,
+            ui.backgroud_color().r,
+        );
         color_attachment.set_clear_value(&color);
 
         let color_attachments = js_sys::Array::new();

@@ -17,7 +17,7 @@ use crate::{
 
 pub struct Window {
     _event_dispatcher: Rc<EventDispatcher>,
-    _ui: Rc<Ui3d>,
+    ui: Rc<Ui3d>,
     _system_event_handler: Rc<SystemEventHandler>,
     renderer: Rc<Renderer>,
 }
@@ -52,7 +52,7 @@ impl Window {
 
         Ok(Self {
             _event_dispatcher: event_dispatcher,
-            _ui: ui,
+            ui,
             _system_event_handler: system_event_handler,
             renderer,
         })
@@ -78,7 +78,7 @@ impl Window {
     }
 
     pub fn render(&self) {
-        self.renderer.render();
+        self.renderer.render(&self.ui);
     }
 }
 
