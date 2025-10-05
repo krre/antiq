@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use crate::ui::{
-    d3::Scene,
+    d3::Scene3D,
     node::{HasNodeState, Node, NodeState},
     widget::{HasWidgetState, Widget, WidgetState},
 };
@@ -10,22 +10,22 @@ use super::{HasWidget2DState, Widget2D, Widget2DState};
 
 pub struct View {
     state2d: Widget2DState,
-    scene: Rc<Scene>,
+    scene: Rc<Scene3D>,
 }
 
 impl View {
     pub fn new() -> Self {
         Self {
             state2d: Widget2DState::new(),
-            scene: Rc::new(Scene::new()),
+            scene: Rc::new(Scene3D::new()),
         }
     }
 
-    pub fn set_scene(&mut self, scene: Rc<Scene>) {
+    pub fn set_scene(&mut self, scene: Rc<Scene3D>) {
         self.scene = scene;
     }
 
-    pub fn scene(&self) -> Rc<Scene> {
+    pub fn scene(&self) -> Rc<Scene3D> {
         self.scene.clone()
     }
 }
