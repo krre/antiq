@@ -24,3 +24,21 @@ macro_rules! run_app {
         }
     };
 }
+
+#[macro_export]
+macro_rules! run_example_app {
+    ($app_type:ty) => {
+        use antiq::ApplicationBackend;
+        use wasm_bindgen::prelude::*;
+        use wasm_bindgen_futures::spawn_local;
+
+        pub fn main() -> Result<(), JsValue> {
+            spawn_local(async {
+                let backend = ApplicationBackend::<$app_type>::new().await;
+                Box::leak(Box::new(backend));
+            });
+
+            Ok(())
+        }
+    };
+}
