@@ -5,7 +5,7 @@ use web_sys::{
 };
 
 use crate::{
-    renderer::webgpu::{Adapter, CanvasContext, Device, Gpu},
+    renderer::webgpu::{CanvasContext, Device, Gpu},
     ui::{Ui3d, d2::geometry::Size2D},
 };
 
@@ -14,7 +14,6 @@ pub mod webgpu;
 pub struct Renderer {
     gpu: Gpu,
     context: CanvasContext,
-    _adapter: Adapter,
     device: Device,
 }
 
@@ -30,7 +29,6 @@ impl Renderer {
         Ok(Self {
             gpu,
             context,
-            _adapter: adapter,
             device,
         })
     }
