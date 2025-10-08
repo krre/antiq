@@ -14,7 +14,7 @@ pub struct Ui3d {
 impl Ui3d {
     pub fn new() -> Self {
         Self {
-            background_color: Color::from_rgb(0.0, 0.0, 1.1),
+            background_color: Color::GRAY,
             layout: Box::new(Fill2D::new()),
         }
     }
