@@ -7,11 +7,11 @@ pub struct Color {
 }
 
 impl Color {
-    pub fn new(r: f64, g: f64, b: f64) -> Self {
+    pub fn from_rgb(r: f64, g: f64, b: f64) -> Self {
         Self { r, g, b, a: 1.0 }
     }
 
-    pub fn with_alpha(r: f64, g: f64, b: f64, a: f64) -> Self {
+    pub fn from_rgba(r: f64, g: f64, b: f64, a: f64) -> Self {
         Self { r, g, b, a }
     }
 
