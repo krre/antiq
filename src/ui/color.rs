@@ -1,9 +1,9 @@
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
-    r: f64,
-    g: f64,
-    b: f64,
-    a: f64,
+    r: f32,
+    g: f32,
+    b: f32,
+    a: f32,
 }
 
 impl Color {
@@ -77,47 +77,47 @@ impl Color {
         a: 1.0,
     };
 
-    pub fn from_rgb(r: f64, g: f64, b: f64) -> Self {
+    pub fn from_rgb(r: f32, g: f32, b: f32) -> Self {
         Self { r, g, b, a: 1.0 }
     }
 
-    pub fn from_rgba(r: f64, g: f64, b: f64, a: f64) -> Self {
+    pub fn from_rgba(r: f32, g: f32, b: f32, a: f32) -> Self {
         Self { r, g, b, a }
     }
 
-    pub fn set_red(&mut self, r: f64) {
+    pub fn set_red(&mut self, r: f32) {
         self.r = r;
     }
 
-    pub fn red(&self) -> f64 {
+    pub fn red(&self) -> f32 {
         self.r
     }
 
-    pub fn set_green(&mut self, g: f64) {
+    pub fn set_green(&mut self, g: f32) {
         self.g = g;
     }
 
-    pub fn green(&self) -> f64 {
+    pub fn green(&self) -> f32 {
         self.g
     }
 
-    pub fn set_blue(&mut self, b: f64) {
+    pub fn set_blue(&mut self, b: f32) {
         self.b = b;
     }
 
-    pub fn blue(&self) -> f64 {
+    pub fn blue(&self) -> f32 {
         self.b
     }
 
-    pub fn set_alpha(&mut self, a: f64) {
+    pub fn set_alpha(&mut self, a: f32) {
         self.a = a;
     }
 
-    pub fn alpha(&self) -> f64 {
+    pub fn alpha(&self) -> f32 {
         self.a
     }
 
-    pub fn as_tuple(&self) -> (f64, f64, f64, f64) {
+    pub fn as_tuple(&self) -> (f32, f32, f32, f32) {
         (self.r, self.g, self.b, self.a)
     }
 }
