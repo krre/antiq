@@ -6,7 +6,7 @@ use web_sys::{
 
 use crate::{
     renderer::webgpu::{CanvasContext, Device, Gpu},
-    ui::{Ui3d, d2::geometry::Size2D},
+    ui::{Color, Ui3d, d2::geometry::Size2D},
 };
 
 pub mod webgpu;
@@ -38,6 +38,14 @@ impl Renderer {
     }
 
     pub fn render(&self, ui: &Ui3d) {
+        self.clear(ui.background_color());
+    }
+
+    pub fn gpu(&self) -> &Gpu {
+        &self.gpu
+    }
+
+    fn clear(&self, color: &Color) {
         let texture = self
             .context
             .into_inner()
@@ -51,9 +59,9 @@ impl Renderer {
 
         let color = GpuColorDict::new(
             1.0,
-            ui.background_color().blue().into(),
-            ui.background_color().green().into(),
-            ui.background_color().red().into(),
+            color.blue().into(),
+            color.green().into(),
+            color.red().into(),
         );
         color_attachment.set_clear_value(&color);
 
@@ -76,9 +84,5 @@ impl Renderer {
 
         let queue = self.device.into_inner().queue();
         queue.submit(&command_buffers);
-    }
-
-    pub fn gpu(&self) -> &Gpu {
-        &self.gpu
     }
 }
