@@ -1,12 +1,14 @@
 mod column;
 mod fill;
 mod grid;
+mod position;
 mod row;
 mod split;
 
 pub use column::Column2D;
 pub use fill::Fill2D;
 pub use grid::Grid2D;
+pub use position::Position2D;
 pub use row::Row2D;
 pub use split::Split2D;
 
