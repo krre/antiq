@@ -1,27 +1,19 @@
 use crate::ui::{
-    d2::widget::Blank,
     layout::{HasLayoutState, Layout, LayoutState},
     node::{HasNodeState, Node, NodeState},
-    widget::Widget,
 };
 
 use super::Layout2D;
 
 pub struct Fill2D {
     layout_state: LayoutState,
-    widget: Box<dyn Widget>,
 }
 
 impl Fill2D {
     pub fn new() -> Self {
         Self {
             layout_state: LayoutState::new(),
-            widget: Box::new(Blank::new()),
         }
-    }
-
-    pub fn set_widget(&mut self, widget: Box<dyn Widget>) {
-        self.widget = widget;
     }
 }
 
