@@ -6,7 +6,10 @@ pub use blank::Blank;
 pub use rectangle::Rectangle;
 pub use view::View;
 
-use crate::ui::widget::{HasWidgetState, Widget, WidgetState};
+use crate::ui::{
+    d2::layout::{Fill2D, Layout2D},
+    widget::{HasWidgetState, Widget, WidgetState},
+};
 
 use super::geometry::{Pos2D, Size2D};
 
@@ -40,12 +43,21 @@ pub trait Widget2D: Widget + HasWidget2DState {
     fn size(&self) -> Size2D {
         self.widget_2d_state().size
     }
+
+    fn set_layout(&mut self, layout: Box<dyn Layout2D>) {
+        self.widget_2d_state_mut().layout = layout;
+    }
+
+    fn layout(&self) -> &Box<dyn Layout2D> {
+        &self.widget_2d_state().layout
+    }
 }
 
 pub struct Widget2DState {
     state: WidgetState,
     position: Pos2D,
     size: Size2D,
+    layout: Box<dyn Layout2D>,
 }
 
 impl Widget2DState {
@@ -54,6 +66,7 @@ impl Widget2DState {
             state: WidgetState::new(),
             position: Pos2D::default(),
             size: Size2D::default(),
+            layout: Box::new(Fill2D::new()),
         }
     }
 }
