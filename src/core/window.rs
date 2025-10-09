@@ -25,7 +25,9 @@ pub struct Window {
 impl Window {
     pub async fn new(ui: Ui3d) -> Result<Self, JsValue> {
         let window = Self::window();
+
         let document = window.document().ok_or("Document not found")?;
+        document.set_title(ui.title());
 
         let canvas = document
             .create_element("canvas")?

@@ -5,7 +5,9 @@ pub struct HelloApp {}
 
 impl Application for HelloApp {
     fn build_ui(&self) -> Ui3d {
-        Ui3d::new()
+        let mut ui = Ui3d::new();
+        ui.set_title("Hello Example");
+        ui
     }
 }
 

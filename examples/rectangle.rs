@@ -26,6 +26,7 @@ impl Application for RectangleApp {
         layout.add_widget(Rc::new(RefCell::new(rect)));
 
         let mut ui = Ui3d::new();
+        ui.set_title("Rectangle Example");
         ui.set_layout(Box::new(layout));
         ui
     }
