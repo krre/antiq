@@ -61,6 +61,20 @@ pub struct Node {
     parent: Option<Box<dyn NodeLike>>,
 }
 
+impl Node {
+    pub fn new() -> Self {
+        Self::with_id(NodeId::generate())
+    }
+
+    pub fn with_id(id: NodeId) -> Self {
+        Self {
+            id,
+            children: Vec::new(),
+            parent: None,
+        }
+    }
+}
+
 impl NodeLike for Node {
     fn id(&self) -> NodeId {
         self.id
