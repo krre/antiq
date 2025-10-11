@@ -6,16 +6,16 @@ use std::{
 
 static NODE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub trait NodeLike: Any {
+pub trait Node: Any {
     fn id(&self) -> NodeId;
 
-    fn add_child(&mut self, child: Box<dyn NodeLike>);
+    fn add_child(&mut self, child: Box<dyn Node>);
 
-    fn insert_child(&mut self, index: usize, child: Box<dyn NodeLike>);
+    fn insert_child(&mut self, index: usize, child: Box<dyn Node>);
 
     fn remove_child(&mut self, index: usize);
 
-    fn find_child(&self, id: NodeId) -> Option<&Box<dyn NodeLike>> {
+    fn find_child(&self, id: NodeId) -> Option<&Box<dyn Node>> {
         for child in self.children().iter() {
             if child.id() == id {
                 return Some(child);
@@ -31,11 +31,11 @@ pub trait NodeLike: Any {
         None
     }
 
-    fn children(&self) -> &[Box<dyn NodeLike>];
+    fn children(&self) -> &[Box<dyn Node>];
 
-    fn set_parent(&mut self, parent: Box<dyn NodeLike>);
+    fn set_parent(&mut self, parent: Box<dyn Node>);
 
-    fn parent(&self) -> Option<&Box<dyn NodeLike>>;
+    fn parent(&self) -> Option<&Box<dyn Node>>;
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -55,13 +55,13 @@ impl NodeId {
     }
 }
 
-pub struct Node {
+pub struct NodeData {
     id: NodeId,
-    children: Vec<Box<dyn NodeLike>>,
-    parent: Option<Box<dyn NodeLike>>,
+    children: Vec<Box<dyn Node>>,
+    parent: Option<Box<dyn Node>>,
 }
 
-impl Node {
+impl NodeData {
     pub fn new() -> Self {
         Self::with_id(NodeId::generate())
     }
@@ -75,16 +75,16 @@ impl Node {
     }
 }
 
-impl NodeLike for Node {
+impl Node for NodeData {
     fn id(&self) -> NodeId {
         self.id
     }
 
-    fn add_child(&mut self, child: Box<dyn NodeLike>) {
+    fn add_child(&mut self, child: Box<dyn Node>) {
         self.children.push(child);
     }
 
-    fn insert_child(&mut self, index: usize, child: Box<dyn NodeLike>) {
+    fn insert_child(&mut self, index: usize, child: Box<dyn Node>) {
         self.children.insert(index, child);
     }
 
@@ -92,7 +92,7 @@ impl NodeLike for Node {
         self.children.remove(index);
     }
 
-    fn find_child(&self, id: NodeId) -> Option<&Box<dyn NodeLike>> {
+    fn find_child(&self, id: NodeId) -> Option<&Box<dyn Node>> {
         for child in self.children().iter() {
             if child.id() == id {
                 return Some(child);
@@ -108,15 +108,15 @@ impl NodeLike for Node {
         None
     }
 
-    fn children(&self) -> &[Box<dyn NodeLike>] {
+    fn children(&self) -> &[Box<dyn Node>] {
         &self.children
     }
 
-    fn set_parent(&mut self, parent: Box<dyn NodeLike>) {
+    fn set_parent(&mut self, parent: Box<dyn Node>) {
         self.parent = Some(parent);
     }
 
-    fn parent(&self) -> Option<&Box<dyn NodeLike>> {
+    fn parent(&self) -> Option<&Box<dyn Node>> {
         self.parent.as_ref()
     }
 }
