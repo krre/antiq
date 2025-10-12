@@ -15,7 +15,7 @@ impl Rectangle {
     pub fn new() -> Self {
         Self {
             state2d: Widget2DState::new(),
-            color: Color::from_rgb(1.0, 1.0, 1.0),
+            color: Color::WHITE,
         }
     }
 
