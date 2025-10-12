@@ -1,6 +1,7 @@
 use crate::ui::{
     layout::{HasLayoutState, Layout, LayoutState},
     node::{HasNodeState, Node, NodeState},
+    widget::{HasWidgetState, Widget, WidgetState},
 };
 
 use super::Layout2D;
@@ -25,6 +26,10 @@ impl Default for Grid2D {
 
 impl Node for Grid2D {}
 
+impl Widget for Grid2D {
+    fn build(&self) {}
+}
+
 impl Layout for Grid2D {
     fn build(&self) {}
 }
@@ -33,11 +38,21 @@ impl Layout2D for Grid2D {}
 
 impl HasNodeState for Grid2D {
     fn node_state(&self) -> &NodeState {
-        Layout::node_state(self)
+        Widget::node_state(self)
     }
 
     fn node_state_mut(&mut self) -> &mut NodeState {
-        Layout::node_state_mut(self)
+        Widget::node_state_mut(self)
+    }
+}
+
+impl HasWidgetState for Grid2D {
+    fn widget_state(&self) -> &WidgetState {
+        Layout::widget_state(self)
+    }
+
+    fn widget_state_mut(&mut self) -> &mut WidgetState {
+        Layout::widget_state_mut(self)
     }
 }
 
