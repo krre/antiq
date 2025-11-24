@@ -1,11 +1,11 @@
 use wasm_bindgen::{JsValue, UnwrapThrowExt};
 use web_sys::{
-    GpuCanvasConfiguration, GpuColorDict, GpuLoadOp, GpuRenderPassColorAttachment,
+    GpuCanvasConfiguration, GpuColorDict, GpuDevice, GpuLoadOp, GpuRenderPassColorAttachment,
     GpuRenderPassDescriptor, GpuStoreOp, GpuTextureFormat, js_sys,
 };
 
 use crate::{
-    renderer::webgpu::{CanvasContext, Device, Gpu},
+    renderer::webgpu::{CanvasContext, Gpu},
     ui::{Color, Ui3d, d2::geometry::Size2D},
 };
 
@@ -14,7 +14,7 @@ pub mod webgpu;
 pub struct Renderer {
     gpu: Gpu,
     context: CanvasContext,
-    device: Device,
+    device: GpuDevice,
 }
 
 impl Renderer {
@@ -22,8 +22,7 @@ impl Renderer {
         let adapter = gpu.request_adapter().await?;
         let device = adapter.request_device().await?;
 
-        let configuration =
-            GpuCanvasConfiguration::new(device.into_inner(), GpuTextureFormat::Bgra8unorm);
+        let configuration = GpuCanvasConfiguration::new(&device, GpuTextureFormat::Bgra8unorm);
         context.configure(configuration)?;
 
         Ok(Self {
@@ -68,7 +67,7 @@ impl Renderer {
 
         let render_pass_descriptor = GpuRenderPassDescriptor::new(&color_attachments);
 
-        let encoder = self.device.into_inner().create_command_encoder();
+        let encoder = self.device.create_command_encoder();
 
         let render_pass = encoder
             .begin_render_pass(&render_pass_descriptor)
@@ -80,7 +79,7 @@ impl Renderer {
         let command_buffers = js_sys::Array::new();
         command_buffers.push(&command_buffer);
 
-        let queue = self.device.into_inner().queue();
+        let queue = self.device.queue();
         queue.submit(&command_buffers);
     }
 }
