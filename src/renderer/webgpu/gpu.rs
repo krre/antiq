@@ -1,7 +1,6 @@
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
-
-use super::Adapter;
+use web_sys::GpuAdapter;
 
 pub struct Gpu {
     inner: web_sys::Gpu,
@@ -12,11 +11,11 @@ impl Gpu {
         Self { inner: gpu }
     }
 
-    pub async fn request_adapter(&self) -> Result<Adapter, JsValue> {
+    pub async fn request_adapter(&self) -> Result<GpuAdapter, JsValue> {
         let adapter = JsFuture::from(self.inner.request_adapter())
             .await?
             .dyn_into::<web_sys::GpuAdapter>()?;
-        Ok(Adapter::new(adapter))
+        Ok(adapter)
     }
 
     pub fn into_inner(&self) -> &web_sys::Gpu {

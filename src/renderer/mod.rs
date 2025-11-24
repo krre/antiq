@@ -1,4 +1,5 @@
-use wasm_bindgen::{JsValue, UnwrapThrowExt};
+use wasm_bindgen::{JsCast, JsValue, UnwrapThrowExt};
+use wasm_bindgen_futures::JsFuture;
 use web_sys::{
     GpuCanvasConfiguration, GpuColorDict, GpuDevice, GpuLoadOp, GpuRenderPassColorAttachment,
     GpuRenderPassDescriptor, GpuStoreOp, GpuTextureFormat, js_sys,
@@ -20,7 +21,9 @@ pub struct Renderer {
 impl Renderer {
     pub(crate) async fn new(gpu: Gpu, context: CanvasContext) -> Result<Self, JsValue> {
         let adapter = gpu.request_adapter().await?;
-        let device = adapter.request_device().await?;
+        let device = JsFuture::from(adapter.request_device())
+            .await?
+            .dyn_into::<web_sys::GpuDevice>()?;
 
         let configuration = GpuCanvasConfiguration::new(&device, GpuTextureFormat::Bgra8unorm);
         context.configure(configuration)?;
