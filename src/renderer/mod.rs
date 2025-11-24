@@ -8,7 +8,6 @@ use web_sys::{
 use crate::ui::{Color, Ui3d, d2::geometry::Size2D};
 
 pub struct Renderer {
-    gpu: Gpu,
     context: GpuCanvasContext,
     device: GpuDevice,
 }
@@ -25,21 +24,13 @@ impl Renderer {
         let configuration = GpuCanvasConfiguration::new(&device, GpuTextureFormat::Bgra8unorm);
         context.configure(&configuration)?;
 
-        Ok(Self {
-            gpu,
-            context,
-            device,
-        })
+        Ok(Self { context, device })
     }
 
     pub fn resize(&self, _size: &Size2D) {}
 
     pub fn render(&self, ui: &Ui3d) {
         self.clear(ui.background_color());
-    }
-
-    pub fn gpu(&self) -> &Gpu {
-        &self.gpu
     }
 
     fn clear(&self, color: &Color) {
