@@ -8,7 +8,6 @@ use web_sys::{GpuCanvasContext, HtmlCanvasElement};
 use crate::{
     Renderer,
     event::{Event, EventDispatcher, EventHandler},
-    renderer::webgpu::Gpu,
     ui::{
         Ui3d,
         d2::geometry::{Pos2D, Size2D},
@@ -44,7 +43,7 @@ impl Window {
             .ok_or("WebGPU context not found")?
             .dyn_into::<GpuCanvasContext>()?;
 
-        let gpu = Gpu::new(window.navigator().gpu());
+        let gpu = window.navigator().gpu();
         let renderer = Rc::new(Renderer::new(gpu, context).await?);
 
         let system_event_handler = Rc::new(SystemEventHandler::new(renderer.clone()));
