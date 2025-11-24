@@ -1,12 +1,12 @@
 use wasm_bindgen::{JsCast, JsValue, UnwrapThrowExt};
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{
-    GpuCanvasConfiguration, GpuColorDict, GpuDevice, GpuLoadOp, GpuRenderPassColorAttachment,
-    GpuRenderPassDescriptor, GpuStoreOp, GpuTextureFormat, js_sys,
+    GpuCanvasConfiguration, GpuCanvasContext, GpuColorDict, GpuDevice, GpuLoadOp,
+    GpuRenderPassColorAttachment, GpuRenderPassDescriptor, GpuStoreOp, GpuTextureFormat, js_sys,
 };
 
 use crate::{
-    renderer::webgpu::{CanvasContext, Gpu},
+    renderer::webgpu::Gpu,
     ui::{Color, Ui3d, d2::geometry::Size2D},
 };
 
@@ -14,19 +14,19 @@ pub mod webgpu;
 
 pub struct Renderer {
     gpu: Gpu,
-    context: CanvasContext,
+    context: GpuCanvasContext,
     device: GpuDevice,
 }
 
 impl Renderer {
-    pub(crate) async fn new(gpu: Gpu, context: CanvasContext) -> Result<Self, JsValue> {
+    pub(crate) async fn new(gpu: Gpu, context: GpuCanvasContext) -> Result<Self, JsValue> {
         let adapter = gpu.request_adapter().await?;
         let device = JsFuture::from(adapter.request_device())
             .await?
             .dyn_into::<web_sys::GpuDevice>()?;
 
         let configuration = GpuCanvasConfiguration::new(&device, GpuTextureFormat::Bgra8unorm);
-        context.configure(configuration)?;
+        context.configure(&configuration)?;
 
         Ok(Self {
             gpu,
@@ -48,7 +48,6 @@ impl Renderer {
     fn clear(&self, color: &Color) {
         let texture = self
             .context
-            .into_inner()
             .get_current_texture()
             .expect_throw("Failed to get current texture");
         let view = texture
