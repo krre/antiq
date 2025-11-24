@@ -7,8 +7,6 @@ use web_sys::{
 
 use crate::ui::{Color, Ui3d, d2::geometry::Size2D};
 
-pub mod webgpu;
-
 pub struct Renderer {
     gpu: Gpu,
     context: GpuCanvasContext,
