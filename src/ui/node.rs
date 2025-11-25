@@ -64,6 +64,22 @@ pub trait Node: HasNodeState {
         }
     }
 
+    fn find_child(&self, id: NodeId) -> Option<Weak<RefCell<dyn Node>>> {
+        for child in self.node_state().children.iter() {
+            if child.borrow().id() == id {
+                return Some(Rc::downgrade(&child.clone()));
+            }
+
+            let nested_child = child.borrow().find_child(id);
+
+            if nested_child.is_some() {
+                return nested_child;
+            }
+        }
+
+        None
+    }
+
     fn set_parent(&mut self, parent: Option<Weak<RefCell<dyn Node>>>) {
         self.node_state_mut().parent = parent;
     }
