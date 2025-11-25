@@ -1,7 +1,27 @@
 use std::{
     cell::RefCell,
     rc::{Rc, Weak},
+    sync::atomic::{AtomicUsize, Ordering},
 };
+
+static NODE_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
+
+#[derive(Clone, Copy, PartialEq)]
+pub struct NodeId(usize);
+
+impl NodeId {
+    pub fn new(id: usize) -> Self {
+        Self(id)
+    }
+
+    pub fn generate() -> Self {
+        Self(NODE_ID_COUNTER.fetch_add(1, Ordering::Relaxed))
+    }
+
+    pub fn as_usize(&self) -> usize {
+        self.0
+    }
+}
 
 pub trait HasNodeState {
     fn node_state(&self) -> &NodeState;
@@ -10,6 +30,10 @@ pub trait HasNodeState {
 }
 
 pub trait Node: HasNodeState {
+    fn id(&self) -> NodeId {
+        self.node_state().id
+    }
+
     fn add_child(&mut self, child: Rc<RefCell<dyn Node>>) {
         self.node_state_mut().children.push(child);
     }
@@ -52,6 +76,7 @@ pub trait Node: HasNodeState {
 }
 
 pub struct NodeState {
+    id: NodeId,
     parent: Option<Weak<RefCell<dyn Node>>>,
     children: Vec<Rc<RefCell<dyn Node>>>,
 }
@@ -59,6 +84,7 @@ pub struct NodeState {
 impl NodeState {
     pub fn new() -> Self {
         Self {
+            id: NodeId::generate(),
             parent: None,
             children: Vec::new(),
         }
