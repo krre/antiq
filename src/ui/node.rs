@@ -34,6 +34,10 @@ pub trait Node: HasNodeState {
         self.node_state().id
     }
 
+    fn set_id(&mut self, id: NodeId) {
+        self.node_state_mut().id = id;
+    }
+
     fn add_child(&mut self, child: Rc<RefCell<dyn Node>>) {
         self.node_state_mut().children.push(child);
     }
