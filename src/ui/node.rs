@@ -56,7 +56,7 @@ pub trait Node: HasNodeState {
         self.node_state().children.len()
     }
 
-    fn child_at(&self, index: usize) -> Option<Weak<RefCell<dyn Node>>> {
+    fn child(&self, index: usize) -> Option<Weak<RefCell<dyn Node>>> {
         if index > self.count() - 1 {
             None
         } else {
